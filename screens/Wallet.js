@@ -16,30 +16,43 @@ export default function App({navigation}){
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{width:"100%", height:"16%", paddingLeft:"8%"}}>
+      <View style={{width:"100%", height:"12%", paddingLeft:"8%"}}>
         <Text>Current Balance</Text>
-        <Text style={{fontSize:50, marginTop:10}}>508 Bao</Text>
+        <Text style={{fontSize:50, marginTop:3}}>508 Bao</Text>
       </View>
-      <View style={{width:"100%", height:"68%", backgroundColor:"red", flexDirection:"row"}}>
+      <View style={{width:"100%", height:"72%", flexDirection:"row"}}>
         <View style={{width:"50%", height:"100%"}}>
 
           <View style={{width:"100%", height:"50%"}}>
-            <View style={{...styles.box}}></View>
+            <View style={{width:"95%", height:"95%", backgroundColor:"#6474E5", marginLeft:"3.33333%", marginTop:"4.3333%", borderRadius:5, justifyContent:"center", alignItems:"center"}}>
+              <Icon name="info" style={{fontSize:70}}></Icon>
+              <Text style={{fontSize:18, marginTop: 10}}>Wallet Profile</Text>
+            </View>
           </View>
 
           <View style={{width:"100%", height:"50%"}}>
-            <View style={{...styles.box, marginLeft:"1.666%"}}></View>
+            <View style={{width:"95%", height:"95%", backgroundColor:"#eb6060", marginLeft:"3.33333%", marginTop:"1.66666%", borderRadius:5, justifyContent:"center", alignItems:"center"}}>
+              <Icon name="history" style={{fontSize:70}}></Icon>
+              <Text style={{fontSize:18, marginTop: 10}}>Transaction History</Text>
+            </View>
           </View>
 
         </View>
+
         <View style={{width:"50%", height:"100%"}}>
 
           <View style={{width:"100%", height:"50%"}}>
-            <View style={styles.box}></View>
+            <View style={{width:"95%", height:"95%", backgroundColor:"#eb6060", marginLeft:"1.6666%", marginTop:"4.3333%", borderRadius:5, justifyContent:"center", alignItems:"center"}}>
+              <Icon name="send" style={{fontSize:70}}></Icon>
+              <Text style={{fontSize:18, marginTop: 10}}>Send Tokens</Text>
+            </View>
           </View>
 
           <View style={{width:"100%", height:"50%"}}>
-            <View style={styles.box}></View>
+            <View style={{width:"95%", height:"95%", backgroundColor:"#6474E5", marginLeft:"1.6666%", marginTop:"1.6666%", borderRadius:5, justifyContent:"center", alignItems:"center"}}>
+              <Icon name="info" style={{fontSize:70}}></Icon>
+              <Text style={{fontSize:18, marginTop: 10}}>THINKING ABOUT IT</Text>
+            </View>
           </View>
 
         </View>
@@ -99,5 +112,4 @@ const styles = StyleSheet.create({
   loginText:{
     color:"white"
   },
-  box:{width:"95%", height:"95%", backgroundColor:"blue"}
 });
