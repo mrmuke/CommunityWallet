@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
-export default function App(){
+export default function App({navigation}){
 
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
@@ -11,7 +11,7 @@ export default function App(){
         <View style={styles.inputView} >
           <TextInput  
             style={styles.inputText}
-            placeholder="Email..." 
+            placeholder="Phone Number..." 
             placeholderTextColor="#003f5c"
             onChangeText={text => setEmail(text)}/>
         </View>
@@ -29,11 +29,11 @@ export default function App(){
         <TouchableOpacity style={styles.loginBtn}>
           <Text style={styles.loginText}>LOGIN</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.loginText}>Signup</Text>
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate("Signup");
+        }}>
+          <Text style={styles.signup}>Don't have an account? Signup now!</Text>
         </TouchableOpacity>
-
-  
       </View>
     );
 }
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
   logo:{
     fontWeight:"bold",
     fontSize:50,
-    color:"#f4a4a4",
+    color:"#eb6060",
     marginBottom:40
   },
   inputView:{
     width:"80%",
-    backgroundColor:"#9AA4EC",
+    backgroundColor:"#e9ecfb",
     borderRadius:25,
     height:50,
     marginBottom:20,
@@ -61,11 +61,19 @@ const styles = StyleSheet.create({
   },
   inputText:{
     height:50,
-    color:"white"
+    color:"black"
   },
   forgot:{
-    color:"#F4a4a4",
+    color:"#eb6060",
     fontSize:11
+  },
+  signup:{
+    color:"#eb6060",
+    fontSize:12,
+    top:-10,
+    paddingTop:10,
+    paddingBottom:10,
+    marginTop:10
   },
   loginBtn:{
     width:"80%",
@@ -74,8 +82,8 @@ const styles = StyleSheet.create({
     height:50,
     alignItems:"center",
     justifyContent:"center",
-    marginTop:40,
-    marginBottom:10
+    marginTop:23,
+    marginBottom:0
   },
   loginText:{
     color:"white"
