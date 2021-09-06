@@ -7,7 +7,7 @@ import Wallet from './Wallet'
 
 const Drawer = createDrawerNavigator();
 
-export default function App({navigation}){
+export default function DrawerNavigator({navigation}){
 
     return (
       <Drawer.Navigator initialRouteName="Home" screenOptions={{headerShown:false}}>
