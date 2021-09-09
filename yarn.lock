@@ -2483,6 +2483,14 @@
     "@react-types/combobox" "^3.0.1"
     "@react-types/shared" "^3.8.0"
 
+"@react-stately/data@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/data/-/data-3.4.1.tgz#02127722eb5a0a8433fdcc4389d159b99289bfd2"
+  integrity sha512-YspY7Ry+HpvkOqleVeOQ4m0Wva5G5PilW1TyKfS2zzo3u98ExnGj2h92Bu7HxLz3c2SJxpUpeph1uz+oZeDdlA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-types/shared" "^3.8.0"
+
 "@react-stately/layout@^3.4.0":
   "integrity" "sha512-ykt/ecycnhbW/NqA7OIqNUzkTFnx6SZInufhObA5VULej4CcBQVVAyS/AuARUg31z1osULczBDcZiokzg5fUDQ=="
   "resolved" "https://registry.npmjs.org/@react-stately/layout/-/layout-3.4.1.tgz"
@@ -2528,9 +2536,9 @@
     "@react-types/shared" "^3.8.0"
 
 "@react-stately/numberfield@^3.0.2":
-  "integrity" "sha512-hxJt/Bj9cqJ8EPp9Vb0BL2CMWaRROWvxveiy76zcMMAT1TN33Wjhta+r+RjhJeUqDCHyvgcbYUeyxEbqrcipRA=="
-  "resolved" "https://registry.npmjs.org/@react-stately/numberfield/-/numberfield-3.0.2.tgz"
-  "version" "3.0.2"
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@react-stately/numberfield/-/numberfield-3.0.2.tgz#2e2831e60cafb7cc4b3124fe5f135a7bbd70e590"
+  integrity sha512-hxJt/Bj9cqJ8EPp9Vb0BL2CMWaRROWvxveiy76zcMMAT1TN33Wjhta+r+RjhJeUqDCHyvgcbYUeyxEbqrcipRA==
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@internationalized/number" "^3.0.2"
@@ -2557,9 +2565,9 @@
     "@react-types/radio" "^3.1.2"
 
 "@react-stately/searchfield@^3.1.3":
-  "integrity" "sha512-IIsgZ87RgdSTLcXB3U+EdgbtAXlpw50G9fDYhwpjIaiZQ60RsaEz0mo+s1+oapXGudCFWyQYNR+nqF7jzNKxwg=="
-  "resolved" "https://registry.npmjs.org/@react-stately/searchfield/-/searchfield-3.1.3.tgz"
-  "version" "3.1.3"
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@react-stately/searchfield/-/searchfield-3.1.3.tgz#c2fe18be4ca8478c3bb3fdebc7e9e4a14ebfae07"
+  integrity sha512-IIsgZ87RgdSTLcXB3U+EdgbtAXlpw50G9fDYhwpjIaiZQ60RsaEz0mo+s1+oapXGudCFWyQYNR+nqF7jzNKxwg==
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@react-stately/utils" "^3.2.2"
@@ -2631,6 +2639,16 @@
     "@react-stately/utils" "^3.2.0"
     "@react-types/tabs" "3.0.0-alpha.2"
 
+"@react-stately/tabs@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/tabs/-/tabs-3.0.1.tgz#7df000f8c5c14b3bf973348c491e12bcfcafe49d"
+  integrity sha512-XhF/5mt8eme3mu0+4nC7Du+e5OWSu0W8SeKfbH9JmTWTCayZpPtui68nRStJK6OkgHs28gA+j55RSsTqT/N1Fg==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-stately/list" "^3.3.0"
+    "@react-stately/utils" "^3.2.2"
+    "@react-types/tabs" "^3.0.1"
+
 "@react-stately/toggle@^3.2.1", "@react-stately/toggle@^3.2.3":
   "integrity" "sha512-p5eVjXwNo4y4CeybxfjYmbTzNMNiI67uspbRAJnawWBVWw8X+yIvRfpjYAsqmvsJ+DsvwybSTlQDT6taGoWEsA=="
   "resolved" "https://registry.npmjs.org/@react-stately/toggle/-/toggle-3.2.3.tgz"
@@ -2642,19 +2660,19 @@
     "@react-types/shared" "^3.8.0"
 
 "@react-stately/tooltip@^3.0.5":
-  "integrity" "sha512-rHqPSfkxbx0T0B/j+WDl4G2CfLjFeBfyaifGiIUJWHO/0Kwvh5am88VeHtuTVzC2DPEGTdtXqYns21EuJOrDlQ=="
-  "resolved" "https://registry.npmjs.org/@react-stately/tooltip/-/tooltip-3.0.5.tgz"
-  "version" "3.0.5"
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@react-stately/tooltip/-/tooltip-3.0.5.tgz#0cb716791ef3242acd810794162d651b1c47a328"
+  integrity sha512-rHqPSfkxbx0T0B/j+WDl4G2CfLjFeBfyaifGiIUJWHO/0Kwvh5am88VeHtuTVzC2DPEGTdtXqYns21EuJOrDlQ==
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@react-stately/overlays" "^3.1.3"
     "@react-stately/utils" "^3.2.2"
     "@react-types/tooltip" "^3.1.2"
 
-"@react-stately/tree@^3.1.2", "@react-stately/tree@^3.2.0":
-  "integrity" "sha512-FfHfs79KeXN0Yi8X5O/oRWL1ZTZByhIT++NEUX4aCO3VSxnqhcl9/ErSmH/fYr36q0xdYZsX3BFvk/fm1EDkXQ=="
-  "resolved" "https://registry.npmjs.org/@react-stately/tree/-/tree-3.2.0.tgz"
-  "version" "3.2.0"
+"@react-stately/tree@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/@react-stately/tree/-/tree-3.2.0.tgz"
+  integrity sha512-FfHfs79KeXN0Yi8X5O/oRWL1ZTZByhIT++NEUX4aCO3VSxnqhcl9/ErSmH/fYr36q0xdYZsX3BFvk/fm1EDkXQ==
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@react-stately/collections" "^3.3.3"
@@ -2758,18 +2776,10 @@
     "@react-types/overlays" "^3.5.1"
     "@react-types/shared" "^3.8.0"
 
-"@react-types/meter@^3.1.2":
-  "integrity" "sha512-rF14kgjXkafmwaMGTpNsDMfjXhGNvKLdf02fwVBEqQjUJ5PFu/DubrIecu4Q6+TG/hEXjD0EryU+YxAwVOzkmg=="
-  "resolved" "https://registry.npmjs.org/@react-types/meter/-/meter-3.1.2.tgz"
-  "version" "3.1.2"
-  dependencies:
-    "@react-types/progress" "^3.1.2"
-    "@react-types/shared" "^3.8.0"
-
 "@react-types/numberfield@^3.0.1":
-  "integrity" "sha512-0rXwbyP1PvrZkyWRHH9DgI7G4dqG6uS7XZSD3M4vdkUwzDkJritlwjB4MlKuNwYwx8mL2bXKZdrqlihgP4zIvg=="
-  "resolved" "https://registry.npmjs.org/@react-types/numberfield/-/numberfield-3.0.1.tgz"
-  "version" "3.0.1"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@react-types/numberfield/-/numberfield-3.0.1.tgz#1099733924b5379d85bb75d56fa706242ea747ad"
+  integrity sha512-0rXwbyP1PvrZkyWRHH9DgI7G4dqG6uS7XZSD3M4vdkUwzDkJritlwjB4MlKuNwYwx8mL2bXKZdrqlihgP4zIvg==
   dependencies:
     "@react-types/shared" "^3.8.0"
 
@@ -2795,9 +2805,9 @@
     "@react-types/shared" "^3.8.0"
 
 "@react-types/searchfield@^3.1.2":
-  "integrity" "sha512-lIyXEzoS/XXmddAvgZk/a8/8qAkVt5XbUrX7CrpZOiwqIPsVDI2bDYiv7N9GdS0pMeSyu1X9mXCnJfvzu/Dkow=="
-  "resolved" "https://registry.npmjs.org/@react-types/searchfield/-/searchfield-3.1.2.tgz"
-  "version" "3.1.2"
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@react-types/searchfield/-/searchfield-3.1.2.tgz#184770b67f1fad57a6024ad00b7e42cf934ed54b"
+  integrity sha512-lIyXEzoS/XXmddAvgZk/a8/8qAkVt5XbUrX7CrpZOiwqIPsVDI2bDYiv7N9GdS0pMeSyu1X9mXCnJfvzu/Dkow==
   dependencies:
     "@react-types/textfield" "^3.2.3"
 
@@ -2850,6 +2860,13 @@
   dependencies:
     "@react-types/shared" "^3.2.1"
 
+"@react-types/tabs@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@react-types/tabs/-/tabs-3.0.1.tgz#a32931e95303d4442e51d4c687d4e154654014f6"
+  integrity sha512-GvPVU9GAqImHFhU+Do+pdGK/vZA4kqA699Gly1V95DUmtdG3GSwTnwlvM/Sy80/F9fKZDGokZnQmBFo8MFZyIw==
+  dependencies:
+    "@react-types/shared" "^3.8.0"
+
 "@react-types/textfield@^3.2.3":
   "integrity" "sha512-8TsI2ba54JwCyMpcr2I2m3WpctxlAQV9+IL7ijLwWUdxV+GJw/0wr2uglkWnxr7Kjtqsn+xlXfEhkavWW6c2xA=="
   "resolved" "https://registry.npmjs.org/@react-types/textfield/-/textfield-3.2.3.tgz"
@@ -2861,6 +2878,14 @@
   "integrity" "sha512-puyiRi3IaEeKH25AErZzQKthnxk1McU+7S+Qo2kFLy3F3PyXV0cmSqvKKOhH6kU5Cw4ZnuAlNjCI0tV8PYdlYA=="
   "resolved" "https://registry.npmjs.org/@react-types/tooltip/-/tooltip-3.1.2.tgz"
   "version" "3.1.2"
+  dependencies:
+    "@react-types/overlays" "^3.5.1"
+    "@react-types/shared" "^3.8.0"
+
+"@react-types/tooltip@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@react-types/tooltip/-/tooltip-3.1.2.tgz#a80d1ab5a37337156881a032cdaa136a9e028e32"
+  integrity sha512-puyiRi3IaEeKH25AErZzQKthnxk1McU+7S+Qo2kFLy3F3PyXV0cmSqvKKOhH6kU5Cw4ZnuAlNjCI0tV8PYdlYA==
   dependencies:
     "@react-types/overlays" "^3.5.1"
     "@react-types/shared" "^3.8.0"
@@ -4633,47 +4658,52 @@
   "version" "11.1.3"
   dependencies:
     "@expo/config-plugins" "^3.0.0"
-    "expo-modules-core" "~0.2.0"
-    "uuid" "^3.4.0"
+    expo-modules-core "~0.2.0"
+    uuid "^3.4.0"
 
-"expo-font@~9.2.1":
-  "integrity" "sha512-sT9nm2Dt1nTLz+Ir1fSpyzqH40eJX324Wu5sPyvT2Ivnmu2rw2rxt3gNa8Kvdb8BPRz4qrRvHR/E+YKMqa6ZgQ=="
-  "resolved" "https://registry.npmjs.org/expo-font/-/expo-font-9.2.1.tgz"
-  "version" "9.2.1"
+expo-font@~9.2.1:
+  version "9.2.1"
+  resolved "https://registry.npmjs.org/expo-font/-/expo-font-9.2.1.tgz"
+  integrity sha512-sT9nm2Dt1nTLz+Ir1fSpyzqH40eJX324Wu5sPyvT2Ivnmu2rw2rxt3gNa8Kvdb8BPRz4qrRvHR/E+YKMqa6ZgQ==
   dependencies:
-    "expo-modules-core" "~0.2.0"
-    "fontfaceobserver" "^2.1.0"
+    expo-modules-core "~0.2.0"
+    fontfaceobserver "^2.1.0"
 
-"expo-keep-awake@~9.2.0":
-  "integrity" "sha512-R5jAx5j3MqrhKFB307FBpaHtYSYeVIFX/rVforBF5inKonYjXRWVhjGoBjolF4geAryNamC3NKhMfxyaaB0W6Q=="
-  "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-9.2.0.tgz"
-  "version" "9.2.0"
+expo-keep-awake@~9.2.0:
+  version "9.2.0"
+  resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-9.2.0.tgz"
+  integrity sha512-R5jAx5j3MqrhKFB307FBpaHtYSYeVIFX/rVforBF5inKonYjXRWVhjGoBjolF4geAryNamC3NKhMfxyaaB0W6Q==
 
-"expo-modules-autolinking@^0.0.3":
-  "integrity" "sha512-azkCRYj/DxbK4udDuDxA9beYzQTwpJ5a9QA0bBgha2jHtWdFGF4ZZWSY+zNA5mtU3KqzYt8jWHfoqgSvKyu1Aw=="
-  "resolved" "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-0.0.3.tgz"
-  "version" "0.0.3"
+expo-modules-autolinking@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-0.0.3.tgz"
+  integrity sha512-azkCRYj/DxbK4udDuDxA9beYzQTwpJ5a9QA0bBgha2jHtWdFGF4ZZWSY+zNA5mtU3KqzYt8jWHfoqgSvKyu1Aw==
   dependencies:
-    "chalk" "^4.1.0"
-    "commander" "^7.2.0"
-    "fast-glob" "^3.2.5"
-    "find-up" "~5.0.0"
-    "fs-extra" "^9.1.0"
+    chalk "^4.1.0"
+    commander "^7.2.0"
+    fast-glob "^3.2.5"
+    find-up "~5.0.0"
+    fs-extra "^9.1.0"
 
-"expo-modules-core@~0.2.0":
-  "integrity" "sha512-inpfZ5X/BaTtbj2wG9PA9AC0MN8VyId6KSRlVuEg7+ziurHBy/kKDFxpOddUokhwiln2uhoYPSStJjR/tKypdw=="
-  "resolved" "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-0.2.0.tgz"
-  "version" "0.2.0"
+expo-modules-core@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-0.2.0.tgz"
+  integrity sha512-inpfZ5X/BaTtbj2wG9PA9AC0MN8VyId6KSRlVuEg7+ziurHBy/kKDFxpOddUokhwiln2uhoYPSStJjR/tKypdw==
 
-"expo-status-bar@~1.0.4":
-  "integrity" "sha512-s7nc496D/Zn1NGiMJ5wu6HyIdXxbgGtmZZtbHm7rpbcmLdf28GmMSNHDx7M0t00BMhky7VAurTCUo+BJs8ugsw=="
-  "resolved" "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.0.4.tgz"
-  "version" "1.0.4"
+expo-sms@~9.2.3:
+  version "9.2.3"
+  resolved "https://registry.yarnpkg.com/expo-sms/-/expo-sms-9.2.3.tgz#0eff72e0e799bc1d9496d4236af82c46cc2cbced"
+  integrity sha512-zxCbDHy6jBVyfntF0MQwIEAL13pPbvoMTjvh9qsEvwhZ3wGgLWwhdic2xKeM5vyfst2yN1RVcGYpvlRz4P5dPQ==
 
-"expo@~42.0.1":
-  "integrity" "sha512-m8gqCLIMGf/i7XVAicocHOCOWYlLBLUyufGTXZfPHZ4xstSQUTB5PekzMoXoX115zocNbiNASMzy3SFIJ/MP8A=="
-  "resolved" "https://registry.npmjs.org/expo/-/expo-42.0.3.tgz"
-  "version" "42.0.3"
+expo-status-bar@~1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.0.4.tgz"
+  integrity sha512-s7nc496D/Zn1NGiMJ5wu6HyIdXxbgGtmZZtbHm7rpbcmLdf28GmMSNHDx7M0t00BMhky7VAurTCUo+BJs8ugsw==
+
+expo@~42.0.1:
+  version "42.0.3"
+  resolved "https://registry.npmjs.org/expo/-/expo-42.0.3.tgz"
+  integrity sha512-m8gqCLIMGf/i7XVAicocHOCOWYlLBLUyufGTXZfPHZ4xstSQUTB5PekzMoXoX115zocNbiNASMzy3SFIJ/MP8A==
   dependencies:
     "@babel/runtime" "^7.1.2"
     "@expo/metro-config" "^0.1.70"
@@ -7419,170 +7449,120 @@
     "@react-native-community/cli" "^4.14.0"
     "@react-native-community/cli-platform-android" "^4.13.0"
     "@react-native-community/cli-platform-ios" "^4.13.0"
-    "abort-controller" "^3.0.0"
-    "anser" "^1.4.9"
-    "base64-js" "^1.1.2"
-    "event-target-shim" "^5.0.1"
-    "fbjs" "^1.0.0"
-    "fbjs-scripts" "^1.1.0"
-    "hermes-engine" "~0.5.0"
-    "invariant" "^2.2.4"
-    "jsc-android" "^245459.0.0"
-    "metro-babel-register" "0.59.0"
-    "metro-react-native-babel-transformer" "0.59.0"
-    "metro-source-map" "0.59.0"
-    "nullthrows" "^1.1.1"
-    "pretty-format" "^24.9.0"
-    "promise" "^8.0.3"
-    "prop-types" "^15.7.2"
-    "react-devtools-core" "^4.6.0"
-    "react-refresh" "^0.4.0"
-    "regenerator-runtime" "^0.13.2"
-    "scheduler" "0.19.1"
-    "stacktrace-parser" "^0.1.3"
-    "use-subscription" "^1.0.0"
-    "whatwg-fetch" "^3.0.0"
+    abort-controller "^3.0.0"
+    anser "^1.4.9"
+    base64-js "^1.1.2"
+    event-target-shim "^5.0.1"
+    fbjs "^1.0.0"
+    fbjs-scripts "^1.1.0"
+    hermes-engine "~0.5.0"
+    invariant "^2.2.4"
+    jsc-android "^245459.0.0"
+    metro-babel-register "0.59.0"
+    metro-react-native-babel-transformer "0.59.0"
+    metro-source-map "0.59.0"
+    nullthrows "^1.1.1"
+    pretty-format "^24.9.0"
+    promise "^8.0.3"
+    prop-types "^15.7.2"
+    react-devtools-core "^4.6.0"
+    react-refresh "^0.4.0"
+    regenerator-runtime "^0.13.2"
+    scheduler "0.19.1"
+    stacktrace-parser "^0.1.3"
+    use-subscription "^1.0.0"
+    whatwg-fetch "^3.0.0"
 
-"react-refresh@^0.4.0":
-  "integrity" "sha512-Hwln1VNuGl/6bVwnd0Xdn1e84gT/8T9aYNL+HAKDArLCS7LWjwr7StE30IEYbIkx0Vi3vs+coQxe+SQDbGbbpA=="
-  "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
-  "version" "0.4.3"
+react-refresh@^0.4.0:
+  version "0.4.3"
+  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
+  integrity sha512-Hwln1VNuGl/6bVwnd0Xdn1e84gT/8T9aYNL+HAKDArLCS7LWjwr7StE30IEYbIkx0Vi3vs+coQxe+SQDbGbbpA==
 
-"react-timer-mixin@^0.13.4":
-  "integrity" "sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q=="
-  "resolved" "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
-  "version" "0.13.4"
-
-"react@*", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0-rc.1", "react@>= 16.8.0", "react@>=16.5.1", "react@16 || 17", "react@16.13.1":
-  "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
-  "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
-  "version" "16.13.1"
+react-stately@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/react-stately/-/react-stately-3.8.0.tgz#a195c6e1cc0392d1c9e11f5b932422305417a403"
+  integrity sha512-UabUWAw1j6oUcD0cKdmZ65kVZAoc+j7hNibntfvboxtDMcdTZfDjrqFdTJM0p2TpTF73SNUcxaSfLoE0nubrEA==
   dependencies:
-    "loose-envify" "^1.1.0"
-    "object-assign" "^4.1.1"
-    "prop-types" "^15.6.2"
+    "@react-stately/checkbox" "^3.0.3"
+    "@react-stately/collections" "^3.3.3"
+    "@react-stately/combobox" "^3.0.1"
+    "@react-stately/data" "^3.4.1"
+    "@react-stately/list" "^3.3.0"
+    "@react-stately/menu" "^3.2.3"
+    "@react-stately/numberfield" "^3.0.2"
+    "@react-stately/overlays" "^3.1.3"
+    "@react-stately/radio" "^3.3.2"
+    "@react-stately/searchfield" "^3.1.3"
+    "@react-stately/select" "^3.1.3"
+    "@react-stately/selection" "^3.7.0"
+    "@react-stately/slider" "^3.0.3"
+    "@react-stately/tabs" "^3.0.1"
+    "@react-stately/toggle" "^3.2.3"
+    "@react-stately/tooltip" "^3.0.5"
+    "@react-stately/tree" "^3.2.0"
 
-"readable-stream@^2.0.1":
-  "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
-  "version" "2.3.7"
+react-timer-mixin@^0.13.4:
+  version "0.13.4"
+  resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
+  integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
+
+react@16.13.1:
+  version "16.13.1"
+  resolved "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
+  integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
   dependencies:
-    "core-util-is" "~1.0.0"
-    "inherits" "~2.0.3"
-    "isarray" "~1.0.0"
-    "process-nextick-args" "~2.0.0"
-    "safe-buffer" "~5.1.1"
-    "string_decoder" "~1.1.1"
-    "util-deprecate" "~1.0.1"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
 
-"readable-stream@^2.0.6":
-  "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
-  "version" "2.3.7"
+readable-stream@^2.0.1, readable-stream@^2.2.2, readable-stream@~2.3.6:
+  version "2.3.7"
+  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
+  integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
   dependencies:
-    "core-util-is" "~1.0.0"
-    "inherits" "~2.0.3"
-    "isarray" "~1.0.0"
-    "process-nextick-args" "~2.0.0"
-    "safe-buffer" "~5.1.1"
-    "string_decoder" "~1.1.1"
-    "util-deprecate" "~1.0.1"
+    core-util-is "~1.0.0"
+    inherits "~2.0.3"
+    isarray "~1.0.0"
+    process-nextick-args "~2.0.0"
+    safe-buffer "~5.1.1"
+    string_decoder "~1.1.1"
+    util-deprecate "~1.0.1"
 
-"readable-stream@^2.2.2":
-  "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
-  "version" "2.3.7"
+readable-stream@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.0.tgz"
+  integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
   dependencies:
-    "core-util-is" "~1.0.0"
-    "inherits" "~2.0.3"
-    "isarray" "~1.0.0"
-    "process-nextick-args" "~2.0.0"
-    "safe-buffer" "~5.1.1"
-    "string_decoder" "~1.1.1"
-    "util-deprecate" "~1.0.1"
+    inherits "^2.0.3"
+    string_decoder "^1.1.1"
+    util-deprecate "^1.0.1"
 
-"readable-stream@^3.1.1", "readable-stream@^3.4.0", "readable-stream@^3.6.0":
-  "integrity" "sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.0.tgz"
-  "version" "3.6.0"
+readonly-date@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/readonly-date/-/readonly-date-1.0.0.tgz"
+  integrity sha512-tMKIV7hlk0h4mO3JTmmVuIlJVXjKk3Sep9Bf5OH0O+758ruuVkUy2J9SttDLm91IEX/WHlXPSpxMGjPj4beMIQ==
+
+regenerate-unicode-properties@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.npmjs.org/regenerate-unicode-properties/-/regenerate-unicode-properties-8.2.0.tgz"
+  integrity sha512-F9DjY1vKLo/tPePDycuH3dn9H1OTPIkVD9Kz4LODu+F2C75mgjAJ7x/gwy6ZcSNRAAkhNlJSOHRe8k3p+K9WhA==
   dependencies:
-    "inherits" "^2.0.3"
-    "string_decoder" "^1.1.1"
-    "util-deprecate" "^1.0.1"
+    regenerate "^1.4.0"
 
-"readable-stream@~2.3.6":
-  "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
-  "version" "2.3.7"
-  dependencies:
-    "core-util-is" "~1.0.0"
-    "inherits" "~2.0.3"
-    "isarray" "~1.0.0"
-    "process-nextick-args" "~2.0.0"
-    "safe-buffer" "~5.1.1"
-    "string_decoder" "~1.1.1"
-    "util-deprecate" "~1.0.1"
+regenerate@^1.4.0:
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/regenerate/-/regenerate-1.4.2.tgz"
+  integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-"readonly-date@^1.0.0":
-  "integrity" "sha512-tMKIV7hlk0h4mO3JTmmVuIlJVXjKk3Sep9Bf5OH0O+758ruuVkUy2J9SttDLm91IEX/WHlXPSpxMGjPj4beMIQ=="
-  "resolved" "https://registry.npmjs.org/readonly-date/-/readonly-date-1.0.0.tgz"
-  "version" "1.0.0"
+regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.4:
+  version "0.13.9"
+  resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
+  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
 
-"realm-network-transport@^0.7.0":
-  "integrity" "sha512-w81+N+YrFBkWZWFlspDPrpot50xCkfr+AB+NCQjsTI6OfVF0igqhLfl3frwrSS61fQiL5XrZrFYFV6BWU0F+iA=="
-  "resolved" "https://registry.npmjs.org/realm-network-transport/-/realm-network-transport-0.7.0.tgz"
-  "version" "0.7.0"
-  dependencies:
-    "abort-controller" "^3.0.0"
-    "node-fetch" "^2.6.0"
-
-"realm@^10.7.0":
-  "integrity" "sha512-BsbfQsSOwbmscpuQs4dzCadr/bH63Yo35pC9/SKzkeNndtTHHi714IGNOYya0l60mH8kcwFCZb+d9n6tcJgZxQ=="
-  "resolved" "https://registry.npmjs.org/realm/-/realm-10.7.0.tgz"
-  "version" "10.7.0"
-  dependencies:
-    "bindings" "^1.5.0"
-    "bson" "4.4.1"
-    "command-line-args" "^5.1.1"
-    "deepmerge" "2.1.0"
-    "deprecated-react-native-listview" "0.0.6"
-    "fs-extra" "^4.0.3"
-    "https-proxy-agent" "^2.2.4"
-    "ini" "^1.3.7"
-    "node-addon-api" "^3.1.0"
-    "node-fetch" "^2.6.1"
-    "node-machine-id" "^1.1.10"
-    "prebuild-install" "^6.1.1"
-    "progress" "^2.0.3"
-    "prop-types" "^15.6.2"
-    "realm-network-transport" "^0.7.0"
-    "request" "^2.88.0"
-    "stream-counter" "^1.0.0"
-    "sync-request" "^3.0.1"
-    "tar" "^6.0.1"
-    "url-parse" "^1.4.4"
-
-"regenerate-unicode-properties@^8.2.0":
-  "integrity" "sha512-F9DjY1vKLo/tPePDycuH3dn9H1OTPIkVD9Kz4LODu+F2C75mgjAJ7x/gwy6ZcSNRAAkhNlJSOHRe8k3p+K9WhA=="
-  "resolved" "https://registry.npmjs.org/regenerate-unicode-properties/-/regenerate-unicode-properties-8.2.0.tgz"
-  "version" "8.2.0"
-  dependencies:
-    "regenerate" "^1.4.0"
-
-"regenerate@^1.4.0":
-  "integrity" "sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A=="
-  "resolved" "https://registry.npmjs.org/regenerate/-/regenerate-1.4.2.tgz"
-  "version" "1.4.2"
-
-"regenerator-runtime@^0.13.2", "regenerator-runtime@^0.13.4":
-  "integrity" "sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA=="
-  "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
-  "version" "0.13.9"
-
-"regenerator-transform@^0.14.2":
-  "integrity" "sha512-eOf6vka5IO151Jfsw2NO9WpGX58W6wWmefK3I1zEGr0lOD0u8rwPaNqQL1aRxUaxLeKO3ArNh3VYg1KbaD+FFw=="
-  "resolved" "https://registry.npmjs.org/regenerator-transform/-/regenerator-transform-0.14.5.tgz"
-  "version" "0.14.5"
+regenerator-transform@^0.14.2:
+  version "0.14.5"
+  resolved "https://registry.npmjs.org/regenerator-transform/-/regenerator-transform-0.14.5.tgz"
+  integrity sha512-eOf6vka5IO151Jfsw2NO9WpGX58W6wWmefK3I1zEGr0lOD0u8rwPaNqQL1aRxUaxLeKO3ArNh3VYg1KbaD+FFw==
   dependencies:
     "@babel/runtime" "^7.8.4"
 
