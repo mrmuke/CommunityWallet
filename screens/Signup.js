@@ -1,19 +1,47 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Bip39,Random } from '@cosmjs/crypto'
+import * as SMS from 'expo-sms';
+import { Checkbox } from 'native-base';
 
-export default function App({navigation}){
+export default function Signup({navigation}){
 
-  const [email,setEmail]=useState("")
+  const [phoneNumber,setPhoneNumber]=useState("")
   const [password,setPassword]=useState("")
   const [confirmPassword,setConfirmPassword]=useState("")
   const [code,setCode]=useState("")
   const [verificationCode,setVerificationCode]=useState("")
+  const [verifyCode, setVerifyCode]=useState("")
   const [verifying, setVerifying]=useState(false);
+  async function register(){
+    console.log(Bip39.encode(Random.getBytes(32)))
+    const isAvailable = await SMS.isAvailableAsync();
+if (isAvailable) {
+  
+  var min = 123456
+  var max = 999999
+  var random = Math.floor(Math.random() * (max - min) + min);
+  await SMS.sendSMSAsync(
+    [phoneNumber],
+    'Your verification code is: '+random
+  );
+  setVerifyCode(random)
+  setVerifying(true)
+}
+    
+    //mongo set info
+  }
+  function checkVerify(){
+    if(verifyCode==verificationCode){
+      
+    }
+  }
+  
   if(verifying){
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sign Up</Text>
-        <Text style={styles.verifaction}>A code has been sent to &nbsp;{email}. {'\n'}Please insert it to continue</Text>
+        <Text style={styles.verifaction}>A code has been sent to &nbsp;{phoneNumber}. {'\n'}Please insert it to continue</Text>
         <View style={styles.inputView} >
           <TextInput  
             style={styles.inputText}
@@ -29,7 +57,7 @@ export default function App({navigation}){
         }>
           <Text style={styles.forgot}>Go back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity onPress={()=>checkVerify()} style={styles.loginBtn}>
           <Text style={styles.loginText}>VERIFY</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>{
@@ -48,8 +76,8 @@ export default function App({navigation}){
             style={styles.inputText}
             placeholder="Phone Number..." 
             placeholderTextColor="#003f5c"
-            onChangeText={text => setEmail(text)}
-            value={email}/>
+            onChangeText={text => setPhoneNumber(text)}
+            value={phoneNumber}/>
         </View>
         <View style={styles.inputView} >
           <TextInput  
@@ -80,7 +108,7 @@ export default function App({navigation}){
         </View>
         <TouchableOpacity style={styles.loginBtn} onPress={
           ()=>{
-            setVerifying(true)
+            register()
           }
         }>
           <Text style={styles.loginText}>SIGNUP</Text>
