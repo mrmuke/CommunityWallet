@@ -1,5 +1,6 @@
 {
   "main": "node_modules/expo/AppEntry.js",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -8,31 +9,28 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@ixo/client-sdk": "^1.10.4",
-    "@react-native-masked-view/masked-view": "0.2.4",
+    "@cosmjs/crypto": "^0.26.0",
+    "@react-aria/interactions": "^3.5.1",
+    "@react-aria/ssr": "^3.0.3",
     "@react-navigation/drawer": "^6.1.4",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.0.7",
+    "@react-stately/checkbox": "^3.0.3",
+    "@react-stately/collections": "^3.3.3",
+    "@react-stately/slider": "^3.0.3",
+    "@react-stately/tabs": "^3.0.1",
+    "@react-stately/toggle": "^3.2.3",
     "expo": "~42.0.1",
     "expo-sms": "~9.2.3",
     "expo-status-bar": "~1.0.4",
     "native-base": "^3.1.0",
     "react": "16.13.1",
-    "react-aria": "^3.9.0",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
-    "react-native-aria": "^0.2.3",
-    "react-native-gesture-handler": "~1.10.2",
-    "react-native-reanimated": "~2.2.0",
-    "react-native-safe-area-context": "3.2.0",
-    "react-native-screens": "~3.4.0",
-    "react-native-svg": "12.1.1",
-    "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
+    "react-navigation": "^4.4.4",
     "react-stately": "^3.8.0",
-    "realm": "^10.7.0",
-    "styled-components": "^5.3.1",
-    "styled-system": "^5.1.5"
+    "realm": "^10.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
