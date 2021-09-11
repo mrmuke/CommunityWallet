@@ -23,7 +23,8 @@ const wallet2 = await DirectSecp256k1HdWallet.fromMnemonic(test.mnemonic);
 let accounts = await wallet2.getAccounts()
 let wallet2address = accounts[0].address
 console.log(wallet2address)
-
+console.log(wallet2.mnemonic)
+/*
 const tendermintUrl = "localhost:26657";
 
 const fee = {
@@ -51,3 +52,4 @@ console.log(send);
 
 const after = await client.getBalance(wallet2address, "uatom");
 console.log(after);
+*/

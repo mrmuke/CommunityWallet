@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import { Checkbox } from 'native-base'
 import * as SMS from 'expo-sms'
-import { SigningStargateClient } from "@cosmjs/stargate"
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing"
 import { UUID } from "bson"
 import { openRealm } from '../realmDev'
@@ -36,12 +35,16 @@ export default function Signup({ navigation }) {
 
     //mongo set info
     const partition_id = new UUID()
+    const wallet = await DirectSecp256k1HdWallet.generate()
+    const mnemonic = await wallet.mnemonic
+
     openRealm(partition_id)
     realm.write(() => {
       realm.create("Wallet", {
           _id: new UUID(),
           _partition: partition_id,
-          phoneNumber: phoneNumber
+          phoneNumber: phoneNumber,
+          mnemonic: mnemonic
       })
     })
   }
