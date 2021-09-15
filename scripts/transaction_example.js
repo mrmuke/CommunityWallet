@@ -1,6 +1,7 @@
 import { coins, GasPrice } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+async function main(){
 const sender = {
     mnemonic: "luggage rotate orient usage program cloud armed warrior rich erase acquire remember",
     address: "cosmos14eadktsf4zzah6har7h7a46tunnj7rq7lmppy5",
@@ -11,7 +12,7 @@ const recipient = {
     address: "cosmos1jztulwdp5ungrffu5hd65k20upjrgdqqht4efw",
     path: "m/44'/118'/0'/0/0"
 };
-const tendermintUrl = "localhost:26657";
+const tendermintUrl = "https://26657-coral-clam-78umxub9.ws-us15.gitpod.io/";
 const wallet = await DirectSecp256k1HdWallet.fromMnemonic(sender.mnemonic);
 
 const fee = {
@@ -39,3 +40,5 @@ console.log(send);
 
 const after = await client.getBalance(recipient.address, "uatom");
 console.log(after);
+}
+main()

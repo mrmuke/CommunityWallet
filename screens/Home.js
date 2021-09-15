@@ -26,7 +26,6 @@ export default function App({navigation}){
         </View>
       </View>
       <View style={{width:"100%", height:"44%"}}>
-        
       </View>
       <View style={{width:"100%", height:"40%", justifyContent:"center", alignItems:"center", flexDirection:"row"}}>
         <TouchableOpacity style={{height: Dimensions.get("screen").width * 0.37, width: Dimensions.get("screen").width * 0.37, justifyContent:"center", alignItems:"center", backgroundColor:"#f9d2d2", borderRadius:2000, borderWidth:5, position:'absolute', top:"-10%"}}
