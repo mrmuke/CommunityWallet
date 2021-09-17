@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { justifyContent } from 'styled-system';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image } from 'react-native';
 
-export default function App({navigation}){
+export default function Home({navigation}){
   return(
     <View style={{height:"100%", width:"100%", backgroundColor:"white"}}>
       <View style={styles.logoContainer}>
