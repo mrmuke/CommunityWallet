@@ -1,60 +1,36 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import * as SMS from 'expo-sms'
-import { initializeApp } from "firebase/app"
-import { getDatabase } from "firebase/database"
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing"
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+/* import { Bip39,Random } from '@cosmjs/crypto' */
+import { Checkbox } from 'native-base';
+import axios from 'axios';
 
-export default function Signup({ navigation }) {
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [communityCode, setCommunityCode] = useState("")
-  const [verificationCode, setVerificationCode] = useState("")
-  const [verifyCode, setVerifyCode] = useState("")
-  const [verifying, setVerifying] = useState(false)
-
-  async function register() {
-    const newWallet = await DirectSecp256k1HdWallet.generate()
-    const isAvailable = await SMS.isAvailableAsync()
-    
-    if (isAvailable) {
-      var min = 123456
-      var max = 999999
-      var randomCode = Math.floor(Math.random() * (max - min) + min)
-
-      await SMS.sendSMSAsync(
-        [phoneNumber],
-        'Your verification code is: ' + randomCode
-      )
-
-      setVerifyCode(randomCode)
-      setVerifying(true)
-    }
-
-    //firebase set info
-    const firebaseConfig = {
-      apiKey: "AIzaSyA7wegayCQfvGgQexHZrEuHXOZJmlFSdm8",
-      authDomain: "walletdev-c7351.firebaseapp.com",
-      projectId: "walletdev-c7351",
-      databaseURL: "https://walletdev-c7351-default-rtdb.firebaseio.com/",
-      storageBucket: "walletdev-c7351.appspot.com",
-      messagingSenderId: "296209260053",
-      appId: "1:296209260053:web:087097dd79269edd65b81c"
-    }
-    
-    const app = initializeApp(firebaseConfig)
-    const db = getDatabase()
-
-    const wallet = await DirectSecp256k1HdWallet.generate()
-    const mnemonic = await wallet.mnemonic
-    console.log(wallet)
-
+export default function Signup({navigation}){
+  const [phoneNumber,setPhoneNumber]=useState("")
+  const [password,setPassword]=useState("")
+  const [confirmPassword,setConfirmPassword]=useState("")
+  const [code,setCode]=useState("")
+  const [verificationCode,setVerificationCode]=useState("")
+  const [verifyCode, setVerifyCode]=useState("")
+  const [verifying, setVerifying]=useState(false);
+  const [error, setError]=useState("")
+  async function register(){
+/*     console.log(Bip39.encode(Random.getBytes(32)))
+ */   
+  var min = 123456
+  var max = 999999
+  var random = Math.floor(Math.random() * (max - min) + min);
+  axios.post("https://rest.nexmo.com/sms/json",{"from":"18334641476","text":"Your verification code is "+random,"to":phoneNumber,"api_key":"e5444577","api_secret":"PcOaBXuHxxySxTe6"}).then(response=>{
+    setVerifyCode(random)
+    setVerifying(true)
+  })
+    //mongo set info
   }
-
-  function checkVerify() {
-    if (verifyCode == verificationCode) {
-
+  function checkVerify(){
+    if(verifyCode==verificationCode){
+      navigation.navigate('Dashboard')
+    }
+    else{
+      setError("Wrong Verification Code..")
     }
   }
 
@@ -68,8 +44,8 @@ export default function Signup({ navigation }) {
             style={styles.inputText}
             placeholder="Verification Code..."
             placeholderTextColor="#003f5c"
-            onChangeText={text => setVerificationCode(text)}
-            value={verificationCode} />
+            onChangeText={text => {setVerificationCode(text);if(error.length>0){setError("")}}}
+            value={verificationCode}/>
         </View>
         <TouchableOpacity onPress={() => {setVerifying(false)}
         }>
@@ -81,9 +57,10 @@ export default function Signup({ navigation }) {
         <TouchableOpacity onPress={() => {navigation.navigate("Login")}}>
           <Text style={styles.signup}>Already have an account? Log in!</Text>
         </TouchableOpacity>
+        {error.length>0&&<Text style={{backgroundColor:"#eb6060",padding:15,color:'white'}}>{error}</Text>}
       </View>
-    )
-  } else {
+    );
+  } 
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sign Up</Text>
@@ -130,8 +107,7 @@ export default function Signup({ navigation }) {
           <Text style={styles.signup}>Already have an account? Log in!</Text>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
 }
 
 const styles = StyleSheet.create({

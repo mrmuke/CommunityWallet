@@ -1,5 +1,6 @@
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+async function main(){
 const sender = {
     mnemonic: "luggage rotate orient usage program cloud armed warrior rich erase acquire remember",
     address: "cosmos14eadktsf4zzah6har7h7a46tunnj7rq7lmppy5",
@@ -16,7 +17,6 @@ const recipient = {
     address: "cosmos1jztulwdp5ungrffu5hd65k20upjrgdqqht4efw",
     path: "m/44'/118'/0'/0/0"
 };
-
 const wallet = await DirectSecp256k1HdWallet.fromMnemonic(sender.mnemonic);
 const wallet2 = await DirectSecp256k1HdWallet.fromMnemonic(test.mnemonic);
 
