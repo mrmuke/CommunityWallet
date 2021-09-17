@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import { Checkbox } from 'native-base'
 import * as SMS from 'expo-sms'
+import { initializeApp } from "firebase/app"
+import { getDatabase } from "firebase/database"
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing"
-import { UUID } from "bson"
-import { openRealm } from '../realmDev'
 
 export default function Signup({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -33,20 +32,24 @@ export default function Signup({ navigation }) {
       setVerifying(true)
     }
 
-    //mongo set info
-    const partition_id = new UUID()
+    //firebase set info
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7wegayCQfvGgQexHZrEuHXOZJmlFSdm8",
+      authDomain: "walletdev-c7351.firebaseapp.com",
+      projectId: "walletdev-c7351",
+      databaseURL: "https://walletdev-c7351-default-rtdb.firebaseio.com/",
+      storageBucket: "walletdev-c7351.appspot.com",
+      messagingSenderId: "296209260053",
+      appId: "1:296209260053:web:087097dd79269edd65b81c"
+    }
+    
+    const app = initializeApp(firebaseConfig)
+    const db = getDatabase()
+
     const wallet = await DirectSecp256k1HdWallet.generate()
     const mnemonic = await wallet.mnemonic
+    console.log(wallet)
 
-    openRealm(partition_id)
-    realm.write(() => {
-      realm.create("Wallet", {
-          _id: new UUID(),
-          _partition: partition_id,
-          phoneNumber: phoneNumber,
-          mnemonic: mnemonic
-      })
-    })
   }
 
   function checkVerify() {

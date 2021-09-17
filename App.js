@@ -1,7 +1,5 @@
-import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { NativeBaseProvider } from 'native-base';
 import Login from './screens/Login'
 import Signup from './screens/Signup'
 import Drawer from './screens/Drawer'
