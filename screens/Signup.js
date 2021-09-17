@@ -1,25 +1,50 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+/* import { Bip39,Random } from '@cosmjs/crypto' */
+import { Checkbox } from 'native-base';
+import axios from 'axios';
 
-export default function App({navigation}){
-
-  const [email,setEmail]=useState("")
+export default function Signup({navigation}){
+  const [phoneNumber,setPhoneNumber]=useState("")
   const [password,setPassword]=useState("")
   const [confirmPassword,setConfirmPassword]=useState("")
   const [code,setCode]=useState("")
   const [verificationCode,setVerificationCode]=useState("")
+  const [verifyCode, setVerifyCode]=useState("")
   const [verifying, setVerifying]=useState(false);
+  const [error, setError]=useState("")
+  async function register(){
+/*     console.log(Bip39.encode(Random.getBytes(32)))
+ */   
+  var min = 123456
+  var max = 999999
+  var random = Math.floor(Math.random() * (max - min) + min);
+  axios.post("https://rest.nexmo.com/sms/json",{"from":"18334641476","text":"Your verification code is "+random,"to":phoneNumber,"api_key":"e5444577","api_secret":"PcOaBXuHxxySxTe6"}).then(response=>{
+    setVerifyCode(random)
+    setVerifying(true)
+  })
+    //mongo set info
+  }
+  function checkVerify(){
+    if(verifyCode==verificationCode){
+      navigation.navigate('Dashboard')
+    }
+    else{
+      setError("Wrong Verification Code..")
+    }
+  }
+  
   if(verifying){
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sign Up</Text>
-        <Text style={styles.verifaction}>A code has been sent to &nbsp;{email}. {'\n'}Please insert it to continue</Text>
+        <Text style={styles.verifaction}>A code has been sent to &nbsp;{phoneNumber}. {'\n'}Please insert it to continue</Text>
         <View style={styles.inputView} >
           <TextInput  
             style={styles.inputText}
             placeholder="Verification Code..." 
             placeholderTextColor="#003f5c"
-            onChangeText={text => setVerificationCode(text)}
+            onChangeText={text => {setVerificationCode(text);if(error.length>0){setError("")}}}
             value={verificationCode}/>
         </View>
         <TouchableOpacity onPress={
@@ -29,7 +54,7 @@ export default function App({navigation}){
         }>
           <Text style={styles.forgot}>Go back</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity onPress={()=>checkVerify()} style={styles.loginBtn}>
           <Text style={styles.loginText}>VERIFY</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>{
@@ -37,19 +62,20 @@ export default function App({navigation}){
         }}>
           <Text style={styles.signup}>Already have an account? Log in!</Text>
         </TouchableOpacity>
+        {error.length>0&&<Text style={{backgroundColor:"#eb6060",padding:15,color:'white'}}>{error}</Text>}
       </View>
     );
-  } else {
+  } 
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sign Up</Text>
         <View style={styles.inputView} >
           <TextInput  
             style={styles.inputText}
-            placeholder="Phone Number..." 
+            placeholder="Phone Number..."
             placeholderTextColor="#003f5c"
-            onChangeText={text => setEmail(text)}
-            value={email}/>
+            onChangeText={text => setPhoneNumber(text)}
+            value={phoneNumber}/>
         </View>
         <View style={styles.inputView} >
           <TextInput  
@@ -80,7 +106,7 @@ export default function App({navigation}){
         </View>
         <TouchableOpacity style={styles.loginBtn} onPress={
           ()=>{
-            setVerifying(true)
+            register()
           }
         }>
           <Text style={styles.loginText}>SIGNUP</Text>
@@ -92,7 +118,6 @@ export default function App({navigation}){
         </TouchableOpacity>
       </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({
