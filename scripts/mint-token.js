@@ -17,7 +17,7 @@ async function main() {
     decimals: 0,
     initial_balances: [{ address, amount: "123456789" }],
   };
-  const foo = await client.instantiate(1, initMsg, "FOO");
+  const foo = await client.instantiate(1, initMsg, "TMT");
   foo;
   foo.logs[0].events[0];
   const fooAddr = foo.contractAddress;

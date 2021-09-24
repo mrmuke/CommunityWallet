@@ -116,8 +116,8 @@ export default function Send({ navigation }) {
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.text}>Who do you want to send this to?</Text>
-        <TextInput style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, paddingLeft: 11 }} keyboardType="numeric"></TextInput>
-        
+        <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding:20 }} keyboardType="numeric"></TextInput>
+
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
           setPage(1);
         }}><Text style={[styles.text], { color: "white" }}>Next</Text>
@@ -267,6 +267,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: Dimensions.get("screen").height * 0.02
+    fontSize: Dimensions.get("screen").height * 0.03
   }
 });

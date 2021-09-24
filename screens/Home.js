@@ -36,12 +36,12 @@ export default function Home({navigation}){
             </TouchableOpacity>
           </View>
           <View style={{height:"48%", width:"100%", flexDirection:"row", justifyContent:"space-between"}}>
-            <TouchableOpacity style={{width:"48%", height:"100%", backgroundColor:"#aec6cc", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
+            <TouchableOpacity onPress={()=>navigation.navigate('Wallet')} style={{width:"48%", height:"100%", backgroundColor:"#aec6cc", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
               <View style={{width:"50%", aspectRatio:1, backgroundColor:"white", borderRadius:200, justifyContent:"center", alignItems:"center"}}>
-                <Image style={{width:"50%", height:"50%"}} source={require("./../assets/unknown.png")}></Image>
+                <Image style={{width:"50%", height:"50%"}} source={require("./../assets/wallet.png")}></Image>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={{width:"48%", height:"100%", backgroundColor:"#ced75c", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
+            <TouchableOpacity  style={{width:"48%", height:"100%", backgroundColor:"#ced75c", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
               <View style={{width:"50%", aspectRatio:1, backgroundColor:"white", borderRadius:200, justifyContent:"center", alignItems:"center"}}>
                 <Image style={{width:"50%", height:"50%"}} source={require("./../assets/unknown.png")}></Image>
               </View>
