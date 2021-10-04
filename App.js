@@ -34,6 +34,4 @@ export default function App() {
       </Stack.Navigator></NativeBaseProvider>
     </NavigationContainer>
   );
-
 }
-
