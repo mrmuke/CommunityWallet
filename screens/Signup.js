@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-/* import { Bip39,Random } from '@cosmjs/crypto' */
-import { Checkbox } from 'native-base';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Signup({navigation}){
   const [phoneNumber,setPhoneNumber]=useState("")
   const [password,setPassword]=useState("")
@@ -13,9 +11,10 @@ export default function Signup({navigation}){
   const [verifyCode, setVerifyCode]=useState("")
   const [verifying, setVerifying]=useState(false);
   const [error, setError]=useState("")
+  
   async function register(){
-/*     console.log(Bip39.encode(Random.getBytes(32)))
- */   
+    //create wallet
+    //setup mongo
   var min = 123456
   var max = 999999
   var random = Math.floor(Math.random() * (max - min) + min);
@@ -27,7 +26,8 @@ export default function Signup({navigation}){
   }
   function checkVerify(){
     if(verifyCode==verificationCode){
-      navigation.navigate('Dashboard')
+      AsyncStorage.setItem('wallet','123')
+      navigation.navigate('Drawer')
     }
     else{
       setError("Wrong Verification Code..")

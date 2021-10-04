@@ -6,7 +6,7 @@ async function main() {
     address: "cosmos14eadktsf4zzah6har7h7a46tunnj7rq7lmppy5",
     path: "m/44'/118'/0'/0/0"
   };
-  const tendermintUrl = "https://26657-coral-clam-78umxub9.ws-us15.gitpod.io/";
+  const tendermintUrl = "https://26657-coral-clam-78umxub9.ws-us15.gitpod.io";
   const wallet = await DirectSecp256k1HdWallet.fromMnemonic(sender.mnemonic);
 
   const client = await SigningStargateClient.connectWithSigner(tendermintUrl, wallet);
@@ -17,7 +17,7 @@ async function main() {
     decimals: 0,
     initial_balances: [{ address, amount: "123456789" }],
   };
-  const foo = await client.instantiate(1, initMsg, "FOO");
+  const foo = await client.instantiate(1, initMsg, "TMT");
   foo;
   foo.logs[0].events[0];
   const fooAddr = foo.contractAddress;
