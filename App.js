@@ -174,6 +174,4 @@ setTimeout(()=>{
           </Stack.Navigator></AuthContext.Provider></NativeBaseProvider>
     </NavigationContainer>
   );
-
 }
-

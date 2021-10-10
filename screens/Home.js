@@ -53,7 +53,11 @@ export default function Home({navigation}){
         </View>
         <View style={styles.contentCommunity}>
           <View style={{height:"96%", width:"100%", flexDirection:"row", justifyContent:"space-between"}}>
-            <TouchableOpacity style={{width:"48%", height:"100%", backgroundColor:"#ffb6ad", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
+            <TouchableOpacity style={{width:"48%", height:"100%", backgroundColor:"#ffb6ad", borderRadius:10, justifyContent:"center", alignItems:"center"}}  onPress={
+              ()=>{
+                navigation.navigate("Services")
+              }
+            }>
               <View style={{width:"50%", aspectRatio:1, backgroundColor:"white", borderRadius:200, justifyContent:"center", alignItems:"center"}}>
                 <Image style={{width:"50%", height:"50%"}} source={require("./../assets/shop.png")}></Image>
               </View>
