@@ -1,13 +1,18 @@
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeBaseProvider } from 'native-base';
 import Drawer from './screens/Drawer'
 import { NavigationContainer } from '@react-navigation/native';
-/* import firebase from 'firebase/app'
- */import Signup from './screens/Signup';
+import Signup from './screens/Signup';
 import Login from './screens/Login';
 import SplashScreen from './screens/Splash';
+import AdminNavigator from './screens/AdminNavigator';
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from './auth-context';
+import checkAdmin from './utils/utils';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -29,13 +34,12 @@ const app = firebase.initializeApp(firebaseConfig); */
 const Stack = createStackNavigator();
 
 const Auth = () => {
-  // Stack Navigator for Login and Sign up Screen
   return (
-    <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Signup"
@@ -53,20 +57,121 @@ const Auth = () => {
       />
     </Stack.Navigator>
   );
+
 };
 export default function App() {
-  return (
-    <NavigationContainer>
-      <NativeBaseProvider>
-      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Splash">
-      <Stack.Screen
-          name="Splash"
-          component={SplashScreen}
-                  />
-        <Stack.Screen name="Auth" component={Auth}/>
+  const [state, dispatch] = React.useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            mnemonic: action.mnemonic,
+            password:action.password,
+            admin:action.admin, 
+            isLoading:false
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            mnemonic: action.mnemonic,
+            password:action.password,
+            admin:action.admin
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            mnemonic: null,
+            password:null,
+            admin:null
+          };
+      }
+    },
+    {
+      admin: null,
+      password: null,
+      mnemonic: null,
+      isLoading:true
+    }
+  );
+
+  useEffect(() => {
+    // Fetch the token from storage then navigate to our appropriate place
+    const bootstrapAsync = async () => {
+      let mnemonic;
+      let password;
+      let admin;
+      try {
+        mnemonic = await SecureStore.getItemAsync('mnemonic');
+        password = await SecureStore.getItemAsync('password');
+        admin = await AsyncStorage.getItem("admin")
         
-        <Stack.Screen name="Drawer" component={Drawer}/>
-      </Stack.Navigator></NativeBaseProvider>
+      } catch (e) {
+        // Restoring token failed
+      }
+
+      // After restoring token, we may need to validate it in production apps
+
+      // This will switch to the App screen or Auth screen and this loading
+      // screen will be unmounted and thrown away.
+      dispatch({ type: 'RESTORE_TOKEN', mnemonic: mnemonic, password:password,admin:admin });
+    };
+setTimeout(()=>{
+  bootstrapAsync();
+},1000)
+   
+  }, []);
+
+  const authContext = React.useMemo(
+    () => ({
+      signIn: async data => {
+        // In a production app, we need to send some data (usually username, password) to server and get a token
+        // We will also need to handle errors if sign in failed
+        // After getting token, we need to persist the token using `SecureStore`
+        console.log(data)
+        
+        await SecureStore.setItemAsync("mnemonic", data.mnemonic)
+        await SecureStore.setItemAsync("password", data.password)
+        await AsyncStorage.setItem("admin",""+data.admin)
+        dispatch({ type: 'SIGN_IN', mnemonic: data.mnemonic,password:data.password,admin:data.admin });
+      },
+      signOut: async() => {
+        await SecureStore.deleteItemAsync("mnemonic")
+        await SecureStore.deleteItemAsync("password")
+        await AsyncStorage.removeItem("admin")
+        dispatch({ type: 'SIGN_OUT' })},
+      signUp: async data => {
+        // In a production app, we need to send user data to server and get a token
+        // We will also need to handle errors if sign up failed
+        // After getting token, we need to persist the token using `SecureStore`
+
+        await SecureStore.setItemAsync("mnemonic", data.mnemonic)
+        await SecureStore.setItemAsync("password", data.password)
+        await AsyncStorage.setItem("admin",""+data.admin)
+        dispatch({ type: 'SIGN_IN', mnemonic: data.mnemonic,password:data.password,admin:data.admin });
+      },
+    }),
+    []
+  );
+  if(state.isLoading){
+    return <SplashScreen/>
+  }
+  console.log(state)
+  return (<NavigationContainer>
+      <NativeBaseProvider>
+        <AuthContext.Provider value={{authContext,state}} >
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            
+            {!state.mnemonic  ? (
+
+              <Stack.Screen name="Auth" component={Auth} />
+            ) : (
+              <>
+              {!checkAdmin(state.admin)?
+                <Stack.Screen name="Drawer" component={Drawer} />
+                :
+                <Stack.Screen name="AdminNavigator" component={AdminNavigator} />}</>)}
+          </Stack.Navigator></AuthContext.Provider></NativeBaseProvider>
     </NavigationContainer>
   );
 

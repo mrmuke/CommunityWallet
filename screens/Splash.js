@@ -9,22 +9,23 @@ import {
   StyleSheet,
   Image
 } from 'react-native';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from '../auth-context';
 
 const SplashScreen = ({navigation}) => {
   //State for ActivityIndicator animation
-
+  /* const {state} = React.useContext(AuthContext); */
   useEffect(() => {
     setTimeout(() => {
       //Check if token is set or not
       //If not then send for Authentication
       //else send to Home Screen
-      AsyncStorage.getItem('wallet').then((value) =>
+      /* SecureStore.getItemAsync('mnemonic').then(async (value) =>
         navigation.replace(
-          value === null ? 'Auth' : 'Drawer'
+          value === null ? 'Auth' : (await AsyncStorage.getItem('admin')?'AdminNavigator':'Drawer')
         ),
-      );
+      ); */
+/*       navigation.replace(!state.mnemonic?"Auth":state.admin?"AdminNavigatior":"Drawer")
+ */
     }, 2000);
   }, []);
 

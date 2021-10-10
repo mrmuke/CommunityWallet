@@ -5,10 +5,12 @@ import Send from './Wallet/Send'
 import Wallet from './Wallet/Wallet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AuthContext from '../auth-context';
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator({ navigation }) {
+  const {authContext} = React.useContext(AuthContext);
 
   return (
     <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }} drawerContent={props => {
@@ -56,7 +58,7 @@ export default function DrawerNavigator({ navigation }) {
                 />
               )}
               label="Logout"
-              onPress={() => { AsyncStorage.removeItem('wallet'); navigation.navigate('Auth') }}
+              onPress={() => { authContext.signOut() }}
             />
         </DrawerContentScrollView>
       )

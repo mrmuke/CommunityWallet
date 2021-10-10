@@ -93,17 +93,17 @@ export default function Send({ navigation }) {
       setPage(1)
     };
     return <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
-<TouchableOpacity onPress={cancel} style={{flexDirection:'row',alignItems:'center',padding:10}}><Icon name="cancel" style={{marginRight:10}}></Icon><Text>Cancel</Text></TouchableOpacity>
+<TouchableOpacity onPress={cancel} style={{flexDirection:'row',alignItems:'center',padding:10,backgroundColor:"orange",borderTopLeftRadius:10,borderTopRightRadius:10}}><Icon color="white" name="cancel" style={{marginRight:10}}></Icon><Text style={{color:"white",}}>Cancel</Text></TouchableOpacity>
     {hasPermission==null?<ActivityIndicator/>
     :
     (
     hasPermission==false?
       <Text>No camera permission</Text>
     :
+    <View style={{borderWidth:3,borderColor:"orange",width:"85%",height:"70%",}}>
     <BarCodeScanner
       onBarCodeScanned={handleBarCodeScanned}
-      style={{width:"85%",height:"70%"}}
-    />)
+style={{height:"100%",width:"100%"}}    /></View>)
     }</View>
   }
   const AskNumber = () => {
