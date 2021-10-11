@@ -16,6 +16,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import API_URL from '../API_URL';
+import Members from './Admin/Members'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import AuthContext from '../auth-context'
@@ -111,8 +112,7 @@ function Page({name}){
     </VStack>
   }
   else if(name=="Members"){
-    return <>
-    <Heading>Join Code: 3274DN</Heading></>
+    return <><Members></Members></>
   }
   else{
     return <></>

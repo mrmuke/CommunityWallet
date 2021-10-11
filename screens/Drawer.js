@@ -1,7 +1,8 @@
 import React from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Home from './Home'
-import Send from './Wallet/Wallet'
+import Send from './Wallet/Send'
+import Wallet from './Wallet/Wallet';
 import Services from './Wallet/Services'
 import CreateServices from './Wallet/CreateServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -68,7 +69,7 @@ export default function DrawerNavigator({ navigation }) {
         <Drawer.Screen name="Send" component={Send}/>
         <Drawer.Screen name="Services" component={Services}/>
         <Drawer.Screen name="Create" component={CreateServices}/>
-
+        <Drawer.Screen name="Wallet" component={Wallet}/>
     </Drawer.Navigator>
   );
 }

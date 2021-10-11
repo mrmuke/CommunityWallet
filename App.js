@@ -173,5 +173,5 @@ setTimeout(()=>{
                 <Stack.Screen name="AdminNavigator" component={AdminNavigator} />}</>)}
           </Stack.Navigator></AuthContext.Provider></NativeBaseProvider>
     </NavigationContainer>
-  );
+ );
 }
