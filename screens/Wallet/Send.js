@@ -80,7 +80,7 @@ export default function Send({ navigation }) {
   }
   function Scan({cancel}){
     const [hasPermission, setHasPermission] = useState(null);
-
+    const [rcPhoneNumber,setRCPhoneNumber]=useState(null)
     useEffect(() => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -92,8 +92,7 @@ export default function Send({ navigation }) {
       console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
       setPage(1)
     };
-    return <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
-<TouchableOpacity onPress={cancel} style={{flexDirection:'row',alignItems:'center',padding:10,backgroundColor:"orange",borderTopLeftRadius:10,borderTopRightRadius:10}}><Icon color="white" name="cancel" style={{marginRight:10}}></Icon><Text style={{color:"white",}}>Cancel</Text></TouchableOpacity>
+    return <View style={{ alignItems:'center',justifyContent:'center'}}>
     {hasPermission==null?<ActivityIndicator/>
     :
     (
@@ -103,7 +102,8 @@ export default function Send({ navigation }) {
     <View style={{borderWidth:3,borderColor:"orange",width:"85%",height:"70%",}}>
     <BarCodeScanner
       onBarCodeScanned={handleBarCodeScanned}
-style={{height:"100%",width:"100%"}}    /></View>)
+style={{height:"100%",width:"100%"}}    /><TouchableOpacity onPress={cancel} style={{flexDirection:'row',alignItems:'center',padding:10,backgroundColor:"orange",borderBottomLeftRadius:10,borderBottomRightRadius:10}}><Icon color="white" name="cancel" style={{marginRight:10}}></Icon><Text style={{color:"white",}}>Cancel</Text></TouchableOpacity>
+</View>)
     }</View>
   }
   const AskNumber = () => {
@@ -117,7 +117,6 @@ style={{height:"100%",width:"100%"}}    /></View>)
       <View style={styles.mainContainer}>
         <Text style={styles.text}>Who do you want to send this to?</Text>
         <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding:20 }} keyboardType="numeric"></TextInput>
-
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
           setPage(1);
         }}><Text style={[styles.text], { color: "white" }}>Next</Text>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import axios from 'axios'
 import API_URL from '../API_URL';
 import AuthContext from '../auth-context';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 export default function Login({ navigation }) {
   const { authContext } = React.useContext(AuthContext);
 
@@ -29,7 +29,6 @@ export default function Login({ navigation }) {
   }
   return (
     <View style={styles.container}>
-      <FlashMessage position="top" />
       <Text style={styles.logo}>Bao</Text>
       <View style={styles.inputView} >
         <TextInput
