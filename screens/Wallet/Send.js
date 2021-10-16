@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, InteractionManager } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { ActivityIndicator } from 'react-native';
@@ -23,7 +23,9 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumberLong} onPress={
               ()=>{
-                setAmount("0");
+                if(amount != "0"){
+                  setAmount("0");
+                }
               }
             }>
               <Text style={styles.inputRowNumberText}>CLEAR</Text>
@@ -108,15 +110,15 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText}   onPress={
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
               ()=>{
-                if(amount == "0"){
+                if(parseInt(amount) == 0){
                   setAmount("1");
                 } else {
                   setAmount(amount + "1");
                 }
-              }}>1</Text>
+              }}>
+              <Text style={styles.inputRowNumberText}>1</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumber}   onPress={
               ()=>{
@@ -153,7 +155,14 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("0");
+                } else {
+                  setAmount(amount + "0");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>0</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumberSend}>
