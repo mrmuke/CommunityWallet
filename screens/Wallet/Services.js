@@ -35,23 +35,23 @@ export default function Services({navigation}){
       <ScrollView style={{}}>
         <View style={{flexDirection:"row"}}>
           <View style={styles.shopItem}>
-            <Image source={require("./../../assets/chair.jpg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Moris Chair</Text>
-            <Text style={styles.shopItemSubTitle}>World Market</Text>
+            <Image source={require("./../../assets/cleaning.jpeg")} style={styles.shopItemImage}></Image>
+            <Text style={styles.shopItemTitle}>Cleaning</Text>
+            <Text style={styles.shopItemSubTitle}>224-605-8803</Text>
             <Text style={styles.shopItemPrice}>$ 159</Text>
           </View>
           <View style={styles.shopItem}>
-            <Image source={require("./../../assets/laptop.jpg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Dell Inspiron</Text>
-            <Text style={styles.shopItemSubTitle}>Dell</Text>
+            <Image source={require("./../../assets/plumbing.jpeg")} style={styles.shopItemImage}></Image>
+            <Text style={styles.shopItemTitle}>Plumbing</Text>
+            <Text style={styles.shopItemSubTitle}>224-883-1234</Text>
             <Text style={styles.shopItemPrice}>$ 159</Text>
           </View>
         </View>
         <View style={{flexDirection:"row"}}>
           <View style={styles.shopItem}>
-            <Image source={require("./../../assets/shirt.jpg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Red Shirt</Text>
-            <Text style={styles.shopItemSubTitle}>Com</Text>
+            <Image source={require("./../../assets/laundry.jpg")} style={styles.shopItemImage}></Image>
+            <Text style={styles.shopItemTitle}>Laundry</Text>
+            <Text style={styles.shopItemSubTitle}>999-666-4444</Text>
             <Text style={styles.shopItemPrice}>$ 159</Text>
           </View>
           <View style={styles.shopItem}>
@@ -109,15 +109,16 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   shopItem:{
-    height:Dimensions.get("screen").height * 0.348,
     width:"50%",
+    marginBottom: 20
 
   },
   shopItemImage:{
     width:Dimensions.get("screen").width * 0.45,
     height:Dimensions.get("screen").width * 0.55,
     resizeMode:"cover",
-    marginLeft:Dimensions.get("screen").width * 0.025
+    marginLeft:Dimensions.get("screen").width * 0.025,
+    borderRadius:10
   },
   shopItemTitle:{
     marginLeft:Dimensions.get("screen").width * 0.025,

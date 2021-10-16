@@ -175,5 +175,5 @@ setTimeout(()=>{
                 
           </Stack.Navigator></AuthContext.Provider><FlashMessage position="top" /></NativeBaseProvider>
     </NavigationContainer>
-  );
+ );
 }

@@ -16,6 +16,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import API_URL from '../API_URL';
+import Members from './Admin/Members'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import AuthContext from '../auth-context'
@@ -66,6 +67,7 @@ function Page({ name, community, state }) {
   const { authContext } = React.useContext(AuthContext);
   const [loading, setLoading] = useState(false)
   const [tokens,setTokens]=useState({})
+  const [showModal,setShowModal]=useState(null)
   useEffect(() => {
     if (name == "Tokens") {
       setLoading(true)
@@ -132,8 +134,8 @@ function Page({ name, community, state }) {
     return <VStack style={{ paddingTop: 10,width:"100%" }}>
       <List>
 {Object.keys(tokens).map(c=>(
-  <List.Item>
-    <View style={{flexDirection:'row',flex:1,justifyContent:'space-between',alignItems:'center',paddingRight:10}}>
+  <List.Item  style={[c==showModal?{backgroundColor:"#eee"}:null]}>
+    <TouchableOpacity  onPress={()=>{if(c==showModal){setShowModal(null)}else{setShowModal(c)}}} style={{flexDirection:'row',flex:1,justifyContent:'space-between',alignItems:'center',paddingRight:10}}>
       <HStack>
     <View style={{marginRight:5}}><Icon name="logo-bitcoin" size={30} ></Icon></View>
     <View>
@@ -141,18 +143,20 @@ function Page({ name, community, state }) {
       <Text>{c.substr(0,20)}...</Text>
     </View></HStack>
     <Text>${tokens[c]}</Text>
-    </View>
+    </TouchableOpacity>
   </List.Item>
 ))}</List>
-
+  {showModal&&
+  <View style={{flexDirection:'row',flex:1,marginTop:10}}>
+    <Button style={{flex:1,marginLeft:5}} backgroundColor="orange">Burn Token</Button>
+    <Button style={{flex:1,marginLeft:5,marginRight:5}} backgroundColor="orange">Send Token</Button></View>
+    }
       {/* <Button padding={5}>Create New Token</Button>
       <Button padding={5} marginTop={2}>Send Tokens</Button> */}
     </VStack>
   }
-  else if (name == "Members") {
-    return <>
-      <Heading>Join Code: {community.code}</Heading></>
-    //QAw37e
+  else if(name=="Members"){
+    return <><Members joinCode={community.code}></Members></>
   }
   else {
     return <></>
@@ -166,7 +170,7 @@ function Tab({ name, image, navigate, active }) {
   return <TouchableOpacity onPress={navigate} style={{ alignItems: 'center', marginBottom: 10, marginRight: 15 }}><View style={[active ? { backgroundColor: "orange" } : {}, { borderRadius: 100, borderWidth: 1, borderColor: "orange", padding: 15 }]}><Icon name={image} style={[active ? { color: "white" } : { color: "orange" }]} size={35} />{/* <Image source={{uri:image}} style={[{width:35,height:35,},active?{tintColor:"white"}:{}]}/> */}</View><Text style={{ marginTop: 5 }}>{name}</Text></TouchableOpacity>
 }
 function Loader(){
-  return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',padding:30 }}>
+  return <View style={{ alignItems: 'center', justifyContent: 'center',padding:30 }}>
   <ActivityIndicator />
 </View>
 }
@@ -175,5 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: 'center',
     paddingTop: 20,
+    minHeight:Dimensions.get('window').height
   }
 })

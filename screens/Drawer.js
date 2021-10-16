@@ -54,6 +54,17 @@ export default function DrawerNavigator({ navigation }) {
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon
+                  name="shopping"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Services"
+              onPress={() => { props.navigation.navigate('Services') }}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon
                   name="logout"
                   color={color}
                   size={size}
@@ -66,11 +77,10 @@ export default function DrawerNavigator({ navigation }) {
       )
     }}>
       <Drawer.Screen name="Home" component={Home}/>
-      <Drawer.Screen name="Wallet" component={Wallet}/>
         <Drawer.Screen name="Send" component={Send}/>
         <Drawer.Screen name="Services" component={Services}/>
         <Drawer.Screen name="Create" component={CreateServices}/>
-
+        <Drawer.Screen name="Wallet" component={Wallet}/>
     </Drawer.Navigator>
   );
 }

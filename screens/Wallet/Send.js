@@ -80,7 +80,6 @@ export default function Send({ navigation }) {
   }
   function Scan({cancel}){
     const [hasPermission, setHasPermission] = useState(null);
-    const [rcPhoneNumber,setRCPhoneNumber]=useState(null)
     useEffect(() => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
