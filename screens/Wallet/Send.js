@@ -6,12 +6,13 @@ import { ActivityIndicator } from 'react-native';
 
 export default function Send({ navigation }) {
   const [page, setPage] = useState(0);
+  const [amount, setAmount] = useState("0");
 
   const Calculator = () => {
     return (
       <View>
         <View style={styles.numberDisplayContainer}>
-          <Text style={{ fontSize: Dimensions.get("screen").height * 0.07,/*  fontFamily:"sans-serif-light" */ }}>59800</Text>
+          <Text style={{ fontSize: Dimensions.get("screen").height * 0.07,/*  fontFamily:"sans-serif-light" */ }}>{amount}</Text>
         </View>
         <View style={styles.inputContainer}>
           <View style={styles.inputRow}>
@@ -20,32 +21,86 @@ export default function Send({ navigation }) {
             }}>
               <Icon name="keyboard-backspace" style={styles.sendIcon}></Icon>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumberLong}>
+            <TouchableOpacity style={styles.inputRowNumberLong} onPress={
+              ()=>{
+                setAmount("0");
+              }
+            }>
               <Text style={styles.inputRowNumberText}>CLEAR</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("7");
+                } else {
+                  setAmount(amount + "7");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>7</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("8");
+                } else {
+                  setAmount(amount + "8");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>8</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("9");
+                } else {
+                  setAmount(amount + "9");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>9</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}  onPress={
+              ()=>{
+                if(amount.length == 1){
+                  setAmount("0");
+                } else {
+                  setAmount(amount.substring(0, amount.length-1));
+                }
+              }
+            }>
               <Icon name="backspace-outline" style={styles.inputRowNumberText}></Icon>
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("4");
+                } else {
+                  setAmount(amount + "4");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>4</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("5");
+                } else {
+                  setAmount(amount + "5");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>5</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("6");
+                } else {
+                  setAmount(amount + "6");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>6</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumber}>
@@ -54,15 +109,46 @@ export default function Send({ navigation }) {
           </View>
           <View style={styles.inputRow}>
             <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText}>1</Text>
+              <Text style={styles.inputRowNumberText}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("1");
+                } else {
+                  setAmount(amount + "1");
+                }
+              }}>1</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("2");
+                } else {
+                  setAmount(amount + "2");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>2</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount == "0"){
+                  setAmount("3");
+                } else {
+                  setAmount(amount + "3");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>3</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}>
+            <TouchableOpacity style={styles.inputRowNumber}   onPress={
+              ()=>{
+                if(amount.indexOf(".") != "-1"){
+                  return;
+                }
+                if(amount == "0"){
+                  setAmount(".");
+                } else {
+                  setAmount(amount + ".");
+                }
+              }}>
               <Text style={styles.inputRowNumberText}>.</Text>
             </TouchableOpacity>
           </View>
