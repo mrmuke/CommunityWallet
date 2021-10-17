@@ -6,6 +6,7 @@ import { ActivityIndicator } from 'react-native';
 import { Button } from 'native-base';
 import axios from 'axios';
 import AuthContext from '../../auth-context';
+import API_URL from '../../API_URL';
 
 export default function Send({ navigation }) {
   const [page, setPage] = useState(0);
@@ -15,20 +16,23 @@ export default function Send({ navigation }) {
   const { state } = React.useContext(AuthContext);
 
   function sendTokens() {
-setSending(true)
-axios.post(API_URL+"/user/send",{mnemonic:state.mnemonic,
-password:state.password,
-recipientAddress:rcpAddress,
-transferAmount:amount,
-"contractAddress":"wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
+    setSending(true)
+    axios.post(API_URL + "/user/send", {
+      mnemonic: state.mnemonic,
+      password: state.password,
+      recipientAddress: rcpAddress,
+      transferAmount: amount,
+      contractAddress: "wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
 
-}).then(res=>{
-  setPage(2)
-})
+    }).then(res => {
+      setSending(false)
+      setPage(3)
+    })
   }
-  const Success = ()=>{
-    return <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-      <Text>Success!</Text>
+  const Success = () => {
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{fontSize:30}}>Success!</Text>
+      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => navigation.navigate("Home")}>Go Home</Button>
     </View>
   }
   const Calculator = () => {
@@ -216,23 +220,21 @@ transferAmount:amount,
       }</View>
   }
   const Confirm = () => {
-    
+
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ textAlign: 'center', marginBottom: 20 }}>Sending <Text style={{ fontWeight: "bold" }}>{amount}</Text> tokens to <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
-      <Button backgroundColor="orange">Confirm</Button>
+      <Button onPress={sendTokens} backgroundColor="orange">Confirm</Button>
     </View>
   }
-  function Loader(){
-    return <View style={{ alignItems: 'center', justifyContent: 'center',padding:30 }}>
-    <ActivityIndicator />
-  </View>
+  function Loader() {
+    return <View style={{ alignItems: 'center', justifyContent: 'center',flex:1 }}>
+      <ActivityIndicator />
+    </View>
   }
   const AskNumber = () => {
     const [scanning, setScanning] = useState(false)
 
-    if (sending){
-      return <Loader/>
-    }
+    
     if (scanning) {
       return <Scan cancel={() => setScanning(false)} />
     }
@@ -252,7 +254,9 @@ transferAmount:amount,
       </View>
     )
   }
-
+  if (sending) {
+    return <Loader />
+  }
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -272,10 +276,13 @@ transferAmount:amount,
           return (
             <Calculator></Calculator>
           )
-        } else if(page==2) {
+        } else if (page == 2) {
           return <Confirm></Confirm>
         }
-        
+        else {
+          return <Success></Success>
+        }
+
       })()}
     </View>
   )
