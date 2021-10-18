@@ -2,12 +2,12 @@ import React from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Home from './Home'
 import Send from './Wallet/Send'
-import Wallet from './Wallet/Wallet';
 import Services from './Wallet/Services'
 import CreateServices from './Wallet/CreateServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AuthContext from '../auth-context';
+import Wallet from './Wallet/Wallet';
 
 const Drawer = createDrawerNavigator();
 
@@ -50,6 +50,17 @@ export default function DrawerNavigator({ navigation }) {
               )}
               label="Wallet"
               onPress={() => { props.navigation.navigate('Wallet') }}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon
+                  name="shopping"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Services"
+              onPress={() => { props.navigation.navigate('Services') }}
             />
             <DrawerItem
               icon={({ color, size }) => (

@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './auth-context';
 import checkAdmin from './utils/utils';
+import FlashMessage from 'react-native-flash-message';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -171,7 +172,8 @@ setTimeout(()=>{
                 <Stack.Screen name="Drawer" component={Drawer} />
                 :
                 <Stack.Screen name="AdminNavigator" component={AdminNavigator} />}</>)}
-          </Stack.Navigator></AuthContext.Provider></NativeBaseProvider>
+                
+          </Stack.Navigator></AuthContext.Provider><FlashMessage position="top" /></NativeBaseProvider>
     </NavigationContainer>
  );
 }

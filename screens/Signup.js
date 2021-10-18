@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import API_URL from '../API_URL';
 import { HStack, Switch } from 'native-base';
 import AuthContext from '../auth-context';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 export default function Signup({ navigation }) {
   const { authContext } = React.useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -17,11 +17,19 @@ export default function Signup({ navigation }) {
 /*   const [error, setError] = useState("")
  */  const [admin, setAdmin] = useState(false)
   const [communityName, setCommunityName] = useState("")
-
+  const [loading,setLoading]=useState(false)
+  const [username,setUsername]=useState("")
 
   async function register() {
     //create wallet
     //setup mongo
+    if(admin&&communityName.length<4){
+      showMessage({
+        message: "Your community name should be longer!",
+        type: "error",
+      });
+      return;
+    }
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
@@ -34,7 +42,8 @@ export default function Signup({ navigation }) {
   }
   function checkVerify() {
     if (verifyCode == verificationCode) {
-      axios.post(API_URL + "/user/create", { phoneNumber, name: "Test #2", admin, code, password,communityName }).then(response => {
+      setLoading(true)
+      axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName }).then(response => {
         console.log(response.data)
         var data = {
           mnemonic: response.data.mnemonic,
@@ -59,20 +68,24 @@ export default function Signup({ navigation }) {
   if (verifying) {
     return (
       <View style={styles.container}>
-        <FlashMessage position="top" />
+        
         <Text style={styles.logo}>Sign Up</Text>
-        <Text style={styles.verifaction}>A code has been sent to &nbsp;{phoneNumber}. {'\n'}Please enter it to continue</Text>
+        {loading?
+        <ActivityIndicator/>
+        :
+        <>
+        <Text style={styles.verifaction}>A code has been sent to {phoneNumber}. {'\n'}Please enter it to continue</Text>
         <View style={styles.inputView} >
 
           <TextInput
+          keyboardType="numeric"
             style={styles.inputText}
             placeholder="Verification Code..."
             placeholderTextColor="#003f5c"
             onChangeText={text => { setVerificationCode(text);/*  if (error.length > 0) { setError("")  }*/ }}
             value={verificationCode} />
         </View>
-{/*         {error.length > 0 && <Text style={{ backgroundColor: "#eb6060", padding: 15, color: 'white', marginBottom: 10 }}>{error}</Text>}
- */}
+
         <TouchableOpacity onPress={
           () => {
             setVerifying(false);
@@ -89,21 +102,30 @@ export default function Signup({ navigation }) {
           navigation.navigate("Login");
         }}>
           <Text style={styles.signup}>Already have an account? Log in!</Text>
-        </TouchableOpacity>
-
+        </TouchableOpacity></>}
       </View>
     );
   }
   return (
     <View style={styles.container}>
+      
       <Text style={styles.logo}>Sign Up</Text>
       <View style={styles.inputView} >
         <TextInput
+        keyboardType="numeric"
           style={styles.inputText}
           placeholder="Phone Number..."
           placeholderTextColor="#003f5c"
           onChangeText={text => setPhoneNumber(text)}
           value={phoneNumber} />
+      </View>
+      <View style={styles.inputView} >
+        <TextInput
+          style={styles.inputText}
+          placeholder="Username..."
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setUsername(text)}
+          value={username} />
       </View>
       <View style={styles.inputView} >
         <TextInput
@@ -151,6 +173,7 @@ export default function Signup({ navigation }) {
       }}>
         <Text style={styles.signup}>Already have an account? Log in!</Text>
       </TouchableOpacity>
+      
     </View>
   );
 }

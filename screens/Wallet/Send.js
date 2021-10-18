@@ -1,13 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { ActivityIndicator } from 'react-native';
+import { Button } from 'native-base';
+import axios from 'axios';
+import AuthContext from '../../auth-context';
+import API_URL from '../../API_URL';
 
 export default function Send({ navigation }) {
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
+  const [rcpAddress, setRcpAddress] = useState("")
+  const [sending, setSending] = useState(false)
+  const { state } = React.useContext(AuthContext);
 
+  function sendTokens() {
+    setSending(true)
+    axios.post(API_URL + "/user/send", {
+      mnemonic: state.mnemonic,
+      password: state.password,
+      recipientAddress: rcpAddress,
+      transferAmount: amount,
+      contractAddress: "wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
+
+    }).then(res => {
+      setSending(false)
+      setPage(3)
+    })
+  }
+  const Success = () => {
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{fontSize:30}}>Success!</Text>
+      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => navigation.navigate("Home")}>Go Home</Button>
+    </View>
+  }
   const Calculator = () => {
     return (
       <View>
@@ -22,19 +49,17 @@ export default function Send({ navigation }) {
               <Icon name="keyboard-backspace" style={styles.sendIcon}></Icon>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumberLong} onPress={
-              ()=>{
-                if(amount != "0"){
-                  setAmount("0");
-                }
+              () => {
+                setAmount("0");
               }
             }>
               <Text style={styles.inputRowNumberText}>CLEAR</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("7");
                 } else {
                   setAmount(amount + "7");
@@ -42,9 +67,9 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>7</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("8");
                 } else {
                   setAmount(amount + "8");
@@ -52,9 +77,9 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>8</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("9");
                 } else {
                   setAmount(amount + "9");
@@ -62,12 +87,12 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>9</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}  onPress={
-              ()=>{
-                if(amount.length == 1){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount.length == 1) {
                   setAmount("0");
                 } else {
-                  setAmount(amount.substring(0, amount.length-1));
+                  setAmount(amount.substring(0, amount.length - 1));
                 }
               }
             }>
@@ -75,9 +100,9 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("4");
                 } else {
                   setAmount(amount + "4");
@@ -85,9 +110,9 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>4</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("5");
                 } else {
                   setAmount(amount + "5");
@@ -95,9 +120,9 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>5</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("6");
                 } else {
                   setAmount(amount + "6");
@@ -110,19 +135,19 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(parseInt(amount) == 0){
-                  setAmount("1");
-                } else {
-                  setAmount(amount + "1");
-                }
-              }}>
-              <Text style={styles.inputRowNumberText}>1</Text>
+            <TouchableOpacity style={styles.inputRowNumber}>
+              <Text style={styles.inputRowNumberText} onPress={
+                () => {
+                  if (amount == "0") {
+                    setAmount("1");
+                  } else {
+                    setAmount(amount + "1");
+                  }
+                }}>1</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("2");
                 } else {
                   setAmount(amount + "2");
@@ -130,9 +155,9 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>2</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount == "0") {
                   setAmount("3");
                 } else {
                   setAmount(amount + "3");
@@ -140,12 +165,12 @@ export default function Send({ navigation }) {
               }}>
               <Text style={styles.inputRowNumberText}>3</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount.indexOf(".") != "-1"){
+            <TouchableOpacity style={styles.inputRowNumber} onPress={
+              () => {
+                if (amount.indexOf(".") != "-1") {
                   return;
                 }
-                if(amount == "0"){
+                if (amount == "0") {
                   setAmount(".");
                 } else {
                   setAmount(amount + ".");
@@ -155,17 +180,10 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}   onPress={
-              ()=>{
-                if(amount == "0"){
-                  setAmount("0");
-                } else {
-                  setAmount(amount + "0");
-                }
-              }}>
+            <TouchableOpacity style={styles.inputRowNumber}>
               <Text style={styles.inputRowNumberText}>0</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputRowNumberSend}>
+            <TouchableOpacity onPress={() => { setPage(2) }} style={styles.inputRowNumberSend}>
               <Text style={styles.inputRowNumberText}><Icon name="send" style={styles.sendIcon}></Icon></Text>
             </TouchableOpacity>
           </View>
@@ -173,9 +191,8 @@ export default function Send({ navigation }) {
       </View>
     )
   }
-  function Scan({cancel}){
+  function Scan({ cancel }) {
     const [hasPermission, setHasPermission] = useState(null);
-
     useEffect(() => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -183,38 +200,50 @@ export default function Send({ navigation }) {
       })();
     }, []);
     const handleBarCodeScanned = ({ type, data }) => {
-      
+
       console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+      setRcpAddress(data)
       setPage(1)
     };
-    return <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
-<TouchableOpacity onPress={cancel} style={{flexDirection:'row',alignItems:'center',padding:10,backgroundColor:"orange",borderTopLeftRadius:10,borderTopRightRadius:10}}><Icon color="white" name="cancel" style={{marginRight:10}}></Icon><Text style={{color:"white",}}>Cancel</Text></TouchableOpacity>
-    {hasPermission==null?<ActivityIndicator/>
-    :
-    (
-    hasPermission==false?
-      <Text>No camera permission</Text>
-    :
-    <View style={{borderWidth:3,borderColor:"orange",width:"85%",height:"70%",}}>
-    <BarCodeScanner
-      onBarCodeScanned={handleBarCodeScanned}
-style={{height:"100%",width:"100%"}}    /></View>)
-    }</View>
+    return <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      {hasPermission == null ? <ActivityIndicator />
+        :
+        (
+          hasPermission == false ?
+            <Text>No camera permission</Text>
+            : <>
+              <View style={{ borderWidth: 3, borderColor: "orange", width: "85%", height: "75%", }}>
+                <BarCodeScanner
+                  onBarCodeScanned={handleBarCodeScanned}
+                  style={{ height: "100%", width: "100%" }} />
+              </View><TouchableOpacity onPress={cancel} style={{ width: "85%", flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "orange", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}><Icon color="white" name="cancel" style={{ marginRight: 10 }}></Icon><Text style={{ color: "white", }}>Cancel</Text></TouchableOpacity></>)
+      }</View>
+  }
+  const Confirm = () => {
+
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ textAlign: 'center', marginBottom: 20 }}>Sending <Text style={{ fontWeight: "bold" }}>{amount}</Text> tokens to <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
+      <Button onPress={sendTokens} backgroundColor="orange">Confirm</Button>
+    </View>
+  }
+  function Loader() {
+    return <View style={{ alignItems: 'center', justifyContent: 'center',flex:1 }}>
+      <ActivityIndicator />
+    </View>
   }
   const AskNumber = () => {
-    const [scanning,setScanning]=useState(false)
+    const [scanning, setScanning] = useState(false)
+
     
-    
-    if(scanning){
-      return <Scan cancel={()=>setScanning(false)}/>
+    if (scanning) {
+      return <Scan cancel={() => setScanning(false)} />
     }
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.text}>Who do you want to send this to?</Text>
-        <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding:20 }} keyboardType="numeric"></TextInput>
-
+        <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding: 20 }} keyboardType="numeric"></TextInput>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
-          setPage(1);
+          /* setPage(1); */
         }}><Text style={[styles.text], { color: "white" }}>Next</Text>
         </TouchableOpacity>
         <Text style={[styles.text], { marginTop: 10 }}>OR</Text>
@@ -225,7 +254,9 @@ style={{height:"100%",width:"100%"}}    /></View>)
       </View>
     )
   }
-
+  if (sending) {
+    return <Loader />
+  }
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -241,11 +272,17 @@ style={{height:"100%",width:"100%"}}    /></View>)
           return (
             <AskNumber></AskNumber>
           )
-        } else {
+        } else if (page == 1) {
           return (
             <Calculator></Calculator>
           )
+        } else if (page == 2) {
+          return <Confirm></Confirm>
         }
+        else {
+          return <Success></Success>
+        }
+
       })()}
     </View>
   )

@@ -32,6 +32,7 @@ export default function Home({navigation}){
             <TouchableOpacity style={{width:"48%", height:"100%", backgroundColor:"#ffe293", borderRadius:10, justifyContent:"center", alignItems:"center"}}>
               <View style={{width:"50%", aspectRatio:1, backgroundColor:"white", borderRadius:200, justifyContent:"center", alignItems:"center"}}>
                 <Image style={{width:"50%", height:"50%"}} source={require("./../assets/history.png")}></Image>
+                
               </View>
             </TouchableOpacity>
           </View>
