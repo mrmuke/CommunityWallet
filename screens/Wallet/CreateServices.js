@@ -1,10 +1,37 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import AuthContext from '../../auth-context';
+import axios from 'axios'
+import api from '../../API_URL';
 
 var orange = "#ec802e";
 
 export default function CreateServices({navigation, route}){
+  const { state } = React.useContext(AuthContext);
+
+  const [ name, setName ] = useState("");
+  const [ category, setCategory ] = useState("");
+  const [ cost, setCost ] = useState("");
+  const [ description, setDescription ] = useState("");
+
+  function createItem(){
+    console.log("Name: " + name);
+    console.log("Category: " + category);
+    console.log("Cost: " + cost);
+    console.log("Description: " + description);
+
+    axios.post(api + '/services/service', {
+      name: name,
+      category: category,
+      cost: cost,
+      description: description,
+      mnemonic: state.mnemonic,
+      password: state.password,
+      marketCode: "1UVkH7"
+    });
+  }
+
   return(
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -27,21 +54,21 @@ export default function CreateServices({navigation, route}){
           <View style={styles.formContent}>
             <View style={{flexDirection:"row"}}>
               <Icon name="drive-file-rename-outline" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
-              <TextInput placeholder="Name of Service"></TextInput>
+              <TextInput defaultValue={name} placeholder="Name of Service" onChangeText={text=>setName(text)}></TextInput>
             </View>
             <View style={{marginTop: 10, marginBottom: 10, alignItems:"center"}}>
               <View style={{width:"90%", borderWidth:0.5, borderColor:"#d2d2d2"}}></View>
             </View>
             <View style={{flexDirection:"row"}}>
-              <Icon name="person" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
-              <TextInput placeholder="Source: Company or Person"></TextInput>
+              <Icon name="category" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
+              <TextInput defaultValue={category} placeholder="Category" onChangeText={text=>setCategory(text)}></TextInput>
             </View> 
             <View style={{marginTop: 10, marginBottom: 10, alignItems:"center"}}>
               <View style={{width:"90%", borderWidth:0.5, borderColor:"#d2d2d2"}}></View>
             </View>
             <View style={{flexDirection:"row"}}>
               <Icon name="attach-money" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
-              <TextInput placeholder="Price"></TextInput>
+              <TextInput defaultValue={cost} keyboardType="number-pad" placeholder="Price" onChangeText={text=>setCost(text)}></TextInput>
             </View> 
           </View>
         </View>
@@ -50,7 +77,7 @@ export default function CreateServices({navigation, route}){
           <View style={styles.formContent}>
             <View style={{flexDirection:"row", alignItems:"center"}}>
               <Icon name="description" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 7}}></Icon>
-              <TextInput placeholder="Describe your service" multiline={true} style={{width:Dimensions.get("screen").width * 0.65, height:Dimensions.get("screen").height*0.1}}></TextInput>
+              <TextInput defaultValue={description} placeholder="Describe your service" multiline={true} style={{width:Dimensions.get("screen").width * 0.65, height:Dimensions.get("screen").height*0.1}} onChangeText={text=>setDescription(text)}></TextInput>
             </View>
           </View>
         </View>
@@ -65,7 +92,9 @@ export default function CreateServices({navigation, route}){
         </View>
         <View style={{height:Dimensions.get("screen").height * 0.07,}}></View>
       </ScrollView>
-      <TouchableOpacity style={styles.CreateContainer}>
+      <TouchableOpacity style={styles.CreateContainer} onPress={
+        ()=>{ createItem() }
+      }>
         <Text style={styles.CreateText}>CREATE</Text>
       </TouchableOpacity>
     </View>
