@@ -58,7 +58,7 @@ export default function Services({navigation}){
                 rowArray.push(
                   <View style={{flexDirection:"row"}}>
                     <View style={styles.shopItem}>
-                      <Image source={require("./../../assets/cleaning.jpeg")} style={styles.shopItemImage}></Image>
+                      <Image source={{uri:"https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i*2]["filename"]}} style={styles.shopItemImage}></Image>
                       <Text style={styles.shopItemTitle}>{arrayItems[i*2].name}</Text>
                       <Text style={styles.shopItemSubTitle}>{arrayItems[i*2].description}</Text>
                       <Text style={styles.shopItemPrice}>$ {arrayItems[i*2].cost}</Text>
@@ -69,7 +69,7 @@ export default function Services({navigation}){
                 rowArray.push(
                   <View style={{flexDirection:"row"}}>
                     <View style={styles.shopItem}>
-                      <Image source={require("./../../assets/cleaning.jpeg")} style={styles.shopItemImage}></Image>
+                      <Image source={{uri:"https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i*2]["filename"]}} style={styles.shopItemImage}></Image>
                       <Text style={styles.shopItemTitle}>{arrayItems[i*2].name}</Text>
                       <Text style={styles.shopItemSubTitle}>{arrayItems[i*2].description}</Text>
                       <Text style={styles.shopItemPrice}>$ {arrayItems[i*2].cost}</Text>

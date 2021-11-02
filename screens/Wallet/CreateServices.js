@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AuthContext from '../../auth-context';
 import axios from 'axios'
 import api from '../../API_URL';
+import * as ImagePicker from 'expo-image-picker';
+import { Buffer } from 'buffer';
 
 var orange = "#ec802e";
 
@@ -14,23 +16,65 @@ export default function CreateServices({navigation, route}){
   const [ category, setCategory ] = useState("");
   const [ cost, setCost ] = useState("");
   const [ description, setDescription ] = useState("");
+  const [localUri, setLocalUri] = useState(null);
+  const [fileName, setFileName] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
+      base64: true
+    });
+
+    if (!result.cancelled) {
+      setLocalUri(result.uri);
+      setFileName(result.uri.split('/').pop());  
+    }
+  };
 
   function createItem(){
-    console.log("Name: " + name);
-    console.log("Category: " + category);
-    console.log("Cost: " + cost);
-    console.log("Description: " + description);
+    // Infer the type of the image
+    let match = /\.(\w+)$/.exec(fileName);
+    let type = match ? `image/${match[1]}` : `image`;
 
-    axios.post(api + '/services/service', {
-      name: name,
-      category: category,
-      cost: cost,
-      description: description,
-      mnemonic: state.mnemonic,
-      password: state.password,
-      marketCode: "1UVkH7"
-    });
+    // Upload the image using the fetch and FormData APIs
+    let formData = new FormData();
+    // Assume "photo" is the name of the form field the server expects
+    formData.append('photo', { uri: localUri, name: fileName, type });  
+    formData.append('name', name);
+    formData.append('category', category);
+    formData.append('cost', cost);
+    formData.append('description', description);
+    formData.append('mnemonic', state.mnemonic);
+    formData.append('password',state.password);
+    formData.append('marketCode', "1UVkH7");
+
+    const link = api + '/services/service';
+
+    axios(
+      {
+        method: 'post',
+        url: link,
+        data: formData,
+        headers: {
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
+      }
+    )
   }
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
 
   return(
     <View style={styles.container}>
@@ -83,7 +127,7 @@ export default function CreateServices({navigation, route}){
         </View>
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>PHOTO</Text>
-          <TouchableOpacity style={styles.formContent}>
+          <TouchableOpacity style={styles.formContent} onPress={()=>pickImage()}>
             <View style={{flexDirection:"row", justifyContent :"center", alignItems:"center"}}>
               <Icon name="drive-file-rename-outline" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
               <Text style={{color:"#999"}}>INSERT AN IMAGE HERE!</Text>
