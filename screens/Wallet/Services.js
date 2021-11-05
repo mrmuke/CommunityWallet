@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import api from '../../API_URL';
+import AuthContext from './../../auth-context';
+import axios from 'axios'
 
 export default function Services({navigation}){
+  const { state } = React.useContext(AuthContext);
+  const [ arrayItems, setArrayItems ] = useState([]);
+
+  async function getServices(){
+    axios.post(api+'/services/allServices', {"mnemonic": state.mnemonic, "password": state.password, "marketCode": "1UVkH7"}).then(response=>{
+      setArrayItems(response.data)//decrypt mnemonic with sent password
+    }).catch(e=>{})
+  }
+
+  useEffect(()=>{
+    getServices();
+  },[]);
+
   return(
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -33,39 +49,48 @@ export default function Services({navigation}){
         <TouchableOpacity><Text style={styles.menuText}>Groceries</Text></TouchableOpacity>
       </View>
       <ScrollView style={{}}>
-        <View style={{flexDirection:"row"}}>
-          <View style={styles.shopItem}>
-            <Image source={require("./../../assets/cleaning.jpeg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Cleaning</Text>
-            <Text style={styles.shopItemSubTitle}>224-605-8803</Text>
-            <Text style={styles.shopItemPrice}>$ 159</Text>
-          </View>
-          <View style={styles.shopItem}>
-            <Image source={require("./../../assets/plumbing.jpeg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Plumbing</Text>
-            <Text style={styles.shopItemSubTitle}>224-883-1234</Text>
-            <Text style={styles.shopItemPrice}>$ 159</Text>
-          </View>
-        </View>
-        <View style={{flexDirection:"row"}}>
-          <View style={styles.shopItem}>
-            <Image source={require("./../../assets/laundry.jpg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Laundry</Text>
-            <Text style={styles.shopItemSubTitle}>999-666-4444</Text>
-            <Text style={styles.shopItemPrice}>$ 159</Text>
-          </View>
-          <View style={styles.shopItem}>
-            <Image source={require("./../../assets/haircut.jpg")} style={styles.shopItemImage}></Image>
-            <Text style={styles.shopItemTitle}>Hot Haircut</Text>
-            <Text style={styles.shopItemSubTitle}>David Splenderman</Text>
-            <Text style={styles.shopItemPrice}>$ 159</Text>
-          </View>
-        </View>
+        {
+          (function(){
+            var row = Math.ceil(arrayItems.length/2);
+            var rowArray = [];
+            for(var i = 0; i < row; i++){
+              if(arrayItems.length % 2 == 1 && i == row - 1){
+                rowArray.push(
+                  <View style={{flexDirection:"row"}}>
+                    <View style={styles.shopItem}>
+                      <Image source={{uri:"https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i*2]["filename"]}} style={styles.shopItemImage}></Image>
+                      <Text style={styles.shopItemTitle}>{arrayItems[i*2].name}</Text>
+                      <Text style={styles.shopItemSubTitle}>{arrayItems[i*2].description}</Text>
+                      <Text style={styles.shopItemPrice}>$ {arrayItems[i*2].cost}</Text>
+                    </View>
+                  </View>
+                )
+              } else {
+                rowArray.push(
+                  <View style={{flexDirection:"row"}}>
+                    <View style={styles.shopItem}>
+                      <Image source={{uri:"https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i*2]["filename"]}} style={styles.shopItemImage}></Image>
+                      <Text style={styles.shopItemTitle}>{arrayItems[i*2].name}</Text>
+                      <Text style={styles.shopItemSubTitle}>{arrayItems[i*2].description}</Text>
+                      <Text style={styles.shopItemPrice}>$ {arrayItems[i*2].cost}</Text>
+                    </View>
+                    <View style={styles.shopItem}>
+                      <Image source={require("./../../assets/plumbing.jpeg")} style={styles.shopItemImage}></Image>
+                      <Text style={styles.shopItemTitle}>{arrayItems[i*2 + 1].name}</Text>
+                      <Text style={styles.shopItemSubTitle}>{arrayItems[i*2 + 1].description}</Text>
+                      <Text style={styles.shopItemPrice}>$ {arrayItems[i*2 + 1].cost}</Text>
+                    </View>
+                  </View>
+                )
+              }
+            }
+            return rowArray
+          })()
+        }
       </ScrollView>
     </View>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -130,6 +155,7 @@ const styles = StyleSheet.create({
     marginLeft:Dimensions.get("screen").width * 0.025,
     fontSize:Dimensions.get("screen").height * 0.012,
     color:"#404040",
+    overflow:"hidden"
   },
   shopItemPrice:{
     marginLeft:Dimensions.get("screen").width * 0.025,
