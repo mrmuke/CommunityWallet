@@ -4,10 +4,13 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../../API_URL';
 import AuthContext from './../../auth-context';
 import axios from 'axios'
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Services({navigation}){
   const { state } = React.useContext(AuthContext);
   const [ arrayItems, setArrayItems ] = useState([]);
+  const isFocused = useIsFocused();
+
 
   async function getServices(){
     axios.post(api+'/services/allServices', {"mnemonic": state.mnemonic, "password": state.password, "marketCode": "LeAVXM"}).then(response=>{
@@ -17,7 +20,7 @@ export default function Services({navigation}){
 
   useEffect(()=>{
     getServices();
-  },[]);
+  },[isFocused]);
 
   return(
     <View style={styles.container}>
@@ -48,7 +51,7 @@ export default function Services({navigation}){
         <TouchableOpacity><Text style={styles.menuText}>Candles</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Groceries</Text></TouchableOpacity>
       </View>
-      <ScrollView style={{}}>
+      <ScrollView>
         {
           (function(){
             var row = Math.ceil(arrayItems.length/2);
@@ -75,8 +78,8 @@ export default function Services({navigation}){
                       <Text style={styles.shopItemPrice}>$ {arrayItems[i*2].cost}</Text>
                     </View>
                     <View style={styles.shopItem}>
-                      <Image source={require("./../../assets/plumbing.jpeg")} style={styles.shopItemImage}></Image>
-                      <Text style={styles.shopItemTitle}>{arrayItems[i*2 + 1].name}</Text>
+                      <Image source={{uri:"https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i*2 + 1]["filename"]}} style={styles.shopItemImage}></Image>
+                      <Text style={styles.shopItemTitle}>{arrayItems[i*2 + 1]["name"]}</Text>
                       <Text style={styles.shopItemSubTitle}>{arrayItems[i*2 + 1].description}</Text>
                       <Text style={styles.shopItemPrice}>$ {arrayItems[i*2 + 1].cost}</Text>
                     </View>
