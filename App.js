@@ -168,7 +168,10 @@ setTimeout(()=>{
               <Stack.Screen name="Auth" component={Auth} />
             ) : (
               <>
-                <Stack.Screen name="Drawer" component={Drawer} /></>)}
+              {!checkAdmin(state.admin)?
+                <Stack.Screen name="Drawer" component={Drawer} />
+                :
+                <Stack.Screen name="AdminNavigator" component={AdminNavigator} />}</>)}
                 
           </Stack.Navigator></AuthContext.Provider><FlashMessage position="top" /></NativeBaseProvider>
     </NavigationContainer>
