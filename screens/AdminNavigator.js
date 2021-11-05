@@ -68,6 +68,7 @@ function Page({ name, community, state }) {
   const [loading, setLoading] = useState(false)
   const [tokens,setTokens]=useState({})
   const [showModal,setShowModal]=useState(null)
+  const [members,setMembers]=useState([])
   useEffect(() => {
     if (name == "Tokens") {
       setLoading(true)
@@ -80,7 +81,13 @@ function Page({ name, community, state }) {
       })
     }
     else if (name == "Members") {
+      setLoading(true)
+      axios.post(API_URL+'/community/members', { mnemonic: state.mnemonic, password: state.password }).then(response=>{
+        setMembers(response.data)
+        setLoading(false)
+      }).catch(e=>{
 
+      })
     }
   }, [name])
   if(loading){
@@ -155,8 +162,8 @@ function Page({ name, community, state }) {
       <Button padding={5} marginTop={2}>Send Tokens</Button> */}
     </VStack>
   }
-  else if(name=="Members"){
-    return <><Members joinCode={community.code}></Members></>
+  else if(name=="Members"&&members.length>0){
+    return <><Members joinCode={community.code} members={members}></Members></>
   }
   else {
     return <></>
@@ -179,6 +186,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: 'center',
     paddingTop: 20,
-    minHeight:Dimensions.get('window').height
   }
 })

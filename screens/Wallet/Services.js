@@ -10,7 +10,7 @@ export default function Services({navigation}){
   const [ arrayItems, setArrayItems ] = useState([]);
 
   async function getServices(){
-    axios.post(api+'/services/allServices', {"mnemonic": state.mnemonic, "password": state.password, "marketCode": "1UVkH7"}).then(response=>{
+    axios.post(api+'/services/allServices', {"mnemonic": state.mnemonic, "password": state.password, "marketCode": "LeAVXM"}).then(response=>{
       setArrayItems(response.data)//decrypt mnemonic with sent password
     }).catch(e=>{})
   }
