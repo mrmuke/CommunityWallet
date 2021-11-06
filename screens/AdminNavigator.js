@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import API_URL from '../API_URL';
 import Members from './Admin/Members'
+import Send from './Wallet/Send'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import AuthContext from '../auth-context'
@@ -32,6 +33,7 @@ export default function AdminNavigator() {
   return <Stack.Navigator>
     <Stack.Screen name="Admin Home" component={AdminHome} />
     <Stack.Screen name="Analytics" component={AdminAnalytics} />
+    <Stack.Screen name="Send" component={Send} options={{headerShown:false}}/>
   </Stack.Navigator>
 }
 function AdminAnalytics() {
@@ -58,17 +60,17 @@ function AdminHome({ navigation }) {
       {Object.keys(tabs).map(c => (
         <Tab active={active == c} navigate={() => setActive(c)} key={c} name={c} image={tabs[c]} ></Tab>
       ))}</View>
-    <Page state={state} community={community} name={active} />
-
-
+    <Page state={state} community={community} name={active} navigation={navigation} />
   </ScrollView>
 }
-function Page({ name, community, state }) {
+
+function Page({ name, community, state, navigation }) {
   const { authContext } = React.useContext(AuthContext);
   const [loading, setLoading] = useState(false)
   const [tokens,setTokens]=useState({})
   const [showModal,setShowModal]=useState(null)
   const [members,setMembers]=useState([])
+  const [showMembers, setShowMembers] = useState(false);
   useEffect(() => {
     if (name == "Tokens") {
       setLoading(true)
@@ -90,6 +92,16 @@ function Page({ name, community, state }) {
       })
     }
   }, [name])
+
+  function getMembers(){
+    axios.post(API_URL+'/community/members', { mnemonic: state.mnemonic, password: state.password }).then(response=>{
+      setMembers(response.data)
+      setLoading(false)
+    }).catch(e=>{
+
+    })
+  }
+
   if(loading){
     return <Loader/>
   }
@@ -138,7 +150,36 @@ function Page({ name, community, state }) {
   }
   else if (name == "Tokens") {
 
-    return <VStack style={{ paddingTop: 10,width:"100%" }}>
+    if(showMembers){
+      return(
+        <View style={{width:"100%"}}>
+          <TouchableOpacity style={{backgroundColor:"#FFD580", borderRadius:5, padding: 20, width:"20%"}} onPress={()=>{
+            setShowMembers(false);
+          }}>
+            <Text>Back!</Text>
+          </TouchableOpacity>
+          {(function(){
+            let arr = [];
+            for(let member of members){
+              arr.push(<View style={{width:"100%", padding: 20, flexDirection:"row"}}>
+                <View style={{width:"50%"}}><Text style={{width:"100%", textAlign:"center"}}>{member.phoneNumber}</Text></View>
+                <View style={{width:"50%"}}>
+                  <TouchableOpacity style={{width:"50%", backgroundColor:"#FFD580", padding: 10, borderRadius: 10}} onPress={()=>{
+                    navigation.navigate("Send", {
+                      "rcpAddress": member.address
+                    });
+                  }}>
+                    <Text style={{width:"100%", textAlign:"center"}}>Send!</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>)
+            }
+            return arr;
+          })()}
+        </View>
+      )
+    } else {
+      return <VStack style={{ paddingTop: 10,width:"100%" }}>
       <List>
 {Object.keys(tokens).map(c=>(
   <List.Item  style={[c==showModal?{backgroundColor:"#eee"}:null]}>
@@ -146,7 +187,7 @@ function Page({ name, community, state }) {
       <HStack>
     <View style={{marginRight:5}}><Icon name="logo-bitcoin" size={30} ></Icon></View>
     <View>
-      <Text style={{fontWeight:"bold"}}>{community.name} Time Token</Text>
+      <Text style={{fontWeight:"bold"}}>{community.name}Time Token</Text>
       <Text>{c.substr(0,20)}...</Text>
     </View></HStack>
     <Text>${tokens[c]}</Text>
@@ -156,11 +197,18 @@ function Page({ name, community, state }) {
   {showModal&&
   <View style={{flexDirection:'row',flex:1,marginTop:10}}>
     <Button style={{flex:1,marginLeft:5}} backgroundColor="orange">Burn Token</Button>
-    <Button style={{flex:1,marginLeft:5,marginRight:5}} backgroundColor="orange">Send Token</Button></View>
+    <Button style={{flex:1,marginLeft:5,marginRight:5}} backgroundColor="orange" onPress={
+      ()=>{
+        getMembers();
+        setShowMembers(true);
+      }
+    }>Send Token</Button></View>
     }
       {/* <Button padding={5}>Create New Token</Button>
       <Button padding={5} marginTop={2}>Send Tokens</Button> */}
     </VStack>
+    }
+
   }
   else if(name=="Members"&&members.length>0){
     return <><Members joinCode={community.code} members={members}></Members></>

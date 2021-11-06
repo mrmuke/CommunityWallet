@@ -7,14 +7,24 @@ import { Button } from 'native-base';
 import axios from 'axios';
 import AuthContext from '../../auth-context';
 import API_URL from '../../API_URL';
+import { TabRouter } from '@react-navigation/routers';
+import { useIsFocused } from '@react-navigation/native';
 
-export default function Send({ navigation }) {
+export default function Send({ navigation, route }) {
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
   const [rcpAddress, setRcpAddress] = useState("")
   const [sending, setSending] = useState(false)
   const { state } = React.useContext(AuthContext);
+  const isFocused = useIsFocused();
 
+  useEffect(()=>{
+    if(route.params.rcpAddress){
+      setPage(1)
+      setRcpAddress(route.params.rcpAddress);
+    }
+  },[isFocused]);
+  
   function sendTokens() {
     setSending(true)
     axios.post(API_URL + "/user/send", {
@@ -29,12 +39,20 @@ export default function Send({ navigation }) {
       setPage(3)
     })
   }
+
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{fontSize:30}}>Success!</Text>
-      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => navigation.navigate("Home")}>Go Home</Button>
+      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => {
+        if(route.params.rcpAddress){
+          navigation.navigate("Admin Home")
+        } else {
+          navigation.navigate("Home")
+        }
+      }}>Go Home</Button>
     </View>
   }
+
   const Calculator = () => {
     return (
       <View>
@@ -262,7 +280,11 @@ export default function Send({ navigation }) {
       <View style={styles.logoContainer}>
         <TouchableOpacity onPress={() => {
           setPage(0);
-          navigation.navigate("Home")
+            if(route.params.rcpAddress){
+              navigation.navigate("Admin Home")
+            } else {
+              navigation.navigate("Home")
+            }
         }}>
           <Image style={styles.logo} source={require("./../../assets/logo.png")}></Image>
         </TouchableOpacity>
