@@ -7,16 +7,15 @@ import { Button } from 'native-base';
 import axios from 'axios';
 import AuthContext from '../../auth-context';
 import API_URL from '../../API_URL';
-
+import { showMessage } from 'react-native-flash-message';
 export default function Send({ navigation }) {
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
   const [rcpAddress, setRcpAddress] = useState("")
-  const [sending, setSending] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { state } = React.useContext(AuthContext);
-
   function sendTokens() {
-    setSending(true)
+    setLoading(true)
     axios.post(API_URL + "/user/send", {
       mnemonic: state.mnemonic,
       password: state.password,
@@ -25,14 +24,15 @@ export default function Send({ navigation }) {
       contractAddress: "wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
 
     }).then(res => {
-      setSending(false)
+      setLoading(false)
       setPage(3)
     })
   }
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{fontSize:30}}>Success!</Text>
-      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => navigation.navigate("Home")}>Go Home</Button>
+      <View style={{borderRadius:100, backgroundColor:"lightgreen",marginVertical:50}}><Icon name="check" style={{color:"white"}}  size={100}/></View>
+      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");navigation.navigate("Home")}}>Go Home</Button>
     </View>
   }
   const Calculator = () => {
@@ -135,15 +135,15 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText} onPress={
+            <TouchableOpacity  onPress={
                 () => {
                   if (amount == "0") {
                     setAmount("1");
                   } else {
                     setAmount(amount + "1");
                   }
-                }}>1</Text>
+                }} style={styles.inputRowNumber}>
+              <Text style={styles.inputRowNumberText}>1</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumber} onPress={
               () => {
@@ -180,8 +180,17 @@ export default function Send({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText}>0</Text>
+            <TouchableOpacity style={styles.inputRowNumber}
+            onPress={
+              () => {
+                if (amount !== "0") {
+                  
+                  setAmount(amount + "0");
+                }
+              }}>
+              <Text style={styles.inputRowNumberText}
+              
+              >0</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { setPage(2) }} style={styles.inputRowNumberSend}>
               <Text style={styles.inputRowNumberText}><Icon name="send" style={styles.sendIcon}></Icon></Text>
@@ -233,17 +242,34 @@ export default function Send({ navigation }) {
   }
   const AskNumber = () => {
     const [scanning, setScanning] = useState(false)
+    const [phoneNumber,setPhoneNumber]=useState("")
 
-    
+    function checkNumber(){
+      setLoading(true)
+      axios.post(API_URL + "/user/public", {
+        mnemonic: state.mnemonic,
+        password: state.password,
+        phoneNumber:phoneNumber
+  
+      }).then(res => {
+        setLoading(false)
+        setPage(1)
+        setRcpAddress(res.data.rcp)
+        showMessage({message:"User Found",type:"success"})
+      }).catch(e=>{
+        setLoading(false)
+        showMessage({message:"User does not exist..",type:"danger"})
+      })
+    }
     if (scanning) {
       return <Scan cancel={() => setScanning(false)} />
     }
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.text}>Who do you want to send this to?</Text>
-        <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding: 20 }} keyboardType="numeric"></TextInput>
+        <TextInput value={phoneNumber} placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", backgroundColor: "white", marginTop: 30,padding:10}} onChangeText={text=>setPhoneNumber(text)} keyboardType="numeric"></TextInput>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
-          /* setPage(1); */
+          checkNumber()
         }}><Text style={[styles.text], { color: "white" }}>Next</Text>
         </TouchableOpacity>
         <Text style={[styles.text], { marginTop: 10 }}>OR</Text>
@@ -254,7 +280,7 @@ export default function Send({ navigation }) {
       </View>
     )
   }
-  if (sending) {
+  if (loading) {
     return <Loader />
   }
   return (

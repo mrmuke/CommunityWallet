@@ -6,6 +6,7 @@ import axios from 'axios'
 import api from '../../API_URL';
 import * as ImagePicker from 'expo-image-picker';
 import { Buffer } from 'buffer';
+import { showMessage } from 'react-native-flash-message';
 
 var orange = "#ec802e";
 
@@ -62,7 +63,13 @@ export default function CreateServices({navigation, route}){
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
         },
       }
-    )
+    ).then(()=>{
+      showMessage({
+        message: "Service Created",
+        type: "success",
+      });
+      navigation.navigate(route.params.previous);
+    })
   }
 
   useEffect(() => {
@@ -93,6 +100,7 @@ export default function CreateServices({navigation, route}){
         <Text style={styles.headingText}>Create Services</Text>
       </View>
       <ScrollView>
+<View style={{paddingBottom:100}}>
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>MAIN INFO</Text>
           <View style={styles.formContent}>
@@ -130,11 +138,12 @@ export default function CreateServices({navigation, route}){
           <TouchableOpacity style={styles.formContent} onPress={()=>pickImage()}>
             <View style={{flexDirection:"row", justifyContent :"center", alignItems:"center"}}>
               <Icon name="drive-file-rename-outline" style={{color:orange, fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></Icon>
-              <Text style={{color:"#999"}}>INSERT AN IMAGE HERE!</Text>
+              <Text style={{color:"#999"}}>{localUri?"UPLOADED!":"INSERT AN IMAGE HERE!"}</Text>
             </View>
           </TouchableOpacity>
         </View>
         <View style={{height:Dimensions.get("screen").height * 0.07,}}></View>
+        </View>
       </ScrollView>
       <TouchableOpacity style={styles.CreateContainer} onPress={
         ()=>{ createItem() }

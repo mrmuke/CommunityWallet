@@ -19,7 +19,10 @@ export default function Services({navigation}){
   }
 
   useEffect(()=>{
-    getServices();
+    if(isFocused){
+      getServices();
+    }
+   
   },[isFocused]);
 
   return(
@@ -161,7 +164,6 @@ const styles = StyleSheet.create({
     overflow:"hidden"
   },
   shopItemPrice:{
-    marginLeft:Dimensions.get("screen").width * 0.025,
     marginLeft:Dimensions.get("screen").width * 0.025,
     fontSize:Dimensions.get("screen").height * 0.023,
     color:"#ec802e",
