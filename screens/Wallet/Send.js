@@ -18,13 +18,13 @@ export default function Send({ navigation, route }) {
   const { state } = React.useContext(AuthContext);
   const isFocused = useIsFocused();
 
-  useEffect(()=>{
-    if(route.params.rcpAddress){
+  useEffect(() => {
+    if (route.params.rcpAddress) {
       setPage(1)
       setRcpAddress(route.params.rcpAddress);
     }
-  },[isFocused]);
-  
+  }, [isFocused]);
+
   function sendTokens() {
     setSending(true)
     axios.post(API_URL + "/user/send", {
@@ -42,9 +42,9 @@ export default function Send({ navigation, route }) {
 
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{fontSize:30}}>Success!</Text>
-      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => {
-        if(route.params.rcpAddress){
+      <Text style={{ fontSize: 30 }}>Success!</Text>
+      <Button style={{ marginTop: 10 }} backgroundColor="orange" onPress={() => {
+        if (route.params.rcpAddress) {
           navigation.navigate("Admin Home")
         } else {
           navigation.navigate("Home")
@@ -245,14 +245,14 @@ export default function Send({ navigation, route }) {
     </View>
   }
   function Loader() {
-    return <View style={{ alignItems: 'center', justifyContent: 'center',flex:1 }}>
+    return <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
       <ActivityIndicator />
     </View>
   }
   const AskNumber = () => {
     const [scanning, setScanning] = useState(false)
 
-    
+
     if (scanning) {
       return <Scan cancel={() => setScanning(false)} />
     }
@@ -280,11 +280,11 @@ export default function Send({ navigation, route }) {
       <View style={styles.logoContainer}>
         <TouchableOpacity onPress={() => {
           setPage(0);
-            if(route.params.rcpAddress){
-              navigation.navigate("Admin Home")
-            } else {
-              navigation.navigate("Home")
-            }
+          if (route.params.rcpAddress) {
+            navigation.navigate("Admin Home")
+          } else {
+            navigation.navigate("Home")
+          }
         }}>
           <Image style={styles.logo} source={require("./../../assets/logo.png")}></Image>
         </TouchableOpacity>
