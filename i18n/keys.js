@@ -13,12 +13,21 @@ Strings set to each variable are for labeling
 
 export const MembersScreen = {
     joinCode_P: 'join code phrase',
+    phone_W: 'Phone header',
+    joined_W: 'Joined header',
+    tokens_W: 'Tokens header',
+    serv_W: 'Serv header'
 }
 
 export const CreateServicesScreen = {
+    cameraRollPermission_P: 'Need-Camera-Permission alert',
     createServices_P: 'Create-Services header',
     info_W: 'MAIN-INFO header',
+    nameOfService_P: 'Name-of-Service placeholder',
+    category_W: 'Category placeeholder',
+    price_W: 'Price placeholder',
     description_W: 'DESCRIPTION label',
+    describeService_P: 'Describe-Service placeholder',
     photo_W: 'PHOTO label',
     insertImage_P: 'Insert-Image-Here instructions',
     create_W: 'Create button',

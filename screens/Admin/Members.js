@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
+// LANGUAGE LOCALIZATION
+import i18n from '../../i18n';
+import tokens from '../../i18n/tokens';
+
+const { joinCode_P, phone_W, joined_W, tokens_W, serv_W } = tokens.screens.admin.members
+const joinCodePhrase = i18n.t(joinCode_P)
+const phoneWord = i18n.t(phone_W)
+const joinedWord = i18n.t(joined_W)
+const tokensWord = i18n.t(tokens_W)
+const servWord = i18n.t(serv_W)
+
 var width = Dimensions.get("screen").width;
 var height = Dimensions.get("screen").height;
 
@@ -9,13 +20,13 @@ export default function Members({ joinCode, members }) {
     return (
         <View>
             <View style={styles.CodeContainer}>
-                <Text style={styles.CodeText}>Join Code: {joinCode}</Text>
+                <Text style={styles.CodeText}>{joinCodePhrase}{joinCode}</Text>
             </View>
             <View style={{ ...styles.evenList, marginBottom: 10 }}>
-                <Text style={{ width: width * 0.92 * 0.35, fontSize: width * 0.04, fontWeight: 'bold' }}>Phone</Text>
-                <Text style={{ width: width * 0.92 * 0.32, fontSize: width * 0.04, fontWeight: 'bold' }}>Joined</Text>
-                <Text style={{ width: width * 0.92 * 0.19, fontSize: width * 0.04, fontWeight: 'bold' }}>Tokens</Text>
-                <Text style={{ width: width * 0.92 * 0.115, fontSize: width * 0.04, fontWeight: 'bold' }}>Serv.</Text>
+                <Text style={{ width: width * 0.92 * 0.35, fontSize: width * 0.04, fontWeight: 'bold' }}>{phoneWord}</Text>
+                <Text style={{ width: width * 0.92 * 0.32, fontSize: width * 0.04, fontWeight: 'bold' }}>{joinedWord}</Text>
+                <Text style={{ width: width * 0.92 * 0.19, fontSize: width * 0.04, fontWeight: 'bold' }}>{tokensWord}</Text>
+                <Text style={{ width: width * 0.92 * 0.115, fontSize: width * 0.04, fontWeight: 'bold' }}>{servWord}</Text>
             </View>
             <View style={{ height: height * 0.6 }}>
                 <ScrollView>
