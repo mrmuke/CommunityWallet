@@ -1,4 +1,5 @@
 import { Drawer } from 'native-base';
+import Members from '../screens/Admin/Members';
 import Wallet from '../screens/Wallet/Wallet';
 import {
     MembersScreen,
@@ -14,10 +15,19 @@ import {
 
 export const english = {
     [MembersScreen.joinCode_P]: 'Join Code: ',
+    [MembersScreen.phone_W]: 'Phone',
+    [MembersScreen.joined_W]: 'Joined',
+    [MembersScreen.tokens_W]: 'Tokens',
+    [MembersScreen.serv_W]: 'Serv.',
 
+    [CreateServicesScreen.cameraRollPermission_P]: 'Sorry, we need camera roll permissions to make this work!',
     [CreateServicesScreen.createServices_P]: 'Create Services',
     [CreateServicesScreen.info_W]: 'MAIN INFO',
+    [CreateServicesScreen.nameOfService_P]: 'Name of Service',
+    [CreateServicesScreen.category_W]: 'Category',
+    [CreateServicesScreen.price_W]: 'Price',
     [CreateServicesScreen.description_W]: 'DESCRIPTION',
+    [CreateServicesScreen.describeService_P]: 'Describe Your Service',
     [CreateServicesScreen.photo_W]: 'PHOTO',
     [CreateServicesScreen.insertImage_P]: 'INSERT IMAGE HERE',
     [CreateServicesScreen.create_W]: 'CREATE',
