@@ -3,17 +3,43 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { ActivityIndicator } from 'react-native';
-import { Button } from 'native-base';
+import { Button, CheckIcon, Select } from 'native-base';
 import axios from 'axios';
 import AuthContext from '../../auth-context';
 import API_URL from '../../API_URL';
 import { showMessage } from 'react-native-flash-message';
-export default function Send({ navigation }) {
+
+import { TabRouter } from '@react-navigation/routers';
+import { useIsFocused } from '@react-navigation/native';
+
+export default function Send({ navigation, route }) {
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
   const [rcpAddress, setRcpAddress] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [contractAddress,setContractAddress]=useState("")
+  const [loading, setLoading] = useState(true)
   const { state } = React.useContext(AuthContext);
+  const isFocused = useIsFocused();
+  const [tokens,setTokens]=useState(null)
+  
+  useEffect(()=>{
+    if(route.params&&route.params.rcpAddress){
+      setPage(2)
+      setRcpAddress(route.params.rcpAddress);
+      setContractAddress(route.params.contractAddress)
+    }else{
+      axios.post(API_URL + "/community/tokens", {
+        mnemonic: state.mnemonic,
+        password: state.password,
+  
+      }).then(res=>{
+        
+        setTokens(res.data)
+        setLoading(false)
+      })
+    }
+  },[isFocused]);
+  
   function sendTokens() {
     setLoading(true)
     axios.post(API_URL + "/user/send", {
@@ -21,20 +47,27 @@ export default function Send({ navigation }) {
       password: state.password,
       recipientAddress: rcpAddress,
       transferAmount: amount,
-      contractAddress: "wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
+      contractAddress: contractAddress
 
     }).then(res => {
+      setContractAddress(null)
       setLoading(false)
-      setPage(3)
+      setPage(4)
     })
   }
+
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{fontSize:30}}>Success!</Text>
       <View style={{borderRadius:100, backgroundColor:"lightgreen",marginVertical:50}}><Icon name="check" style={{color:"white"}}  size={100}/></View>
-      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");navigation.navigate("Home")}}>Go Home</Button>
+      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");if(route.params&&route.params.rcpAddress){
+          navigation.navigate("Admin Home")
+        } else {
+          navigation.navigate("Home")
+        }}}>Go Home</Button>
     </View>
   }
+
   const Calculator = () => {
     return (
       <View>
@@ -192,7 +225,7 @@ export default function Send({ navigation }) {
               
               >0</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { setPage(2) }} style={styles.inputRowNumberSend}>
+            <TouchableOpacity onPress={() => { setPage(3) }} style={styles.inputRowNumberSend}>
               <Text style={styles.inputRowNumberText}><Icon name="send" style={styles.sendIcon}></Icon></Text>
             </TouchableOpacity>
           </View>
@@ -212,7 +245,7 @@ export default function Send({ navigation }) {
 
       console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
       setRcpAddress(data)
-      setPage(1)
+      setPage(2)
     };
     return <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       {hasPermission == null ? <ActivityIndicator />
@@ -253,7 +286,7 @@ export default function Send({ navigation }) {
   
       }).then(res => {
         setLoading(false)
-        setPage(1)
+        setPage(2)
         setRcpAddress(res.data.rcp)
         showMessage({message:"User Found",type:"success"})
       }).catch(e=>{
@@ -288,21 +321,46 @@ export default function Send({ navigation }) {
       <View style={styles.logoContainer}>
         <TouchableOpacity onPress={() => {
           setPage(0);
-          navigation.navigate("Home")
+            if(route.params&&route.params.rcpAddress){
+              navigation.navigate("Admin Home")
+            } else {
+              navigation.navigate("Home")
+            }
         }}>
           <Image style={styles.logo} source={require("./../../assets/logo.png")}></Image>
         </TouchableOpacity>
       </View>
       {(function () {
-        if (page == 0) {
+        if(page==0){
+          return <View style={{flex:1,justifyContent:'center',padding:10}}><Select
+          selectedValue={contractAddress}
+          marginBottom={3}
+          accessibilityLabel="Choose Token"
+          placeholder="Choose Token"
+          placeholderTextColor='black'
+          color="black"
+          _selectedItem={{
+              bg: "teal.600",
+              endIcon: <CheckIcon size="5" />,
+          }}
+          mt={1}
+          onValueChange={(itemValue) => {setContractAddress(itemValue);}}
+      >
+          {tokens&&Object.keys(tokens).map(c=>(
+              <Select.Item key={c} label={tokens[c]} value={c}/>
+          ))}
+         
+      </Select><Button onPress={()=>setPage(1)} backgroundColor="orange">Proceed</Button></View>
+        }
+        else if (page ==1) {
           return (
             <AskNumber></AskNumber>
           )
-        } else if (page == 1) {
+        } else if (page == 2) {
           return (
             <Calculator></Calculator>
           )
-        } else if (page == 2) {
+        } else if (page == 3) {
           return <Confirm></Confirm>
         }
         else {

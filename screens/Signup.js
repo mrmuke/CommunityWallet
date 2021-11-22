@@ -5,6 +5,7 @@ import API_URL from '../API_URL';
 import { HStack, Switch } from 'native-base';
 import AuthContext from '../auth-context';
 import { showMessage } from 'react-native-flash-message';
+import { ScrollView } from 'react-native-gesture-handler';
 export default function Signup({ navigation }) {
   const { authContext } = React.useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -15,10 +16,12 @@ export default function Signup({ navigation }) {
   const [verifyCode, setVerifyCode] = useState("")
   const [verifying, setVerifying] = useState(false);
 /*   const [error, setError] = useState("")
- */  const [admin, setAdmin] = useState(false)
+ */
+  const [admin, setAdmin] = useState(false)
   const [communityName, setCommunityName] = useState("")
   const [loading,setLoading]=useState(false)
   const [username,setUsername]=useState("")
+  const [numTokens,setNumTokens] =useState("")
 
   async function register() {
     //create wallet
@@ -43,7 +46,7 @@ export default function Signup({ navigation }) {
   function checkVerify() {
     if (verifyCode == verificationCode) {
       setLoading(true)
-      axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName }).then(response => {
+      axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName,numTokens }).then(response => {
         console.log(response.data)
         var data = {
           mnemonic: response.data.mnemonic,
@@ -107,7 +110,7 @@ export default function Signup({ navigation }) {
     );
   }
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       
       <Text style={styles.logo}>Sign Up</Text>
       <View style={styles.inputView} >
@@ -145,22 +148,31 @@ export default function Signup({ navigation }) {
           onChangeText={text => setConfirmPassword(text)}
           value={confirmPassword} />
       </View>
+      
       <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>Admin</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
-      <View style={styles.inputView} >
+      
         {admin ?
-          <TextInput
+        <>
+          <View style={styles.inputView} ><TextInput
             style={styles.inputText}
             placeholder="Community Name..."
             placeholderTextColor="#003f5c"
             onChangeText={text => setCommunityName(text)}
-            value={communityName} />
-          : <TextInput
+            value={communityName} /></View>
+            <View style={styles.inputView}><TextInput
+          keyboardType={'numeric'}
+          style={styles.inputText}
+          placeholder="Number of Tokens in Economy..."
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setNumTokens(text)}
+          value={numTokens} /></View>
+      </>
+          : <View style={styles.inputView} ><TextInput
             style={styles.inputText}
             placeholder="Community Code..."
             placeholderTextColor="#003f5c"
             onChangeText={text => setCode(text)}
-            value={code} />}
-      </View>
+            value={code} /></View>}
       <TouchableOpacity style={styles.loginBtn} onPress={
         () => {
           register()
@@ -174,13 +186,13 @@ export default function Signup({ navigation }) {
         <Text style={styles.signup}>Already have an account? Log in!</Text>
       </TouchableOpacity>
       
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingTop:20,
     alignItems: 'center',
     justifyContent: 'center',
   },

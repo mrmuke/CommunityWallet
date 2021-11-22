@@ -5,7 +5,6 @@ import AuthContext from '../../auth-context';
 import axios from 'axios'
 import api from '../../API_URL';
 import * as ImagePicker from 'expo-image-picker';
-import { Buffer } from 'buffer';
 import { showMessage } from 'react-native-flash-message';
 
 var orange = "#ec802e";
