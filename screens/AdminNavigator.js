@@ -123,7 +123,7 @@ function Page({ name, community, state, navigation }) {
   }
   if (name == "Analytics") {
 
-    return <><Heading style={{ alignSelf: 'flex-start', marginLeft: 25, fontSize: 18 }}>Transactions</Heading>
+    return <><Heading style={{ alignSelf: 'flex-start', marginLeft: 25, fontSize: 18 }}>{transactionsWord}</Heading>
       <LineChart
         data={{
           labels: ['January', 'February', 'March', 'April', 'May', 'June'],
@@ -152,16 +152,16 @@ function Page({ name, community, state, navigation }) {
       />
       <Box w="90%">
         <View style={{ backgroundColor: "#FFD580", padding: 10, borderRadius: 10, marginBottom: 10 }}>
-          <Heading style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Progress</Heading>
+          <Heading style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>{progressWord}</Heading>
           <Progress colorScheme="warning" backgroundColor="#eee" size="md" mb={4} value={45} /></View></Box>
-      <Heading style={{ fontSize: 18, alignSelf: 'flex-start', marginLeft: 25, marginBottom: 10 }}>Statistics</Heading>
+      <Heading style={{ fontSize: 18, alignSelf: 'flex-start', marginLeft: 25, marginBottom: 10 }}>{statisticsWord}</Heading>
 
       <View style={{ flexDirection: 'row', alignSelf: 'flex-start', paddingLeft: 10, marginBottom: 25 }}>
         <Card title="Total Transactions" data={233}></Card>
         <Card title="Total Transactions" data={233}></Card>
         <Card title="Total Transactions" data={233}></Card>
       </View>
-      <Button onPress={() => authContext.signOut()} backgroundColor="orange" width={"100%"} height={70} borderRadius={0}>Sign Out</Button>
+      <Button onPress={() => authContext.signOut()} backgroundColor="orange" width={"100%"} height={70} borderRadius={0}>{signOutPhrase}</Button>
     </>
   }
   else if (name == "Tokens") {
@@ -172,7 +172,7 @@ function Page({ name, community, state, navigation }) {
           <TouchableOpacity style={{ backgroundColor: "#FFD580", borderRadius: 5, padding: 20, width: "20%" }} onPress={() => {
             setShowMembers(false);
           }}>
-            <Text>Back!</Text>
+            <Text>{backWord}</Text>
           </TouchableOpacity>
           {(function () {
             let arr = [];
@@ -185,7 +185,7 @@ function Page({ name, community, state, navigation }) {
                       "rcpAddress": member.address
                     });
                   }}>
-                    <Text style={{ width: "100%", textAlign: "center" }}>Send!</Text>
+                    <Text style={{ width: "100%", textAlign: "center" }}>{sendWord}</Text>
                   </TouchableOpacity>
                 </View>
               </View>)
@@ -203,7 +203,7 @@ function Page({ name, community, state, navigation }) {
                 <HStack>
                   <View style={{ marginRight: 5 }}><Icon name="logo-bitcoin" size={30} ></Icon></View>
                   <View>
-                    <Text style={{ fontWeight: "bold" }}>{community.name}Time Token</Text>
+                    <Text style={{ fontWeight: "bold" }}>{community.name}{timeTokenWord}</Text>
                     <Text>{c.substr(0, 20)}...</Text>
                   </View></HStack>
                 <Text>${tokens[c]}</Text>
@@ -212,13 +212,13 @@ function Page({ name, community, state, navigation }) {
           ))}</List>
         {showModal &&
           <View style={{ flexDirection: 'row', flex: 1, marginTop: 10 }}>
-            <Button style={{ flex: 1, marginLeft: 5 }} backgroundColor="orange">Burn Token</Button>
+            <Button style={{ flex: 1, marginLeft: 5 }} backgroundColor="orange">{burnTokenPhrase}</Button>
             <Button style={{ flex: 1, marginLeft: 5, marginRight: 5 }} backgroundColor="orange" onPress={
               () => {
                 getMembers();
                 setShowMembers(true);
               }
-            }>Send Token</Button></View>
+            }>{sendTokenPhrase}</Button></View>
         }
         {/* <Button padding={5}>Create New Token</Button>
       <Button padding={5} marginTop={2}>Send Tokens</Button> */}

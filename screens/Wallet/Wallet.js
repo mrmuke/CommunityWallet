@@ -16,6 +16,16 @@ import QRCode from 'react-native-qrcode-svg';
 import AuthContext from '../../auth-context';
 import { useIsFocused } from "@react-navigation/native";
 
+// LANGUAGE LOCALIZATION
+import i18n from '../../i18n';
+import tokens from '../../i18n/tokens';
+
+const { myWallet_P, totalBalance_P, receiveTokens_P, today_W } = tokens.screens.wallet.wallets
+const myWalletPhrase = i18n.t(myWallet_P)
+const totalBalancePhrase = i18n.t(totalBalance_P)
+const receiveTokensPhrase = i18n.t(receiveTokens_P)
+const todayWord = i18n.t(today_W)
+
 export default function Wallet() {
     const { state } = React.useContext(AuthContext);
 
@@ -25,12 +35,12 @@ export default function Wallet() {
     const [receive, setReceive] = useState(false)
     const isFocused = useIsFocused();
     useEffect(() => {
-        if(isFocused){
+        if (isFocused) {
             setTokens([])
             setAddress(null)
             getWallet()
         }
-        
+
     }, [isFocused])
     function getWallet() {
         axios.post(API_URL + '/user/wallet', { mnemonic: state.mnemonic, password: state.password }).then(response => {
@@ -54,14 +64,14 @@ export default function Wallet() {
             }
             }><QRCode size={150} value={address} /><TouchableOpacity style={{ padding: 15 }} onPress={() => setReceive(false)}><Text>Close</Text></TouchableOpacity></View></Modal>
             <View style={styles.amount}>
-                <Text style={{ color: 'white', fontSize: 25 }}>My Wallet</Text>
+                <Text style={{ color: 'white', fontSize: 25 }}>{myWalletPhrase}</Text>
                 <View style={{ alignItems: 'center' }}><Heading fontSize={70} color="white">{tokens[Object.keys(tokens)[0]]}</Heading>
-                    <Text style={{ color: '#ececec' }}>Total Balance</Text></View>
+                    <Text style={{ color: '#ececec' }}>{totalBalancePhrase}</Text></View>
             </View>
 
             <View style={{ backgroundColor: 'white', flex: 1, padding: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                <Button onPress={() => setReceive(true)} backgroundColor="orange" marginBottom={5}>Receive Tokens</Button>
-                <Text style={{ fontSize: 25, marginLeft: 15, marginBottom: 10 }}>Today</Text>
+                <Button onPress={() => setReceive(true)} backgroundColor="orange" marginBottom={5}>{receiveTokensPhrase}</Button>
+                <Text style={{ fontSize: 25, marginLeft: 15, marginBottom: 10 }}>{todayWord}</Text>
                 <VStack>
                     {list.map((item, index) => (
                         <Transaction key={index} text={item} />
