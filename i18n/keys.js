@@ -3,7 +3,7 @@
 Placeholder Naming Convention
 
 SUFFIXES:
-'_W' = Word
+'_W' = Word/Noun
 '_P' = Phrase
 '_S' = Statement (informing of a state in the system, need to make dynamic)
 
@@ -49,14 +49,14 @@ export const SendScreen = {
 }
 
 export const ServicesScreen = {
-    allServices: 'All button',
+    all_W: 'All button',
 }
 
 export const WalletScreen = {
     myWallet_P: 'My-Wallet header',
     totalBalance_P: 'Total-Balance header',
     receiveTokens_P: 'Receive-Tokens button',
-    today_P: 'Today header',
+    today_W: 'Today header',
 }
 
 export const AdminNavigatorScreen = {
@@ -88,16 +88,31 @@ export const HomeScreen = {
 }
 
 export const LoginScreen = {
+    wrongCredentials_P: 'Wrong-Number-Password',
     bao_W: 'Bao name',
+    phoneNumber_W: 'Phone-Number placeholder',
+    password_W: 'Password placeholder',
     forgotPassword_P: 'Forgot_Password phrase',
     login_W: 'LOGIN button',
     signUp_P: 'Sign-Up phrase/question',
 }
 
 export const SignupScreen = {
-
-}
-
-export const SplashScreen = {
-
+    communityNameLonger_P: 'Longer-Community-Name longer alert',
+    verificationCode_P: 'Your-Verification-Code-Is phrase',
+    wrongVerificationCode_P: 'Wrong-Verification-Code phrase',
+    signUp_P: 'Sign-Up header',
+    aCodeHasBeenSent_P: 'A-Code-Has-Been-Sent-To phrase',
+    pleaseEnterCode_P: 'Enter-Verification-Code phrase',
+    verficationCodeInput_P: 'Verification-Code placeholder',
+    goBack_P: 'Go-Back button',
+    verify_W: 'VERIFY button',
+    alreadyHaveAccount_P: 'Log-In instead of sign up phrase',
+    phoneNumber_W: 'Phone-Number placeholder',
+    username_W: 'Username placeholder',
+    password_W: 'Password placeholder',
+    confirmPassword_P: 'Confirm-Password placeholder',
+    communityName_W: 'Cpommunity-Name placeholder',
+    communityCode_W: 'Community-Code placeholder',
+    submitSignUp_P: 'SIGNUP final button',
 }

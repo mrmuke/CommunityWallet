@@ -29,7 +29,6 @@ const tokens = {
         home: HomeScreen,
         login: LoginScreen,
         signup: SignupScreen,
-        splash: SplashScreen
     }
 }
 

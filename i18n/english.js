@@ -1,6 +1,3 @@
-import { Drawer } from 'native-base';
-import Members from '../screens/Admin/Members';
-import Wallet from '../screens/Wallet/Wallet';
 import {
     MembersScreen,
     CreateServicesScreen,
@@ -11,6 +8,7 @@ import {
     DrawerScreen,
     HomeScreen,
     LoginScreen,
+    SignupScreen,
 } from './keys';
 
 export const english = {
@@ -45,12 +43,12 @@ export const english = {
     [SendScreen.or_W]: 'OR',
     [SendScreen.scan_W]: 'Scan',
 
-    [ServicesScreen.allServices]: 'All',
+    [ServicesScreen.all_W]: 'All',
 
     [WalletScreen.myWallet_P]: 'My Wallet',
     [WalletScreen.totalBalance_P]: 'Total Balance',
     [WalletScreen.receiveTokens_P]: 'Receive Tokens',
-    [WalletScreen.today_P]: 'Today',
+    [WalletScreen.today_W]: 'Today',
 
     [AdminNavigatorScreen.transactions_W]: 'Transactions',
     [AdminNavigatorScreen.progress_W]: 'Progress',
@@ -74,8 +72,29 @@ export const english = {
     [HomeScreen.wallet_W]: 'Wallet',
     [HomeScreen.community_W]: 'Community',
 
+    [LoginScreen.wrongCredentials_P]: 'Wrong Number or Password',
     [LoginScreen.bao_W]: 'Bao',
+    [LoginScreen.phoneNumber_W]: 'Phone Number...',
+    [LoginScreen.password_W]: 'Password...',
     [LoginScreen.forgotPassword_P]: 'Forgot Password?',
     [LoginScreen.login_W]: 'LOGIN',
     [LoginScreen.signUp_P]: "Don't have an account? Signup now!",
+
+    [SignupScreen.communityNameLonger_P]: 'Your community name should be longer!',
+    [SignupScreen.verificationCode_P]: 'Your verification code is',
+    [SignupScreen.wrongVerificationCode_P]: 'Your Verification Code',
+    [SignupScreen.signUp_P]: 'Sign Up',
+    [SignupScreen.aCodeHasBeenSent_P]: 'A code has been sent to',
+    [SignupScreen.pleaseEnterCode_P]: 'Please enter it to continue',
+    [SignupScreen.verficationCodeInput_P]: 'Verification Code...',
+    [SignupScreen.goBack_P]: 'Go back',
+    [SignupScreen.verify_W]: 'VERIFY',
+    [SignupScreen.alreadyHaveAccount_P]: 'Already have an account? Log in!',
+    [SignupScreen.phoneNumber_W]: 'Phone Number...',
+    [SignupScreen.username_W]: 'Username...',
+    [SignupScreen.password_W]: 'Password...',
+    [SignupScreen.confirmPassword_P]: 'Confirm Password...',
+    [SignupScreen.communityName_W]: 'Community Name...',
+    [SignupScreen.communityCode_W]: 'Community Code...',
+    [SignupScreen.submitSignUp_P]: 'SIGNUP',
 }

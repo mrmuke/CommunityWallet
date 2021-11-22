@@ -7,8 +7,11 @@ import { showMessage } from 'react-native-flash-message';
 import i18n from '../i18n/index'
 import tokens from '../i18n/tokens'
 
-const { bao_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+const wrongCredentialsPhrase = i18n.t(wrongCredentials_P)
 const baoWord = i18n.t(bao_W)
+const phoneNumberWord = i18n.t(phoneNumber_W),
+const passwordWord = i18n.t(password_W)
 const forgotPasswordPhrase = i18n.t(forgotPassword_P)
 const loginWord = i18n.t(login_W)
 const signUpPhrase = i18n.t(signUp_P)
@@ -31,7 +34,7 @@ export default function Login({ navigation }) {
 
     }).catch(e => {
       showMessage({
-        message: "Wrong Number or Password",
+        message: wrongCredentialsPhrase,
         type: "danger",
       });
     })
@@ -42,7 +45,7 @@ export default function Login({ navigation }) {
       <View style={styles.inputView} >
         <TextInput
           style={styles.inputText}
-          placeholder="Phone Number..."
+          placeholder={phoneNumberWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPhoneNumber(text)} />
       </View>
@@ -50,7 +53,7 @@ export default function Login({ navigation }) {
         <TextInput
           secureTextEntry
           style={styles.inputText}
-          placeholder="Password..."
+          placeholder={passwordWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPassword(text)} />
       </View>
