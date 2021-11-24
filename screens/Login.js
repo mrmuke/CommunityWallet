@@ -4,6 +4,18 @@ import axios from 'axios'
 import API_URL from '../API_URL';
 import AuthContext from '../auth-context';
 import { showMessage } from 'react-native-flash-message';
+import i18n from '../i18n/index'
+import tokens from '../i18n/tokens'
+
+const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+const wrongCredentialsPhrase = i18n.t(wrongCredentials_P)
+const baoWord = i18n.t(bao_W)
+const phoneNumberWord = i18n.t(phoneNumber_W),
+const passwordWord = i18n.t(password_W)
+const forgotPasswordPhrase = i18n.t(forgotPassword_P)
+const loginWord = i18n.t(login_W)
+const signUpPhrase = i18n.t(signUp_P)
+
 export default function Login({ navigation }) {
   const { authContext } = React.useContext(AuthContext);
 
@@ -19,21 +31,21 @@ export default function Login({ navigation }) {
         admin: response.data.admin
       }
       authContext.signIn(data)
-      
-    }).catch(e=>{
+
+    }).catch(e => {
       showMessage({
-        message: "Wrong Number or Password",
+        message: wrongCredentialsPhrase,
         type: "danger",
       });
     })
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>Bao</Text>
+      <Text style={styles.logo}>{baoWord}</Text>
       <View style={styles.inputView} >
         <TextInput
           style={styles.inputText}
-          placeholder="Phone Number..."
+          placeholder={phoneNumberWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPhoneNumber(text)} />
       </View>
@@ -41,20 +53,20 @@ export default function Login({ navigation }) {
         <TextInput
           secureTextEntry
           style={styles.inputText}
-          placeholder="Password..."
+          placeholder={passwordWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPassword(text)} />
       </View>
       <TouchableOpacity>
-        <Text style={styles.forgot}>Forgot Password?</Text>
+        <Text style={styles.forgot}>{forgotPasswordPhrase}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={submit} style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text>
+        <Text style={styles.loginText}>{loginWord}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => {
         navigation.navigate("Signup");
       }}>
-        <Text style={styles.signup}>Don't have an account? Signup now!</Text>
+        <Text style={styles.signup}>{signUpPhrase}</Text>
       </TouchableOpacity>
     </View>
   );

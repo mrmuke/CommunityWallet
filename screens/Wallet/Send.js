@@ -12,6 +12,24 @@ import { showMessage } from 'react-native-flash-message';
 import { TabRouter } from '@react-navigation/routers';
 import { useIsFocused } from '@react-navigation/native';
 
+// LANGUAGE LOCALIZATION
+import i18n from '../../i18n';
+import tokens from '../../i18n/tokens';
+
+const { success_W, goHome_P, clear_W, cancel_W, cameraPermission_P, sending_W, tokensTo_P, confirm_W, who_P, next_W, or_W, scan_W } = tokens.screens.wallet.send
+const successWord = i18n.t(success_W)
+const goHomePhrase = i18n.t(goHome_P)
+const clearWord = i18n.t(clear_W)
+const cancelWord = i18n.t(cancel_W)
+const cameraPermissionPhrase = i18n.t(cameraPermission_P)
+const sendingWord = i18n.t(sending_W)
+const tokensToPhrase = i18n.t(tokensTo_P)
+const confirmWord = i18n.t(confirm_W)
+const whoPhrase = i18n.t(who_P)
+const nextWord = i18n.t(next_W)
+const orWord = i18n.t(or_W)
+const scanWord = i18n.t(scan_W)
+
 export default function Send({ navigation, route }) {
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
@@ -38,8 +56,8 @@ export default function Send({ navigation, route }) {
         setLoading(false)
       })
     }
-  },[isFocused]);
-  
+  }, [isFocused]);
+
   function sendTokens() {
     setLoading(true)
     axios.post(API_URL + "/user/send", {
@@ -60,11 +78,12 @@ export default function Send({ navigation, route }) {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{fontSize:30}}>Success!</Text>
       <View style={{borderRadius:100, backgroundColor:"lightgreen",marginVertical:50}}><Icon name="check" style={{color:"white"}}  size={100}/></View>
-      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");if(route.params&&route.params.rcpAddress){
+      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");
+      if(route.params&&route.params.rcpAddress){
           navigation.navigate("Admin Home")
         } else {
           navigation.navigate("Home")
-        }}}>Go Home</Button>
+        }}}>{goHomePhrase}</Button>
     </View>
   }
 
@@ -86,7 +105,7 @@ export default function Send({ navigation, route }) {
                 setAmount("0");
               }
             }>
-              <Text style={styles.inputRowNumberText}>CLEAR</Text>
+              <Text style={styles.inputRowNumberText}>{clearWord}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
@@ -252,24 +271,24 @@ export default function Send({ navigation, route }) {
         :
         (
           hasPermission == false ?
-            <Text>No camera permission</Text>
+            <Text>{cameraPermissionPhrase}</Text>
             : <>
               <View style={{ borderWidth: 3, borderColor: "orange", width: "85%", height: "75%", }}>
                 <BarCodeScanner
                   onBarCodeScanned={handleBarCodeScanned}
                   style={{ height: "100%", width: "100%" }} />
-              </View><TouchableOpacity onPress={cancel} style={{ width: "85%", flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "orange", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}><Icon color="white" name="cancel" style={{ marginRight: 10 }}></Icon><Text style={{ color: "white", }}>Cancel</Text></TouchableOpacity></>)
+              </View><TouchableOpacity onPress={cancel} style={{ width: "85%", flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "orange", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}><Icon color="white" name="cancel" style={{ marginRight: 10 }}></Icon><Text style={{ color: "white", }}>{cancelWord}</Text></TouchableOpacity></>)
       }</View>
   }
   const Confirm = () => {
 
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ textAlign: 'center', marginBottom: 20 }}>Sending <Text style={{ fontWeight: "bold" }}>{amount}</Text> tokens to <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
-      <Button onPress={sendTokens} backgroundColor="orange">Confirm</Button>
+      <Text style={{ textAlign: 'center', marginBottom: 20 }}>{sendingWord} <Text style={{ fontWeight: "bold" }}>{amount}</Text> {tokensToPhrase} <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
+      <Button onPress={sendTokens} backgroundColor="orange">{confirmWord}</Button>
     </View>
   }
   function Loader() {
-    return <View style={{ alignItems: 'center', justifyContent: 'center',flex:1 }}>
+    return <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
       <ActivityIndicator />
     </View>
   }
@@ -299,16 +318,16 @@ export default function Send({ navigation, route }) {
     }
     return (
       <View style={styles.mainContainer}>
-        <Text style={styles.text}>Who do you want to send this to?</Text>
+        <Text style={styles.text}>{whoPhrase}</Text>
         <TextInput value={phoneNumber} placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", backgroundColor: "white", marginTop: 30,padding:10}} onChangeText={text=>setPhoneNumber(text)} keyboardType="numeric"></TextInput>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
           checkNumber()
-        }}><Text style={[styles.text], { color: "white" }}>Next</Text>
+        }}><Text style={[styles.text], { color: "white" }}>{nextWord}</Text>
         </TouchableOpacity>
-        <Text style={[styles.text], { marginTop: 10 }}>OR</Text>
+        <Text style={[styles.text], { marginTop: 10 }}>{orWord}</Text>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 10 }} onPress={() => {
           setScanning(true);
-        }}><Text style={[styles.text], { color: "white" }}>Scan</Text>
+        }}><Text style={[styles.text], { color: "white" }}>{scanWord}</Text>
         </TouchableOpacity>
       </View>
     )
