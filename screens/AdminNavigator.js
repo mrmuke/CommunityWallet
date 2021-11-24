@@ -1,13 +1,9 @@
 import { StyleSheet, View, ActivityIndicator,TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph
+  LineChart
 } from 'expo-chart-kit'
-import { Text, Image } from 'react-native'
+import { Text } from 'react-native'
 import { Dimensions } from 'react-native'
 import { Box, Button, Heading, HStack, List, Progress, VStack, } from 'native-base'
 import { ScrollView } from 'react-native'
