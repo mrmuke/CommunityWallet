@@ -3,53 +3,82 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { ActivityIndicator } from 'react-native';
-import { Button } from 'native-base';
+import { Button, CheckIcon, Select } from 'native-base';
 import axios from 'axios';
-import AuthContext from '../../auth-context';
 import API_URL from '../../API_URL';
+import { showMessage } from 'react-native-flash-message';
+
 import { TabRouter } from '@react-navigation/routers';
 import { useIsFocused } from '@react-navigation/native';
 
+// LANGUAGE LOCALIZATION
+import tokens from '../../i18n/tokens';
+import { useTranslation } from 'react-i18next';
+
+const { success_W, goHome_P, clear_W, cancel_W, cameraPermission_P, sending_W, tokensTo_P, confirm_W, who_P, next_W, or_W, scan_W,found_P,unknown_P } = tokens.screens.wallet.send
+const { chooseToken_P } = tokens.common
+
 export default function Send({ navigation, route }) {
+  const {t} =useTranslation()
+  const successWord = t(success_W)
+const goHomePhrase = t(goHome_P)
+const clearWord = t(clear_W)
+const cancelWord = t(cancel_W)
+const cameraPermissionPhrase = t(cameraPermission_P)
+const sendingWord = t(sending_W)
+const tokensToPhrase = t(tokensTo_P)
+const confirmWord = t(confirm_W)
+const whoPhrase = t(who_P)
+const nextWord = t(next_W)
+const orWord = t(or_W)
+const scanWord = t(scan_W)
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
   const [rcpAddress, setRcpAddress] = useState("")
-  const [sending, setSending] = useState(false)
-  const { state } = React.useContext(AuthContext);
+  const [contractAddress,setContractAddress]=useState("")
+  const [loading, setLoading] = useState(true)
   const isFocused = useIsFocused();
-
-  useEffect(()=>{
-    if(route.params.rcpAddress){
-      setPage(1)
-      setRcpAddress(route.params.rcpAddress);
-    }
-  },[isFocused]);
+  const [tokens,setTokens]=useState(null)
   
+  useEffect(()=>{
+    if(route.params&&route.params.rcpAddress){
+      setLoading(false)
+      setPage(2)
+      setRcpAddress(route.params.rcpAddress);
+      setContractAddress(route.params.contractAddress)
+    }else{
+      axios.get(API_URL + "/community/tokens").then(res=>{
+        setContractAddress(Object.keys(res.data)[0])
+        setTokens(res.data)
+        setLoading(false)
+      })
+    }
+  }, [isFocused]);
+
   function sendTokens() {
-    setSending(true)
+    setLoading(true)
     axios.post(API_URL + "/user/send", {
-      mnemonic: state.mnemonic,
-      password: state.password,
       recipientAddress: rcpAddress,
       transferAmount: amount,
-      contractAddress: "wasm1upg37wmmwykkrj2wr96eudvuw6lrxt5eccw33j"
+      contractAddress: contractAddress
 
     }).then(res => {
-      setSending(false)
-      setPage(3)
+      setContractAddress(null)
+      setLoading(false)
+      setPage(4)
     })
   }
 
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{fontSize:30}}>Success!</Text>
-      <Button style={{marginTop:10}} backgroundColor="orange" onPress={() => {
-        if(route.params.rcpAddress){
+      <Text style={{fontSize:30}}>{successWord}</Text>
+      <View style={{borderRadius:100, backgroundColor:"lightgreen",marginVertical:50}}><Icon name="check" style={{color:"white"}}  size={100}/></View>
+      <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");
+      if(route.params&&route.params.rcpAddress){
           navigation.navigate("Admin Home")
         } else {
           navigation.navigate("Home")
-        }
-      }}>Go Home</Button>
+        }}}>{goHomePhrase}</Button>
     </View>
   }
 
@@ -63,6 +92,9 @@ export default function Send({ navigation, route }) {
           <View style={styles.inputRow}>
             <TouchableOpacity style={styles.inputRowNumberBack} onPress={() => {
               setPage(0);
+              if(route.params&&route.params.rcpAddress){
+                navigation.navigate("Admin Home")
+              } 
             }}>
               <Icon name="keyboard-backspace" style={styles.sendIcon}></Icon>
             </TouchableOpacity>
@@ -71,7 +103,7 @@ export default function Send({ navigation, route }) {
                 setAmount("0");
               }
             }>
-              <Text style={styles.inputRowNumberText}>CLEAR</Text>
+              <Text style={styles.inputRowNumberText}>{clearWord}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
@@ -153,15 +185,15 @@ export default function Send({ navigation, route }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText} onPress={
+            <TouchableOpacity  onPress={
                 () => {
                   if (amount == "0") {
                     setAmount("1");
                   } else {
                     setAmount(amount + "1");
                   }
-                }}>1</Text>
+                }} style={styles.inputRowNumber}>
+              <Text style={styles.inputRowNumberText}>1</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.inputRowNumber} onPress={
               () => {
@@ -198,10 +230,19 @@ export default function Send({ navigation, route }) {
             </TouchableOpacity>
           </View>
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.inputRowNumber}>
-              <Text style={styles.inputRowNumberText}>0</Text>
+            <TouchableOpacity style={styles.inputRowNumber}
+            onPress={
+              () => {
+                if (amount !== "0") {
+                  
+                  setAmount(amount + "0");
+                }
+              }}>
+              <Text style={styles.inputRowNumberText}
+              
+              >0</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { setPage(2) }} style={styles.inputRowNumberSend}>
+            <TouchableOpacity onPress={() => { setPage(3) }} style={styles.inputRowNumberSend}>
               <Text style={styles.inputRowNumberText}><Icon name="send" style={styles.sendIcon}></Icon></Text>
             </TouchableOpacity>
           </View>
@@ -221,58 +262,70 @@ export default function Send({ navigation, route }) {
 
       console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
       setRcpAddress(data)
-      setPage(1)
+      setPage(2)
     };
     return <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       {hasPermission == null ? <ActivityIndicator />
         :
         (
           hasPermission == false ?
-            <Text>No camera permission</Text>
+            <Text>{cameraPermissionPhrase}</Text>
             : <>
               <View style={{ borderWidth: 3, borderColor: "orange", width: "85%", height: "75%", }}>
                 <BarCodeScanner
                   onBarCodeScanned={handleBarCodeScanned}
                   style={{ height: "100%", width: "100%" }} />
-              </View><TouchableOpacity onPress={cancel} style={{ width: "85%", flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "orange", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}><Icon color="white" name="cancel" style={{ marginRight: 10 }}></Icon><Text style={{ color: "white", }}>Cancel</Text></TouchableOpacity></>)
+              </View><TouchableOpacity onPress={cancel} style={{ width: "85%", flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "orange", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}><Icon color="white" name="cancel" style={{ marginRight: 10 }}></Icon><Text style={{ color: "white", }}>{cancelWord}</Text></TouchableOpacity></>)
       }</View>
   }
   const Confirm = () => {
 
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ textAlign: 'center', marginBottom: 20 }}>Sending <Text style={{ fontWeight: "bold" }}>{amount}</Text> tokens to <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
-      <Button onPress={sendTokens} backgroundColor="orange">Confirm</Button>
+      <Text style={{ textAlign: 'center', marginBottom: 20 }}>{sendingWord} <Text style={{ fontWeight: "bold" }}>{amount}</Text> {tokensToPhrase} <Text style={{ fontWeight: "bold" }}>{rcpAddress.substr(0, 30)}...</Text></Text>
+      <Button onPress={sendTokens} backgroundColor="orange">{confirmWord}</Button>
     </View>
   }
   function Loader() {
-    return <View style={{ alignItems: 'center', justifyContent: 'center',flex:1 }}>
+    return <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
       <ActivityIndicator />
     </View>
   }
   const AskNumber = () => {
     const [scanning, setScanning] = useState(false)
+    const [phoneNumber,setPhoneNumber]=useState("")
 
-    
+    function checkNumber(){
+      setLoading(true)
+      axios.get(API_URL + "/user/public?phoneNumber="+phoneNumber).then(res => {
+        setLoading(false)
+        setPage(2)
+        setRcpAddress(res.data.rcp)
+        showMessage({message:t(found_P),type:"success"})
+      }).catch(e=>{
+        setLoading(false)
+        showMessage({message:t(unknown_P),type:"danger"})
+      })
+    }
     if (scanning) {
       return <Scan cancel={() => setScanning(false)} />
     }
     return (
       <View style={styles.mainContainer}>
-        <Text style={styles.text}>Who do you want to send this to?</Text>
-        <TextInput placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", height: Dimensions.get("screen").height * 0.04, backgroundColor: "white", marginTop: 30, padding: 20 }} keyboardType="numeric"></TextInput>
+        <Text style={styles.text}>{whoPhrase}</Text>
+        <TextInput value={phoneNumber} placeholder="+1 773-584-2648" style={{ borderWidth: 3, borderRadius: 10, width: "83%", backgroundColor: "white", marginTop: 30,padding:10}} onChangeText={text=>setPhoneNumber(text)} keyboardType="numeric"></TextInput>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 30 }} onPress={() => {
-          /* setPage(1); */
-        }}><Text style={[styles.text], { color: "white" }}>Next</Text>
+          checkNumber()
+        }}><Text style={[styles.text], { color: "white" }}>{nextWord}</Text>
         </TouchableOpacity>
-        <Text style={[styles.text], { marginTop: 10 }}>OR</Text>
+        <Text style={[styles.text], { marginTop: 10 }}>{orWord}</Text>
         <TouchableOpacity style={{ width: "83%", backgroundColor: "#ec802e", height: Dimensions.get("screen").height * 0.055, justifyContent: "center", alignItems: "center", borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopLeftRadius: 100, borderBottomLeftRadius: 100, borderTopRightRadius: 100, borderBottomRightRadius: 100, marginTop: 10 }} onPress={() => {
           setScanning(true);
-        }}><Text style={[styles.text], { color: "white" }}>Scan</Text>
+        }}><Text style={[styles.text], { color: "white" }}>{scanWord}</Text>
         </TouchableOpacity>
       </View>
     )
   }
-  if (sending) {
+  if (loading) {
     return <Loader />
   }
   return (
@@ -280,7 +333,7 @@ export default function Send({ navigation, route }) {
       <View style={styles.logoContainer}>
         <TouchableOpacity onPress={() => {
           setPage(0);
-            if(route.params.rcpAddress){
+            if(route.params&&route.params.rcpAddress){
               navigation.navigate("Admin Home")
             } else {
               navigation.navigate("Home")
@@ -290,15 +343,36 @@ export default function Send({ navigation, route }) {
         </TouchableOpacity>
       </View>
       {(function () {
-        if (page == 0) {
+        if(page==0&&tokens){
+          return <View style={{flex:1,justifyContent:'center',padding:10}}><Select
+          selectedValue={contractAddress}
+          marginBottom={3}
+          accessibilityLabel={t(chooseToken_P)}
+          placeholder={t(chooseToken_P)}
+          placeholderTextColor='black'
+          color="black"
+          _selectedItem={{
+              bg: "teal.600",
+              endIcon: <CheckIcon size="5" />,
+          }}
+          mt={1}
+          onValueChange={(itemValue) => {setContractAddress(itemValue);}}
+      >
+          {tokens&&Object.keys(tokens).map(c=>(
+              <Select.Item key={c} label={tokens[c]} value={c}/>
+          ))}
+         
+      </Select><Button onPress={()=>setPage(1)} backgroundColor="orange">{nextWord}</Button></View>
+        }
+        else if (page ==1) {
           return (
             <AskNumber></AskNumber>
           )
-        } else if (page == 1) {
+        } else if (page == 2) {
           return (
             <Calculator></Calculator>
           )
-        } else if (page == 2) {
+        } else if (page == 3) {
           return <Confirm></Confirm>
         }
         else {

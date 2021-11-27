@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Button, Heading, VStack } from 'native-base';
+import { Button, Heading, VStack,Select,
+    CheckIcon, } from 'native-base';
 import React, { Component, useEffect, useState } from 'react';
 import {
     StyleSheet,
@@ -11,39 +12,52 @@ import {
     Modal
 } from 'react-native';
 import API_URL from '../../API_URL';
+import tokens from '../../i18n/tokens'
 
 import QRCode from 'react-native-qrcode-svg';
-import AuthContext from '../../auth-context';
 import { useIsFocused } from "@react-navigation/native";
 
+// LANGUAGE LOCALIZATION
+import { useTranslation } from 'react-i18next';
+const { myWallet_P, totalBalance_P, receiveTokens_P, today_W } = tokens.screens.wallet.wallets
+const {chooseToken_P} = tokens.common
 export default function Wallet() {
-    const { state } = React.useContext(AuthContext);
+    const {t} = useTranslation()
 
+
+const myWalletPhrase =t(myWallet_P)
+const totalBalancePhrase =t(totalBalance_P)
+const receiveTokensPhrase =t(receiveTokens_P)
+const todayWord =t(today_W)
+const chooseToken=t(chooseToken_P)
     let list = ["+500", "-500", "-200", "+300"]
     const [tokens, setTokens] = useState([])
     const [address, setAddress] = useState(null)
     const [receive, setReceive] = useState(false)
+    const [curToken,setCurToken]=useState("")
     const isFocused = useIsFocused();
     useEffect(() => {
-        if(isFocused){
+        if (isFocused) {
             setTokens([])
             setAddress(null)
             getWallet()
         }
-        
+
     }, [isFocused])
     function getWallet() {
-        axios.post(API_URL + '/user/wallet', { mnemonic: state.mnemonic, password: state.password }).then(response => {
-            console.log(response.data)
+        axios.get(API_URL + '/user/wallet').then(response => {
             setTokens(response.data.balances)
             setAddress(response.data.address)
+            console.log(response.data.balances)
+            setCurToken(Object.keys(response.data.balances)[0])
         })
     }
-    if (tokens.length == 0 || !address) {
+    if (tokens.length == 0 || !address ||!curToken) {
         return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 30 }}>
             <ActivityIndicator />
         </View>
     }
+    console.log(tokens)
     return (
         <View style={styles.background}>
             <Modal visible={receive} transparent={false} animationType="slide" ><View style={{
@@ -53,15 +67,35 @@ export default function Wallet() {
                 marginTop: 22,
             }
             }><QRCode size={150} value={address} /><TouchableOpacity style={{ padding: 15 }} onPress={() => setReceive(false)}><Text>Close</Text></TouchableOpacity></View></Modal>
-            <View style={styles.amount}>
-                <Text style={{ color: 'white', fontSize: 25 }}>My Wallet</Text>
-                <View style={{ alignItems: 'center' }}><Heading fontSize={70} color="white">{tokens[Object.keys(tokens)[0]]}</Heading>
-                    <Text style={{ color: '#ececec' }}>Total Balance</Text></View>
-            </View>
-
+                <View style={styles.amount}>
+                    <Text style={{ color: 'white', fontSize: 25 }}>{myWalletPhrase}</Text>
+                    <View style={{ alignItems: 'center' }}><Heading fontSize={70} color="white">{tokens[curToken].balance}</Heading>
+                        <Text style={{ color: '#ececec' }}>{totalBalancePhrase}</Text></View>
+                </View>
+                <VStack alignItems="center" space={4} marginBottom={5}>
+                    <Select
+                        selectedValue={curToken}
+                        minWidth="200"
+                        accessibilityLabel={chooseToken}
+                        placeholder={chooseToken}
+                        placeholderTextColor='white'
+                        color="white"
+                        _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size="5" />,
+                        }}
+                        mt={1}
+                        onValueChange={(itemValue) => setCurToken(itemValue)}
+                    >
+                        {Object.keys(tokens).map(c=>(
+                            <Select.Item key={c} label={tokens[c].name} value={c}/>
+                        ))}
+                       
+                    </Select>
+                </VStack>
             <View style={{ backgroundColor: 'white', flex: 1, padding: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                <Button onPress={() => setReceive(true)} backgroundColor="orange" marginBottom={5}>Receive Tokens</Button>
-                <Text style={{ fontSize: 25, marginLeft: 15, marginBottom: 10 }}>Today</Text>
+                <Button onPress={() => setReceive(true)} backgroundColor="orange" marginBottom={5}>{receiveTokensPhrase}</Button>
+                <Text style={{ fontSize: 25, marginLeft: 15, marginBottom: 10 }}>{todayWord}</Text>
                 <VStack>
                     {list.map((item, index) => (
                         <Transaction key={index} text={item} />
@@ -101,7 +135,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         height: 150,
         marginTop: 30,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight:10
     },
     item: {
         backgroundColor: '#FFF',

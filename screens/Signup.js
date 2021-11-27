@@ -5,7 +5,58 @@ import API_URL from '../API_URL';
 import { HStack, Switch } from 'native-base';
 import AuthContext from '../auth-context';
 import { showMessage } from 'react-native-flash-message';
+import { ScrollView } from 'react-native-gesture-handler';
+
+
+// LANGUAGE LOCALIZATION
+import tokens from '../i18n/tokens';
+import { useTranslation } from 'react-i18next';
+
+const {
+  communityNameLonger_P,
+  verificationCode_P,
+  wrongVerificationCode_P,
+  signUp_P,
+  aCodeHasBeenSent_P,
+  pleaseEnterCode_P,
+  verficationCodeInput_P,
+  goBack_P,
+  verify_W,
+  alreadyHaveAccount_P,
+  phoneNumber_W,
+  username_W,
+  password_W,
+  confirmPassword_P,
+  communityName_W,
+  communityCode_W,
+  submitSignUp_P,
+  numTokens_P,
+  passwordsUnequal_P,
+  isAdmin_W
+} = tokens.screens.signup
+
+
+
 export default function Signup({ navigation }) {
+  const {t} = useTranslation()
+
+const communityNameLongerPhrase =t(communityNameLonger_P)
+const verificationCodePhrase =t(verificationCode_P)
+const wrongVerificationCodePhrase =t(wrongVerificationCode_P)
+const signUpPhrase =t(signUp_P)
+const aCodeHasBeenSentPhrase =t(aCodeHasBeenSent_P)
+const pleaseEnterCodePhrase =t(pleaseEnterCode_P)
+const verficationCodeInputPhrase =t(verficationCodeInput_P)
+const goBackPhrase =t(goBack_P)
+const verifyWord =t(verify_W)
+const alreadyHaveAccountPhrase =t(alreadyHaveAccount_P)
+const phoneNumberWord =t(phoneNumber_W)
+const usernameWord =t(username_W)
+const passwordWord =t(password_W)
+const confirmPasswordPhrase =t(confirmPassword_P)
+const communityNameWord =t(communityName_W)
+const communityCodeWord =t(communityCode_W)
+const submitSignUpPhrase =t(submitSignUp_P)
   const { authContext } = React.useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
@@ -15,25 +66,30 @@ export default function Signup({ navigation }) {
   const [verifyCode, setVerifyCode] = useState("")
   const [verifying, setVerifying] = useState(false);
 /*   const [error, setError] = useState("")
- */  const [admin, setAdmin] = useState(false)
+ */
+  const [admin, setAdmin] = useState(false)
   const [communityName, setCommunityName] = useState("")
   const [loading,setLoading]=useState(false)
   const [username,setUsername]=useState("")
+  const [numTokens,setNumTokens] =useState("")
 
   async function register() {
-    //create wallet
-    //setup mongo
-    if(admin&&communityName.length<4){
+    if(password!=confirmPassword){
+      showMessage({message:t(passwordsUnequal_P), type:'warning'})
+      return;
+      //translate messages, admin
+    }
+    if (admin && communityName.length < 4) {
       showMessage({
-        message: "Your community name should be longer!",
-        type: "error",
+        message: communityNameLongerPhrase,
+        type: "warning",
       });
       return;
     }
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
-    axios.post("https://rest.nexmo.com/sms/json", { "from": "18334641476", "text": "Your verification code is " + random, "to": phoneNumber, "api_key": "e5444577", "api_secret": "PcOaBXuHxxySxTe6" }).then(response => {
+    axios.post("https://rest.nexmo.com/sms/json", { "from": "18334641476", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "e5444577", "api_secret": "PcOaBXuHxxySxTe6" }).then(response => {
       setVerifyCode(random)
       console.log(random)
       setVerifying(true)
@@ -41,25 +97,26 @@ export default function Signup({ navigation }) {
     //mongo set info
   }
   function checkVerify() {
+    
     if (verifyCode == verificationCode) {
       setLoading(true)
-      axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName }).then(response => {
+      axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName,numTokens }).then(response => {
         console.log(response.data)
         var data = {
           mnemonic: response.data.mnemonic,
           password: password,
-          admin:admin
+          admin: admin
         }
         authContext.signUp(data)
-        
-      }).catch(e=>{
+
+      }).catch(e => {
         /* showMessage({message:e.}) */
       })
 
     }
     else {
       showMessage({
-        message: "Wrong Verification Code",
+        message: wrongVerificationCodePhrase,
         type: "error",
       });
     }
@@ -68,53 +125,53 @@ export default function Signup({ navigation }) {
   if (verifying) {
     return (
       <View style={styles.container}>
-        
-        <Text style={styles.logo}>Sign Up</Text>
-        {loading?
-        <ActivityIndicator/>
-        :
-        <>
-        <Text style={styles.verifaction}>A code has been sent to {phoneNumber}. {'\n'}Please enter it to continue</Text>
-        <View style={styles.inputView} >
 
-          <TextInput
-          keyboardType="numeric"
-            style={styles.inputText}
-            placeholder="Verification Code..."
-            placeholderTextColor="#003f5c"
-            onChangeText={text => { setVerificationCode(text);/*  if (error.length > 0) { setError("")  }*/ }}
-            value={verificationCode} />
-        </View>
+        <Text style={styles.logo}>{signUpPhrase}</Text>
+        {loading ?
+          <ActivityIndicator />
+          :
+          <>
+            <Text style={styles.verifaction}>{aCodeHasBeenSentPhrase} {phoneNumber}. {'\n'}{pleaseEnterCodePhrase}</Text>
+            <View style={styles.inputView} >
 
-        <TouchableOpacity onPress={
-          () => {
-            setVerifying(false);
-          }
-        }>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.inputText}
+                placeholder={verficationCodeInputPhrase}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => { setVerificationCode(text);/*  if (error.length > 0) { setError("")  }*/ }}
+                value={verificationCode} />
+            </View>
 
-          <Text style={styles.forgot}>Go back</Text>
+            <TouchableOpacity onPress={
+              () => {
+                setVerifying(false);
+              }
+            }>
 
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => checkVerify()} style={styles.loginBtn}>
-          <Text style={styles.loginText}>VERIFY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          navigation.navigate("Login");
-        }}>
-          <Text style={styles.signup}>Already have an account? Log in!</Text>
-        </TouchableOpacity></>}
+              <Text style={styles.forgot}>{goBackPhrase}</Text>
+
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => checkVerify()} style={styles.loginBtn}>
+              <Text style={styles.loginText}>{verifyWord}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate("Login");
+            }}>
+              <Text style={styles.signup}>{alreadyHaveAccountPhrase}!</Text>
+            </TouchableOpacity></>}
       </View>
     );
   }
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       
-      <Text style={styles.logo}>Sign Up</Text>
+      <Text style={styles.logo}>{signUpPhrase}</Text>
       <View style={styles.inputView} >
         <TextInput
-        keyboardType="numeric"
+          keyboardType="numeric"
           style={styles.inputText}
-          placeholder="Phone Number..."
+          placeholder={phoneNumberWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPhoneNumber(text)}
           value={phoneNumber} />
@@ -122,7 +179,7 @@ export default function Signup({ navigation }) {
       <View style={styles.inputView} >
         <TextInput
           style={styles.inputText}
-          placeholder="Username..."
+          placeholder={usernameWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setUsername(text)}
           value={username} />
@@ -131,7 +188,7 @@ export default function Signup({ navigation }) {
         <TextInput
           secureTextEntry
           style={styles.inputText}
-          placeholder="Password..."
+          placeholder={passwordWord}
           placeholderTextColor="#003f5c"
           onChangeText={text => setPassword(text)}
           value={password} />
@@ -140,47 +197,56 @@ export default function Signup({ navigation }) {
         <TextInput
           secureTextEntry
           style={styles.inputText}
-          placeholder="Confirm Password..."
+          placeholder={confirmPasswordPhrase}
           placeholderTextColor="#003f5c"
           onChangeText={text => setConfirmPassword(text)}
           value={confirmPassword} />
       </View>
-      <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>Admin</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
-      <View style={styles.inputView} >
+      
+      <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>{t(isAdmin_W)}</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
+      
         {admin ?
-          <TextInput
+        <>
+          <View style={styles.inputView} ><TextInput
             style={styles.inputText}
-            placeholder="Community Name..."
+            placeholder={communityNameWord}
             placeholderTextColor="#003f5c"
             onChangeText={text => setCommunityName(text)}
-            value={communityName} />
-          : <TextInput
+            value={communityName} /></View>
+            <View style={styles.inputView}><TextInput
+          keyboardType={'numeric'}
+          style={styles.inputText}
+          placeholder={t(numTokens_P)}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setNumTokens(text)}
+          value={numTokens} /></View>
+      </>
+          : <View style={styles.inputView} ><TextInput
             style={styles.inputText}
-            placeholder="Community Code..."
+            placeholder={communityCodeWord}
             placeholderTextColor="#003f5c"
             onChangeText={text => setCode(text)}
-            value={code} />}
-      </View>
+            value={code} /></View>}
       <TouchableOpacity style={styles.loginBtn} onPress={
         () => {
           register()
         }
       }>
-        <Text style={styles.loginText}>SIGNUP</Text>
+        <Text style={styles.loginText}>{submitSignUpPhrase}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => {
         navigation.navigate("Login");
       }}>
-        <Text style={styles.signup}>Already have an account? Log in!</Text>
+        <Text style={styles.signup}>{alreadyHaveAccountPhrase}</Text>
       </TouchableOpacity>
       
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingVertical:50,
     alignItems: 'center',
     justifyContent: 'center',
   },
