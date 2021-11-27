@@ -2,32 +2,16 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   View,
   StyleSheet,
   Image
 } from 'react-native';
-import AuthContext from '../auth-context';
 
-const SplashScreen = ({navigation}) => {
-  //State for ActivityIndicator animation
-  /* const {state} = React.useContext(AuthContext); */
-  useEffect(() => {
-    setTimeout(() => {
-      //Check if token is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
-      /* SecureStore.getItemAsync('mnemonic').then(async (value) =>
-        navigation.replace(
-          value === null ? 'Auth' : (await AsyncStorage.getItem('admin')?'AdminNavigator':'Drawer')
-        ),
-      ); */
-/*       navigation.replace(!state.mnemonic?"Auth":state.admin?"AdminNavigatior":"Drawer")
- */
-    }, 2000);
-  }, []);
+const SplashScreen = () => {
+  
 
   return (
     <View style={styles.container}>

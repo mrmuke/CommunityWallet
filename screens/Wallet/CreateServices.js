@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import AuthContext from '../../auth-context';
 import axios from 'axios'
 import api from '../../API_URL';
 import * as ImagePicker from 'expo-image-picker';
 import { showMessage } from 'react-native-flash-message';
 
 // LANGUAGE LOCALIZATION
-import i18n from '../../i18n/index'
 import tokens from '../../i18n/tokens';
+import { useTranslation } from 'react-i18next';
 
-const { cameraRollPermission_P,uploaded_W, createServices_P, info_W, nameOfService_P, category_W, price_W, description_W, describeService_P, photo_W, insertImage_P, create_W } = tokens.screens.wallet.createServices
-const cameraRollPermissionPhrase = i18n.t(cameraRollPermission_P)
-const createServicesPhrase = i18n.t(createServices_P)
-const infoWord = i18n.t(info_W)
-const nameOfSerivcePhrase = i18n.t(nameOfService_P)
-const categoryWord = i18n.t(category_W)
-const priceWord = i18n.t(price_W)
-const descriptionWord = i18n.t(description_W)
-const describeServicePhrase = i18n.t(describeService_P)
-const photoWord = i18n.t(photo_W)
-const insertImagePhrase = i18n.t(insertImage_P)
-const createWord = i18n.t(create_W)
-const uploaded = il8n.t(uploaded_W)
+
 var orange = "#ec802e";
 
 export default function CreateServices({ navigation, route }) {
-  const { state } = React.useContext(AuthContext);
-
+const {t}= useTranslation()
+const { created_W,cameraRollPermission_P,uploaded_W, createServices_P, info_W, nameOfService_P, category_W, price_W, description_W, describeService_P, photo_W, insertImage_P, create_W } = tokens.screens.wallet.createServices
+const cameraRollPermissionPhrase = t(cameraRollPermission_P)
+const createServicesPhrase = t(createServices_P)
+const infoWord = t(info_W)
+const nameOfSerivcePhrase = t(nameOfService_P)
+const categoryWord = t(category_W)
+const priceWord = t(price_W)
+const descriptionWord = t(description_W)
+const describeServicePhrase = t(describeService_P)
+const photoWord = t(photo_W)
+const insertImagePhrase = t(insertImage_P)
+const createWord = t(create_W)
+const uploaded = t(uploaded_W)
+const created = t(created_W)
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [cost, setCost] = useState("");
@@ -64,9 +64,7 @@ export default function CreateServices({ navigation, route }) {
     formData.append('category', category);
     formData.append('cost', cost);
     formData.append('description', description);
-    formData.append('mnemonic', state.mnemonic);
-    formData.append('password', state.password);
-    formData.append('marketCode', "1UVkH7");
+
 
     const link = api + '/services/service';
 
@@ -81,7 +79,7 @@ export default function CreateServices({ navigation, route }) {
       }
     ).then(()=>{
       showMessage({
-        message: "Service Created",
+        message:created,
         type: "success",
       });
       navigation.navigate(route.params.previous);

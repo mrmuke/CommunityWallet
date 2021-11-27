@@ -4,19 +4,21 @@ import axios from 'axios'
 import API_URL from '../API_URL';
 import AuthContext from '../auth-context';
 import { showMessage } from 'react-native-flash-message';
-import i18n from '../i18n/index'
 import tokens from '../i18n/tokens'
+import { useTranslation } from 'react-i18next';
 
-const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
-const wrongCredentialsPhrase = i18n.t(wrongCredentials_P)
-const baoWord = i18n.t(bao_W)
-const phoneNumberWord = i18n.t(phoneNumber_W),
-const passwordWord = i18n.t(password_W)
-const forgotPasswordPhrase = i18n.t(forgotPassword_P)
-const loginWord = i18n.t(login_W)
-const signUpPhrase = i18n.t(signUp_P)
 
 export default function Login({ navigation }) {
+  const {t} = useTranslation()
+
+const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+const wrongCredentialsPhrase = t(wrongCredentials_P)
+const baoWord = t(bao_W)
+const phoneNumberWord = t(phoneNumber_W)
+const passwordWord = t(password_W)
+const forgotPasswordPhrase = t(forgotPassword_P)
+const loginWord = t(login_W)
+const signUpPhrase = t(signUp_P)
   const { authContext } = React.useContext(AuthContext);
 
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -24,7 +26,6 @@ export default function Login({ navigation }) {
   function submit() {
 
     axios.post(API_URL + "/user/login", { phoneNumber, password }).then(response => {
-      console.log(response.data)
       let data = {
         mnemonic: response.data.mnemonic,
         password: password,

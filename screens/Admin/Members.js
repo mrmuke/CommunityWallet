@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'
 
 // LANGUAGE LOCALIZATION
-import i18n from '../../i18n';
 import tokens from '../../i18n/tokens';
 
-const { joinCode_P, phone_W, joined_W, tokens_W, serv_W } = tokens.screens.admin.members
-const joinCodePhrase = i18n.t(joinCode_P)
-const phoneWord = i18n.t(phone_W)
-const joinedWord = i18n.t(joined_W)
-const tokensWord = i18n.t(tokens_W)
-const servWord = i18n.t(serv_W)
+
 
 var width = Dimensions.get("screen").width;
 var height = Dimensions.get("screen").height;
 
 export default function Members({ joinCode, members }) {
+    const {t} = useTranslation()
+    const { joinCode_P, phone_W, joined_W, tokens_W, serv_W,noMembers_P } = tokens.screens.admin.members
+const joinCodePhrase =t(joinCode_P)
+const phoneWord =t(phone_W)
+const joinedWord =t(joined_W)
+const tokensWord =t(tokens_W)
+const servWord =t(serv_W)
     return (
         <View>
             <View style={styles.CodeContainer}>
                 <Text style={styles.CodeText}>{joinCodePhrase}{joinCode}</Text>
             </View>
+            {members.length>0?
+            <>
             <View style={{ ...styles.evenList, marginBottom: 10 }}>
                 <Text style={{ width: width * 0.92 * 0.35, fontSize: width * 0.04, fontWeight: 'bold' }}>{phoneWord}</Text>
                 <Text style={{ width: width * 0.92 * 0.32, fontSize: width * 0.04, fontWeight: 'bold' }}>{joinedWord}</Text>
@@ -30,8 +33,10 @@ export default function Members({ joinCode, members }) {
             </View>
             <View style={{ height: height * 0.6 }}>
                 <ScrollView>
+
                     {members.map((m, index) => (
-                        index % 2 == 0 ?
+                        <View key={index}>
+                        {index % 2 == 0 ?
                             <View style={styles.oddList}>
                                 <Text style={{ width: width * 0.92 * 0.35 }}>{m.phoneNumber}</Text>
                                 <Text style={{ width: width * 0.92 * 0.32 }}>10/14/2021</Text>
@@ -43,14 +48,16 @@ export default function Members({ joinCode, members }) {
                                 <Text style={{ width: width * 0.92 * 0.32 }}>10/15/2021</Text>
                                 <Text style={{ width: width * 0.92 * 0.19 }}>{m.balance}</Text>
                                 <Text style={{ width: width * 0.92 * 0.115 }}>4</Text>
-                            </View>
-                    ))}
+                            </View>}
+                    </View>))
+                    }
 
 
 
 
                 </ScrollView>
-            </View>
+            </View></>:
+            <Text style={{paddingLeft:width * 0.04, fontSize:15}}>{t(noMembers_P)}</Text>}
         </View>
     )
 }

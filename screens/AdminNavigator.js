@@ -8,7 +8,6 @@ import { Dimensions } from 'react-native'
 import { Box, Button, Heading, HStack, List, Progress, VStack, } from 'native-base'
 import { ScrollView } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import API_URL from '../API_URL';
 import Members from './Admin/Members'
@@ -21,47 +20,47 @@ import AuthContext from '../auth-context'
 import { TextInput } from 'react-native-gesture-handler'
 import { showMessage } from 'react-native-flash-message'
 
-import i18n from '../i18n/index'
+import { useTranslation } from 'react-i18next'
 import tokens from '../i18n/tokens'
-
-const { transactions_W, progress_W, statistics_W, signOut_P, back_W, send_W, timeToken_W, burnToken_P, sendToken_P, createToken_P } = tokens.screens.adminNavigator
-const transactionsWord = i18n.t(transactions_W)
-const progressWord = i18n.t(progress_W)
-const statisticsWord = i18n.t(statistics_W)
-const signOutPhrase = i18n.t(signOut_P)
-const backWord = i18n.t(back_W)
-const sendWord = i18n.t(send_W)
-const timeTokenWord = i18n.t(timeToken_W)
-const burnTokenPhrase = i18n.t(burnToken_P)
-const sendTokenPhrase = i18n.t(sendToken_P)
-const createTokenPhrase = i18n.t(createToken_P)
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
-const tabs = {
-  "Analytics": "analytics",
-  "Tokens": "logo-bitcoin",
-  "Members": "people",
-  "Economy": "stats-chart"
-}
+const { analytics_W,tokens_W,members_W,economy_W,adminHome_P } = tokens.screens.adminNavigator
+const {language_W} = tokens.tabs
+const { amount_W,invalidName_P,transactions_W, progress_W, nameToken_P,statistics_W, invalidAmount_P,signOut_P, back_W, send_W, timeToken_W, burnToken_P, sendToken_P, createToken_P } = tokens.screens.adminNavigator
+
 const Stack = createStackNavigator();
 
 export default function AdminNavigator() {
+  const {t,i18n} = useTranslation()
+  async function switchLanguage(){
+    let cur =  await AsyncStorage.getItem('setLanguage')
+    let newLang= cur=="en"?"cn":"en"
+    console.log(newLang)
+    await AsyncStorage.setItem('setLanguage',newLang)
+    i18n.changeLanguage(newLang)
+    setActive(t(analytics_W))
+  }
+  const [active, setActive] = useState(t(analytics_W))
   return <Stack.Navigator>
-    <Stack.Screen name="Admin Home" component={AdminHome} />
-    <Stack.Screen name="Analytics" component={AdminAnalytics} />
+    <Stack.Screen name="Admin Home" options={{headerTitle:t(adminHome_P),headerRight:()=><TouchableOpacity onPress={switchLanguage} style={{marginRight:20}}><Text>{t(language_W)}</Text></TouchableOpacity>}} component={props=><AdminHome active={active} setActive={setActive} {...props}/>} />
     <Stack.Screen name="Send" component={Send} options={{ headerShown: false }} />
   </Stack.Navigator>
 }
-function AdminAnalytics() {
-  return <View></View>
-}
-function AdminHome({ navigation }) {
-  const { state } = React.useContext(AuthContext);
+function AdminHome({ navigation,active,setActive }) {
+  const {t} = useTranslation()
+  const tabs = {
+    [t(analytics_W)]: "analytics",
+    [t(tokens_W)]: "logo-bitcoin",
+    [t(members_W)]: "people",
+    [t(economy_W)]: "stats-chart"
+  }
+
   const [community, setCommunity] = useState(null)
-  const [active, setActive] = useState("Analytics")
+  
   useEffect(() => {
 
-    axios.post(API_URL + '/community/communityInfo', { mnemonic: state.mnemonic, password: state.password }).then(response => {
+    axios.get(API_URL + '/community/communityInfo').then(response => {
       setCommunity(response.data)
     }).catch(e => {
 
@@ -76,11 +75,23 @@ function AdminHome({ navigation }) {
       {Object.keys(tabs).map(c => (
         <Tab active={active == c} navigate={() => setActive(c)} key={c} name={c} image={tabs[c]} ></Tab>
       ))}</View>
-    <Page setCommunity={setCommunity} state={state} community={community} name={active} navigation={navigation} />
+    <Page setCommunity={setCommunity} community={community} name={active} navigation={navigation} />
   </ScrollView></View>
 }
 
-function Page({ name,setCommunity, community, state, navigation }) {
+function Page({ name,setCommunity, community, navigation }) {
+  const {t} = useTranslation()
+  const transactionsWord = t(transactions_W)
+  const progressWord = t(progress_W)
+  const statisticsWord = t(statistics_W)
+  const signOutPhrase = t(signOut_P)
+  const backWord = t(back_W)
+  const sendWord = t(send_W)
+  const timeTokenWord = t(timeToken_W)
+  const burnTokenPhrase = t(burnToken_P)
+  const sendTokenPhrase = t(sendToken_P)
+  const createTokenPhrase = t(createToken_P)
+  
   const { authContext } = React.useContext(AuthContext);
   const [loading, setLoading] = useState(false)
   const [tokens, setTokens] = useState({})
@@ -89,13 +100,14 @@ function Page({ name,setCommunity, community, state, navigation }) {
   const [showMembers, setShowMembers] = useState(false);
   const [contractAddress,setContractAddress]=useState("")
   const [creating,setCreating]=useState(false)
-  const [amount,setAmount]=useState(0)
+  const [amount,setAmount]=useState("")
   const [tokenName,setTokenName]=useState("")
   
   useEffect(() => {
-    if (name == "Tokens") {
+    if (name == t(tokens_W)) {
       setLoading(true)
-      axios.post(API_URL + '/user/wallet', { mnemonic: state.mnemonic, password: state.password }).then(response => {
+      axios.get(API_URL + '/user/wallet').then(response => {
+        console.log(response.data.balances)
         setTokens(response.data.balances)
         setLoading(false)
 
@@ -103,19 +115,14 @@ function Page({ name,setCommunity, community, state, navigation }) {
 
       })
     }
-    else if (name == "Members") {
+    else if (name == t(members_W)) {
       setLoading(true)
-      axios.post(API_URL + '/community/members', { mnemonic: state.mnemonic, password: state.password }).then(response => {
-        setMembers(response.data)
-        setLoading(false)
-      }).catch(e => {
-
-      })
+      getMembers()
     }
   }, [name])
 
   function getMembers() {
-    axios.post(API_URL + '/community/members', { mnemonic: state.mnemonic, password: state.password }).then(response => {
+    axios.get(API_URL + '/community/members').then(response => {
       setMembers(response.data)
       setLoading(false)
     }).catch(e => {
@@ -124,14 +131,20 @@ function Page({ name,setCommunity, community, state, navigation }) {
   }
   function createToken(){
     if(tokenName.length<=4){
-      showMessage({type:"info",message:"Please enter more than 4 characters..."})
+      showMessage({type:"info",message:t(invalidName_P)})
       return;
     }
+    if(amount.length==0){
+      showMessage({type:"info",message:t(invalidAmount_P)})
+      return;
+    }
+    
     setLoading(true)
-    axios.post(API_URL+'/community/mintToken', { mnemonic: state.mnemonic, password: state.password, amount,tokenName }).then(response=>{
-      console.log(response.data)
+    axios.post(API_URL+'/community/mintToken', { amount,tokenName }).then(response=>{
+      setTokens({...tokens,[response.data]:{name:tokenName,balance:amount}})
       setCreating(false)
-      setCommunity(response.data)
+      setTokenName("")
+      setAmount("")
       setLoading(false)
     })//change token names
   }
@@ -139,7 +152,7 @@ function Page({ name,setCommunity, community, state, navigation }) {
   if (loading) {
     return <Loader />
   }
-  if (name == "Analytics") {
+  if (name == t(analytics_W)) {
 
     return <><Heading style={{ alignSelf: 'flex-start', marginLeft: 25, fontSize: 18 }}>{transactionsWord}</Heading>
       <LineChart
@@ -182,7 +195,7 @@ function Page({ name,setCommunity, community, state, navigation }) {
       <Button onPress={() => authContext.signOut()} backgroundColor="orange" width={"100%"} height={70} borderRadius={0}>{signOutPhrase}</Button>
     </>
   }
-  else if (name == "Tokens") {
+  else if (name == t(tokens_W)) {
 
     if(showMembers){
       return(
@@ -195,7 +208,7 @@ function Page({ name,setCommunity, community, state, navigation }) {
           {(function () {
             let arr = [];
             for(let member of members){
-              arr.push(<View style={[{width:"100%", padding: 20, flexDirection:"row",borderTopWidth:1,borderTopColor:"lightgrey", borderBottomColor:'lightgrey'},member==members[members.length-1]&&{borderBottomWidth:1}]}>
+              arr.push(<View key={member.address} style={[{width:"100%", padding: 20, flexDirection:"row",borderTopWidth:1,borderTopColor:"lightgrey", borderBottomColor:'lightgrey'},member==members[members.length-1]&&{borderBottomWidth:1}]}>
                 <View style={{width:"50%"}}><Text style={{width:"100%", textAlign:"center", fontSize:25}}>{member.phoneNumber}</Text></View>
                 <View style={{width:"50%"}}>
                   <TouchableOpacity style={{ backgroundColor:"#FFD580", padding: 10,flexDirection:'row',justifyContent:'center'}} onPress={()=>{
@@ -218,22 +231,22 @@ function Page({ name,setCommunity, community, state, navigation }) {
       if(creating){
         return (
           <View style={styles.formContainer}>
-            <TouchableOpacity style={{marginTop:10}} onPress={()=>setCreating(false)}><Text>{backWord}</Text></TouchableOpacity>
+            <TouchableOpacity style={{marginTop:10,marginBottom:20}} onPress={()=>setCreating(false)}><Text>{backWord}</Text></TouchableOpacity>
             <Text style={styles.formHeader}>{createTokenPhrase}</Text>
             <View style={styles.formContent}>
               <View style={{flexDirection:"row"}}>
                 <MaterialIcon name="drive-file-rename-outline" style={{color:"orange", fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></MaterialIcon>
-                <TextInput placeholder="Name of Token" onChangeText={text=>setTokenName(text)} style={{width:"100%"}}></TextInput>
+                <TextInput placeholder={t(nameToken_P)} onChangeText={text=>setTokenName(text)} style={{width:"100%"}}></TextInput>
               </View>
               <View style={{marginTop: 10, marginBottom: 10, alignItems:"center"}}>
                 <View style={{width:"90%", borderWidth:0.5, borderColor:"#d2d2d2"}}></View>
               </View>
               <View style={{flexDirection:"row"}}>
                 <MaterialIcon name="attach-money" style={{color:"orange", fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></MaterialIcon>
-                <TextInput keyboardType="number-pad" placeholder="Amount" onChangeText={text=>setAmount(text)}  style={{width:"100%"}}></TextInput>
+                <TextInput keyboardType="number-pad" placeholder={t(amount_W)} onChangeText={text=>setAmount(text)}  style={{width:"100%"}}></TextInput>
               </View> 
               
-              <Button onPress={()=>createToken()} backgroundColor="orange" marginTop={3}>Create</Button>
+              <Button onPress={()=>createToken()} backgroundColor="orange" marginTop={3}>{createTokenPhrase}</Button>
             </View>
           </View>
          
@@ -276,7 +289,7 @@ function Page({ name,setCommunity, community, state, navigation }) {
     }
 
   }
-  else if (name == "Members" && members.length > 0) {
+  else if (name == t(members_W)) {
     return <><Members joinCode={community.code} members={members}></Members></>
   }
   else {

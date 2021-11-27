@@ -13,27 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './auth-context';
 import checkAdmin from './utils/utils';
 import FlashMessage from 'react-native-flash-message';
+import axios from 'axios';
+import './i18n/index'
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-/* const firebaseConfig = {
-  apiKey: "AIzaSyBIwcuAX4RLMczJFAhlrVechxp9EEn7szQ",
-  authDomain: "communitywallet-ed36c.firebaseapp.com",
-  projectId: "communitywallet-ed36c",
-  storageBucket: "communitywallet-ed36c.appspot.com",
-  messagingSenderId: "697161665894",
-  appId: "1:697161665894:web:83280e7c5a650375448ca7",
-  measurementId: "G-5E83HSB3X0"
-};
-
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig); */
-
-const Stack = createStackNavigator();
-
+const Stack = createStackNavigator()
 const Auth = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
@@ -64,7 +47,10 @@ export default function App() {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
+        
         case 'RESTORE_TOKEN':
+          axios.defaults.headers.common['mnemonic'] = action.mnemonic;
+        axios.defaults.headers.common['password'] = action.password;
           return {
             ...prevState,
             mnemonic: action.mnemonic,
@@ -73,6 +59,8 @@ export default function App() {
             isLoading:false
           };
         case 'SIGN_IN':
+          axios.defaults.headers.common['mnemonic'] = action.mnemonic;
+        axios.defaults.headers.common['password'] = action.password;
           return {
             ...prevState,
             mnemonic: action.mnemonic,
@@ -80,6 +68,8 @@ export default function App() {
             admin:action.admin
           };
         case 'SIGN_OUT':
+          delete axios.defaults.headers.common['mnemonic']
+        delete axios.defaults.headers.common['password'];
           return {
             ...prevState,
             mnemonic: null,
@@ -157,7 +147,6 @@ setTimeout(()=>{
   if(state.isLoading){
     return <SplashScreen/>
   }
-  console.log(state)
   return (<NavigationContainer>
       <NativeBaseProvider>
         <AuthContext.Provider value={{authContext,state}} >

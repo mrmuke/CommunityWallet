@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../../API_URL';
-import AuthContext from './../../auth-context';
 import axios from 'axios'
 import { useIsFocused } from '@react-navigation/native';
 
 // LANGUAGE LOCALIZATION
-import i18n from '../../i18n';
 import tokens from '../../i18n/tokens';
+import { useTranslation } from 'react-i18next';
 
 const { all_W } = tokens.screens.wallet.services
-const allWord = i18n.t(all_W)
+
 
 export default function Services({ navigation }) {
-  const { state } = React.useContext(AuthContext);
+  const {t}=useTranslation()
+  const allWord = t(all_W)
   const [arrayItems, setArrayItems] = useState([]);
   const isFocused = useIsFocused();
 
 
   async function getServices() {
-    axios.post(api + '/services/allServices', { "mnemonic": state.mnemonic, "password": state.password, "marketCode": "LeAVXM" }).then(response => {
+    axios.get(api + '/services/allServices').then(response => {
       setArrayItems(response.data)//decrypt mnemonic with sent password
     }).catch(e => { })
   }
@@ -69,7 +69,7 @@ export default function Services({ navigation }) {
             for (var i = 0; i < row; i++) {
               if (arrayItems.length % 2 == 1 && i == row - 1) {
                 rowArray.push(
-                  <View style={{ flexDirection: "row" }}>
+                  <View key={i} style={{ flexDirection: "row" }}>
                     <View style={styles.shopItem}>
                       <Image source={{ uri: "https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i * 2]["filename"] }} style={styles.shopItemImage}></Image>
                       <Text style={styles.shopItemTitle}>{arrayItems[i * 2].name}</Text>
@@ -80,7 +80,7 @@ export default function Services({ navigation }) {
                 )
               } else {
                 rowArray.push(
-                  <View style={{ flexDirection: "row" }}>
+                  <View key={i} style={{ flexDirection: "row" }}>
                     <View style={styles.shopItem}>
                       <Image source={{ uri: "https://community-wallet-service-image.s3.eu-west-1.amazonaws.com/" + arrayItems[i * 2]["filename"] }} style={styles.shopItemImage}></Image>
                       <Text style={styles.shopItemTitle}>{arrayItems[i * 2].name}</Text>

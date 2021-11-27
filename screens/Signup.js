@@ -9,8 +9,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 
 // LANGUAGE LOCALIZATION
-import i18n from '../i18n';
 import tokens from '../i18n/tokens';
+import { useTranslation } from 'react-i18next';
 
 const {
   communityNameLonger_P,
@@ -30,28 +30,33 @@ const {
   communityName_W,
   communityCode_W,
   submitSignUp_P,
+  numTokens_P,
+  passwordsUnequal_P,
+  isAdmin_W
 } = tokens.screens.signup
 
-const communityNameLongerPhrase = i18n.t(communityNameLonger_P)
-const verificationCodePhrase = i18n.t(verificationCode_P)
-const wrongVerificationCodePhrase = i18n.t(wrongVerificationCode_P)
-const signUpPhrase = i18n.t(signUp_P)
-const aCodeHasBeenSentPhrase = i18n.t(aCodeHasBeenSent_P)
-const pleaseEnterCodePhrase = i18n.t(pleaseEnterCode_P)
-const verficationCodeInputPhrase = i18n.t(verficationCodeInput_P)
-const goBackPhrase = i18n.t(goBack_P)
-const verifyWord = i18n.t(verify_W)
-const alreadyHaveAccountPhrase = i18n.t(alreadyHaveAccount_P)
-const phoneNumberWord = i18n.t(phoneNumber_W)
-const usernameWord = i18n.t(username_W)
-const passwordWord = i18n.t(password_W)
-const confirmPasswordPhrase = i18n.t(confirmPassword_P)
-const communityNameWord = i18n.t(communityName_W)
-const communityCodeWord = i18n.t(communityCode_W)
-const submitSignUpPhrase = i18n.t(submitSignUp_P)
 
 
 export default function Signup({ navigation }) {
+  const {t} = useTranslation()
+
+const communityNameLongerPhrase =t(communityNameLonger_P)
+const verificationCodePhrase =t(verificationCode_P)
+const wrongVerificationCodePhrase =t(wrongVerificationCode_P)
+const signUpPhrase =t(signUp_P)
+const aCodeHasBeenSentPhrase =t(aCodeHasBeenSent_P)
+const pleaseEnterCodePhrase =t(pleaseEnterCode_P)
+const verficationCodeInputPhrase =t(verficationCodeInput_P)
+const goBackPhrase =t(goBack_P)
+const verifyWord =t(verify_W)
+const alreadyHaveAccountPhrase =t(alreadyHaveAccount_P)
+const phoneNumberWord =t(phoneNumber_W)
+const usernameWord =t(username_W)
+const passwordWord =t(password_W)
+const confirmPasswordPhrase =t(confirmPassword_P)
+const communityNameWord =t(communityName_W)
+const communityCodeWord =t(communityCode_W)
+const submitSignUpPhrase =t(submitSignUp_P)
   const { authContext } = React.useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
@@ -69,12 +74,15 @@ export default function Signup({ navigation }) {
   const [numTokens,setNumTokens] =useState("")
 
   async function register() {
-    //create wallet
-    //setup mongo
+    if(password!=confirmPassword){
+      showMessage({message:t(passwordsUnequal_P), type:'warning'})
+      return;
+      //translate messages, admin
+    }
     if (admin && communityName.length < 4) {
       showMessage({
         message: communityNameLongerPhrase,
-        type: "error",
+        type: "warning",
       });
       return;
     }
@@ -89,6 +97,7 @@ export default function Signup({ navigation }) {
     //mongo set info
   }
   function checkVerify() {
+    
     if (verifyCode == verificationCode) {
       setLoading(true)
       axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName,numTokens }).then(response => {
@@ -194,7 +203,7 @@ export default function Signup({ navigation }) {
           value={confirmPassword} />
       </View>
       
-      <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>Admin</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
+      <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>{t(isAdmin_W)}</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
       
         {admin ?
         <>
@@ -207,7 +216,7 @@ export default function Signup({ navigation }) {
             <View style={styles.inputView}><TextInput
           keyboardType={'numeric'}
           style={styles.inputText}
-          placeholder="Number of Tokens in Economy..."
+          placeholder={t(numTokens_P)}
           placeholderTextColor="#003f5c"
           onChangeText={text => setNumTokens(text)}
           value={numTokens} /></View>
@@ -237,7 +246,7 @@ export default function Signup({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:20,
+    paddingVertical:50,
     alignItems: 'center',
     justifyContent: 'center',
   },

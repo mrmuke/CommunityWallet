@@ -18,7 +18,8 @@ export const MembersScreen = {
     phone_W: 'Phone header',
     joined_W: 'Joined header',
     tokens_W: 'Tokens header',
-    serv_W: 'Serv header'
+    serv_W: 'Serv header',
+    noMembers_P:"No members"
 }
 
 export const CreateServicesScreen = {
@@ -33,7 +34,8 @@ export const CreateServicesScreen = {
     photo_W: 'PHOTO label',
     insertImage_P: 'Insert-Image-Here instructions',
     create_W: 'Create button',
-    uploaded_W:"Uploaded message"
+    uploaded_W:"Uploaded message",
+    created_W:"Created message"
 }
 
 export const SendScreen = {
@@ -49,6 +51,8 @@ export const SendScreen = {
     next_W: 'next',
     or_W: 'OR',
     scan_W: 'Scan button',
+    unknown_P:"Unknown message",
+    found_P:"Found message"
 }
 
 export const ServicesScreen = {
@@ -72,7 +76,16 @@ export const AdminNavigatorScreen = {
     timeToken_W: 'Time-Token header',
     burnToken_P: 'Burn-Token phrase',
     sendToken_P: 'Send-Token phrase',
-    createToken_P:'Create-Token phrase'
+    createToken_P:'Create-Token phrase',
+    analytics_W:"Analytics tab",
+    tokens_W:"Tokens tab",
+    members_W:"Members tab",
+    economy_W:"Economy tab",
+    adminHome_P:"Admin header",
+    nameToken_P:"Token Name",
+    amount_W:"Amount Tokens",
+    invalidAmount_P:"Invalid # Tokens",
+    invalidName_P:"Invalid Token Name"
 }
 
 export const DrawerScreen = {
@@ -81,6 +94,7 @@ export const DrawerScreen = {
     wallet_W: 'Wallet',
     services_W: 'Services',
     logout_W: 'Logout',
+    language_W:'Change language'
 }
 
 export const HomeScreen = {
@@ -119,4 +133,7 @@ export const SignupScreen = {
     communityName_W: 'Cpommunity-Name placeholder',
     communityCode_W: 'Community-Code placeholder',
     submitSignUp_P: 'SIGNUP final button',
+    numTokens_P:'Placeholder - Number of Tokens in Economy',
+    passwordsUnequal_P:"Unequal passwords warning",
+    isAdmin_W:"Is Admin"
 }

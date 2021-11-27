@@ -12,25 +12,24 @@ import {
     Modal
 } from 'react-native';
 import API_URL from '../../API_URL';
+import tokens from '../../i18n/tokens'
 
 import QRCode from 'react-native-qrcode-svg';
-import AuthContext from '../../auth-context';
 import { useIsFocused } from "@react-navigation/native";
 
 // LANGUAGE LOCALIZATION
-import i18n from '../../i18n';
-import tokens from '../../i18n/tokens';
-
+import { useTranslation } from 'react-i18next';
 const { myWallet_P, totalBalance_P, receiveTokens_P, today_W } = tokens.screens.wallet.wallets
 const {chooseToken_P} = tokens.common
-const myWalletPhrase = i18n.t(myWallet_P)
-const totalBalancePhrase = i18n.t(totalBalance_P)
-const receiveTokensPhrase = i18n.t(receiveTokens_P)
-const todayWord = i18n.t(today_W)
-const chooseToken=il8n.t(chooseToken_P)
 export default function Wallet() {
-    const { state } = React.useContext(AuthContext);
+    const {t} = useTranslation()
 
+
+const myWalletPhrase =t(myWallet_P)
+const totalBalancePhrase =t(totalBalance_P)
+const receiveTokensPhrase =t(receiveTokens_P)
+const todayWord =t(today_W)
+const chooseToken=t(chooseToken_P)
     let list = ["+500", "-500", "-200", "+300"]
     const [tokens, setTokens] = useState([])
     const [address, setAddress] = useState(null)
@@ -46,9 +45,10 @@ export default function Wallet() {
 
     }, [isFocused])
     function getWallet() {
-        axios.post(API_URL + '/user/wallet', { mnemonic: state.mnemonic, password: state.password }).then(response => {
+        axios.get(API_URL + '/user/wallet').then(response => {
             setTokens(response.data.balances)
             setAddress(response.data.address)
+            console.log(response.data.balances)
             setCurToken(Object.keys(response.data.balances)[0])
         })
     }

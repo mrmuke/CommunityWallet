@@ -18,6 +18,7 @@ export const english = {
     [MembersScreen.joined_W]: 'Joined',
     [MembersScreen.tokens_W]: 'Tokens',
     [MembersScreen.serv_W]: 'Serv.',
+    [MembersScreen.noMembers_P]:"No members yet",
 
     [CreateServicesScreen.cameraRollPermission_P]: 'Sorry, we need camera roll permissions to make this work!',
     [CreateServicesScreen.createServices_P]: 'Create Services',
@@ -31,6 +32,7 @@ export const english = {
     [CreateServicesScreen.insertImage_P]: 'INSERT IMAGE HERE',
     [CreateServicesScreen.create_W]: 'CREATE',
     [CreateServicesScreen.uploaded_W]:"Uploaded",
+    [CreateServicesScreen.created_W]:"Service Created",
 
     [SendScreen.success_W]: 'Success!',
     [SendScreen.goHome_P]: 'Go Home',
@@ -44,7 +46,8 @@ export const english = {
     [SendScreen.next_W]: 'Next',
     [SendScreen.or_W]: 'OR',
     [SendScreen.scan_W]: 'Scan',
-
+    [SendScreen.unknown_P]:"User does not exist..",
+    [SendScreen.found_P]:"User found",
     [ServicesScreen.all_W]: 'All',
 
     [WalletScreen.myWallet_P]: 'My Wallet',
@@ -61,12 +64,22 @@ export const english = {
     [AdminNavigatorScreen.timeToken_W]: 'Time Token',
     [AdminNavigatorScreen.burnToken_P]: 'Burn Token',
     [AdminNavigatorScreen.sendToken_P]: 'Send Token',
-
+    [AdminNavigatorScreen.analytics_W]: 'Analytics',
+    [AdminNavigatorScreen.tokens_W]: 'Tokens',
+    [AdminNavigatorScreen.members_W]: 'Members',
+    [AdminNavigatorScreen.economy_W]: 'Economy',
+    [AdminNavigatorScreen.createToken_P]:"Create Token",
+    [AdminNavigatorScreen.adminHome_P]:"Admin Home",
+    [AdminNavigatorScreen.nameToken_P]:"Name of Token",
+    [AdminNavigatorScreen.amount_W]:"Amount",
+    [AdminNavigatorScreen.invalidAmount_P]:"Please enter a valid amount...",
+    [AdminNavigatorScreen.invalidName_P]:"Token name must be more than 4 characters...",
     [DrawerScreen.home_W]: 'Home',
     [DrawerScreen.send_W]: 'Send',
     [DrawerScreen.wallet_W]: 'Wallet',
     [DrawerScreen.services_W]: 'Services',
     [DrawerScreen.logout_W]: 'Logout',
+    [DrawerScreen.language_W]:"Chinese",
 
     [HomeScreen.welcome_W]: 'Welcome',
     [HomeScreen.welcome_P]: 'Welcome back to Bao',
@@ -84,7 +97,7 @@ export const english = {
 
     [SignupScreen.communityNameLonger_P]: 'Your community name should be longer!',
     [SignupScreen.verificationCode_P]: 'Your verification code is',
-    [SignupScreen.wrongVerificationCode_P]: 'Your Verification Code',
+    [SignupScreen.wrongVerificationCode_P]: 'Wrong Verification Code',
     [SignupScreen.signUp_P]: 'Sign Up',
     [SignupScreen.aCodeHasBeenSent_P]: 'A code has been sent to',
     [SignupScreen.pleaseEnterCode_P]: 'Please enter it to continue',
@@ -99,6 +112,9 @@ export const english = {
     [SignupScreen.communityName_W]: 'Community Name...',
     [SignupScreen.communityCode_W]: 'Community Code...',
     [SignupScreen.submitSignUp_P]: 'SIGNUP',
-
-    [Common.chooseToken_P]:"Choose Token"
+    [SignupScreen.numTokens_P]:'Number of Tokens in Economy',
+    [SignupScreen.passwordsUnequal_P]:"Your passwords are not the same!",
+    [SignupScreen.isAdmin_W]:"Admin",
+    [Common.chooseToken_P]:"Choose Token",
+    
 }

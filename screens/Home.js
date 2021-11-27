@@ -1,16 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image } from 'react-native';
-import i18n from '../i18n/index'
 import tokens from '../i18n/tokens';
+import { useTranslation } from "react-i18next";
 
-const { welcome_W, welcome_P, your_W, wallet_W, community_W } = tokens.screens.home
-const welcomeWord = i18n.t(welcome_W)
-const welcomePhrase = i18n.t(welcome_P)
-const yourWord = i18n.t(your_W)
-const walletWord = i18n.t(wallet_W)
-const communityWord = i18n.t(community_W)
+
 
 export default function Home({ navigation }) {
+  const {t} = useTranslation()
+  const { welcome_W, welcome_P, your_W, wallet_W, community_W } = tokens.screens.home
+const welcomeWord = t(welcome_W)
+const welcomePhrase = t(welcome_P)
+const yourWord = t(your_W)
+const walletWord = t(wallet_W)
+const communityWord = t(community_W)
   return (
     <View style={{ height: "100%", width: "100%", backgroundColor: "white" }}>
       <View style={styles.logoContainer}>

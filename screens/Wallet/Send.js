@@ -5,7 +5,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { ActivityIndicator } from 'react-native';
 import { Button, CheckIcon, Select } from 'native-base';
 import axios from 'axios';
-import AuthContext from '../../auth-context';
 import API_URL from '../../API_URL';
 import { showMessage } from 'react-native-flash-message';
 
@@ -13,45 +12,43 @@ import { TabRouter } from '@react-navigation/routers';
 import { useIsFocused } from '@react-navigation/native';
 
 // LANGUAGE LOCALIZATION
-import i18n from '../../i18n';
 import tokens from '../../i18n/tokens';
+import { useTranslation } from 'react-i18next';
 
-const { success_W, goHome_P, clear_W, cancel_W, cameraPermission_P, sending_W, tokensTo_P, confirm_W, who_P, next_W, or_W, scan_W } = tokens.screens.wallet.send
-const successWord = i18n.t(success_W)
-const goHomePhrase = i18n.t(goHome_P)
-const clearWord = i18n.t(clear_W)
-const cancelWord = i18n.t(cancel_W)
-const cameraPermissionPhrase = i18n.t(cameraPermission_P)
-const sendingWord = i18n.t(sending_W)
-const tokensToPhrase = i18n.t(tokensTo_P)
-const confirmWord = i18n.t(confirm_W)
-const whoPhrase = i18n.t(who_P)
-const nextWord = i18n.t(next_W)
-const orWord = i18n.t(or_W)
-const scanWord = i18n.t(scan_W)
+const { success_W, goHome_P, clear_W, cancel_W, cameraPermission_P, sending_W, tokensTo_P, confirm_W, who_P, next_W, or_W, scan_W,found_P,unknown_P } = tokens.screens.wallet.send
+const { chooseToken_P } = tokens.common
 
 export default function Send({ navigation, route }) {
+  const {t} =useTranslation()
+  const successWord = t(success_W)
+const goHomePhrase = t(goHome_P)
+const clearWord = t(clear_W)
+const cancelWord = t(cancel_W)
+const cameraPermissionPhrase = t(cameraPermission_P)
+const sendingWord = t(sending_W)
+const tokensToPhrase = t(tokensTo_P)
+const confirmWord = t(confirm_W)
+const whoPhrase = t(who_P)
+const nextWord = t(next_W)
+const orWord = t(or_W)
+const scanWord = t(scan_W)
   const [page, setPage] = useState(0);
   const [amount, setAmount] = useState("0");
   const [rcpAddress, setRcpAddress] = useState("")
   const [contractAddress,setContractAddress]=useState("")
   const [loading, setLoading] = useState(true)
-  const { state } = React.useContext(AuthContext);
   const isFocused = useIsFocused();
   const [tokens,setTokens]=useState(null)
   
   useEffect(()=>{
     if(route.params&&route.params.rcpAddress){
+      setLoading(false)
       setPage(2)
       setRcpAddress(route.params.rcpAddress);
       setContractAddress(route.params.contractAddress)
     }else{
-      axios.post(API_URL + "/community/tokens", {
-        mnemonic: state.mnemonic,
-        password: state.password,
-  
-      }).then(res=>{
-        
+      axios.get(API_URL + "/community/tokens").then(res=>{
+        setContractAddress(Object.keys(res.data)[0])
         setTokens(res.data)
         setLoading(false)
       })
@@ -61,8 +58,6 @@ export default function Send({ navigation, route }) {
   function sendTokens() {
     setLoading(true)
     axios.post(API_URL + "/user/send", {
-      mnemonic: state.mnemonic,
-      password: state.password,
       recipientAddress: rcpAddress,
       transferAmount: amount,
       contractAddress: contractAddress
@@ -76,7 +71,7 @@ export default function Send({ navigation, route }) {
 
   const Success = () => {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{fontSize:30}}>Success!</Text>
+      <Text style={{fontSize:30}}>{successWord}</Text>
       <View style={{borderRadius:100, backgroundColor:"lightgreen",marginVertical:50}}><Icon name="check" style={{color:"white"}}  size={100}/></View>
       <Button style={{marginTop:10,}} paddingTop={30} paddingBottom={30} paddingLeft={75}  paddingRight={75} backgroundColor="orange" onPress={() => {setPage(0);setRcpAddress("");setAmount("0");
       if(route.params&&route.params.rcpAddress){
@@ -97,6 +92,9 @@ export default function Send({ navigation, route }) {
           <View style={styles.inputRow}>
             <TouchableOpacity style={styles.inputRowNumberBack} onPress={() => {
               setPage(0);
+              if(route.params&&route.params.rcpAddress){
+                navigation.navigate("Admin Home")
+              } 
             }}>
               <Icon name="keyboard-backspace" style={styles.sendIcon}></Icon>
             </TouchableOpacity>
@@ -298,19 +296,14 @@ export default function Send({ navigation, route }) {
 
     function checkNumber(){
       setLoading(true)
-      axios.post(API_URL + "/user/public", {
-        mnemonic: state.mnemonic,
-        password: state.password,
-        phoneNumber:phoneNumber
-  
-      }).then(res => {
+      axios.get(API_URL + "/user/public?phoneNumber="+phoneNumber).then(res => {
         setLoading(false)
         setPage(2)
         setRcpAddress(res.data.rcp)
-        showMessage({message:"User Found",type:"success"})
+        showMessage({message:t(found_P),type:"success"})
       }).catch(e=>{
         setLoading(false)
-        showMessage({message:"User does not exist..",type:"danger"})
+        showMessage({message:t(unknown_P),type:"danger"})
       })
     }
     if (scanning) {
@@ -350,12 +343,12 @@ export default function Send({ navigation, route }) {
         </TouchableOpacity>
       </View>
       {(function () {
-        if(page==0){
+        if(page==0&&tokens){
           return <View style={{flex:1,justifyContent:'center',padding:10}}><Select
           selectedValue={contractAddress}
           marginBottom={3}
-          accessibilityLabel="Choose Token"
-          placeholder="Choose Token"
+          accessibilityLabel={t(chooseToken_P)}
+          placeholder={t(chooseToken_P)}
           placeholderTextColor='black'
           color="black"
           _selectedItem={{
@@ -369,7 +362,7 @@ export default function Send({ navigation, route }) {
               <Select.Item key={c} label={tokens[c]} value={c}/>
           ))}
          
-      </Select><Button onPress={()=>setPage(1)} backgroundColor="orange">Proceed</Button></View>
+      </Select><Button onPress={()=>setPage(1)} backgroundColor="orange">{nextWord}</Button></View>
         }
         else if (page ==1) {
           return (
