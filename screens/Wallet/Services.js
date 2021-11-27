@@ -5,12 +5,15 @@ import api from '../../API_URL';
 import AuthContext from './../../auth-context';
 import axios from 'axios'
 import { useIsFocused } from '@react-navigation/native';
+import { width } from 'styled-system';
+
+var w = Dimensions.get("screen").width;
 
 export default function Services({navigation}){
   const { state } = React.useContext(AuthContext);
   const [ arrayItems, setArrayItems ] = useState([]);
+  const [ searching, setSearching ] = useState(false);
   const isFocused = useIsFocused();
-
 
   async function getServices(){
     axios.post(api+'/services/allServices', {"mnemonic": state.mnemonic, "password": state.password, "marketCode": "LeAVXM"}).then(response=>{
@@ -31,17 +34,35 @@ export default function Services({navigation}){
           <Icon name="arrow-back-ios" style={styles.logo}></Icon>
         </TouchableOpacity>
         <View style={{flexDirection:"row"}}>
-          <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}}>
+        {
+            (()=>{
+              if(searching){
+                return(
+                  <TextInput placeholder="" style={styles.searchBar}></TextInput>
+                )
+              }
+            })()
+          }
+          <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
+            setSearching(!searching);
+          }}>
             <Icon name="search" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"white"}}></Icon>
           </TouchableOpacity>
-
-          <TouchableOpacity style={{backgroundColor:"black", borderRadius: 100, padding: 5}} onPress={()=>{
-            navigation.navigate("Create", {
-              previous:"Services"
-            })
-          }}>
-            <Icon name="add" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"#ec802e"}}></Icon>
-          </TouchableOpacity>
+          {
+            (()=>{
+              if(!searching){
+                return(
+                  <TouchableOpacity style={{backgroundColor:"black", borderRadius: 100, padding: 5}} onPress={()=>{
+                    navigation.navigate("Create", {
+                      previous:"Services"
+                    })
+                  }}>
+                    <Icon name="add" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"#ec802e"}}></Icon>
+                  </TouchableOpacity>
+                )
+              }
+            })()
+          }
         </View>
       </View>
       <View style={styles.menuContainer}>
@@ -166,5 +187,12 @@ const styles = StyleSheet.create({
     fontSize:Dimensions.get("screen").height * 0.023,
     color:"#ec802e",
     fontWeight:"bold",
+  },
+  searchBar:{
+    borderWidth:2,
+    borderRadius:30,
+    width:w*0.55,
+    marginRight:20,
+    paddingLeft:20
   }
 });

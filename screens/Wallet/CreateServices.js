@@ -20,6 +20,15 @@ export default function CreateServices({navigation, route}){
   const [fileName, setFileName] = useState(null);
 
   const pickImage = async () => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+    
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -64,17 +73,6 @@ export default function CreateServices({navigation, route}){
       }
     )
   }
-
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
 
   return(
     <View style={styles.container}>
