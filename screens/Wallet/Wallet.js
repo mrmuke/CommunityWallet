@@ -25,16 +25,16 @@ export default function Wallet() {
     const {t} = useTranslation()
 
 
-const myWalletPhrase =t(myWallet_P)
-const totalBalancePhrase =t(totalBalance_P)
-const receiveTokensPhrase =t(receiveTokens_P)
-const todayWord =t(today_W)
-const chooseToken=t(chooseToken_P)
-    let list = ["+500", "-500", "-200", "+300"]
+    const myWalletPhrase =t(myWallet_P)
+    const totalBalancePhrase =t(totalBalance_P)
+    const receiveTokensPhrase =t(receiveTokens_P)
+    const todayWord =t(today_W)
+    const chooseToken=t(chooseToken_P)
     const [tokens, setTokens] = useState([])
     const [address, setAddress] = useState(null)
     const [receive, setReceive] = useState(false)
     const [curToken,setCurToken]=useState("")
+    const [transactions, setTransactions] = useState([{amount:"loading", topic:"loading...", dateTime:"loading..."}]);
     const isFocused = useIsFocused();
     useEffect(() => {
         if (isFocused) {
@@ -50,6 +50,7 @@ const chooseToken=t(chooseToken_P)
             setAddress(response.data.address)
             console.log(response.data.balances)
             setCurToken(Object.keys(response.data.balances)[0])
+            setTransactions(response.data.transactions);
         })
     }
     if (tokens.length == 0 || !address ||!curToken) {
@@ -97,8 +98,8 @@ const chooseToken=t(chooseToken_P)
                 <Button onPress={() => setReceive(true)} backgroundColor="orange" marginBottom={5}>{receiveTokensPhrase}</Button>
                 <Text style={{ fontSize: 25, marginLeft: 15, marginBottom: 10 }}>{todayWord}</Text>
                 <VStack>
-                    {list.map((item, index) => (
-                        <Transaction key={index} text={item} />
+                    {transactions.map((item, index) => (
+                        <Transaction key={index} text={item.amount} topic={item.topic} date={item.dateTime}/>
                     ))}
                 </VStack>
             </View>
@@ -109,18 +110,21 @@ const chooseToken=t(chooseToken_P)
 
 }
 const Transaction = (props) => {
-
+    let color = "orange";
+    if(props.text < 0){
+        color = "#E4252D";
+    }
+    let date = (new Date(props.date));
     return (
         <View style={styles.item}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../../assets/service.png')} style={{ width: 50, height: 50, backgroundColor: 'lightgrey', borderRadius: 100 }} /><View style={{ marginLeft: 20 }}><Text style={styles.itemText}>Sweeping</Text>
-                    <Text style={{ color: "grey" }}>18 Oct, 9:25 AM</Text></View>
+                <Image source={require('../../assets/service.png')} style={{ width: 50, height: 50, backgroundColor: 'lightgrey', borderRadius: 100 }} /><View style={{ marginLeft: 20 }}><Text style={styles.itemText}>{props.topic}</Text>
+                    <Text style={{ color: "grey" }}>{date.toLocaleDateString() + ", " + date.toLocaleTimeString()}</Text></View>
             </View>
-            <View style={{ borderRadius: 10, padding: 5, backgroundColor: "orange", height: 30 }}><Text style={{ fontSize: 17, color: "white" }}>{props.text}</Text></View>
+            <View style={{ borderRadius: 10, padding: 5, backgroundColor: color, height: 30 }}><Text style={{ fontSize: 17, color: "white" }}>{props.text}</Text></View>
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     background: {
@@ -155,8 +159,5 @@ const styles = StyleSheet.create({
         fontWeight: "500"
 
     },
-
-
-
 });
 

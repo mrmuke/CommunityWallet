@@ -32,7 +32,14 @@ const {
   submitSignUp_P,
   numTokens_P,
   passwordsUnequal_P,
-  isAdmin_W
+  isAdmin_W,
+  phoneNumber_EP,
+  username_EP,
+  password_EP,
+  confirmPassword_EP,
+  communityName_EP,
+  communityCode_EP,
+  numTokens_EP
 } = tokens.screens.signup
 
 
@@ -40,23 +47,31 @@ const {
 export default function Signup({ navigation }) {
   const {t} = useTranslation()
 
-const communityNameLongerPhrase =t(communityNameLonger_P)
-const verificationCodePhrase =t(verificationCode_P)
-const wrongVerificationCodePhrase =t(wrongVerificationCode_P)
-const signUpPhrase =t(signUp_P)
-const aCodeHasBeenSentPhrase =t(aCodeHasBeenSent_P)
-const pleaseEnterCodePhrase =t(pleaseEnterCode_P)
-const verficationCodeInputPhrase =t(verficationCodeInput_P)
-const goBackPhrase =t(goBack_P)
-const verifyWord =t(verify_W)
-const alreadyHaveAccountPhrase =t(alreadyHaveAccount_P)
-const phoneNumberWord =t(phoneNumber_W)
-const usernameWord =t(username_W)
-const passwordWord =t(password_W)
-const confirmPasswordPhrase =t(confirmPassword_P)
-const communityNameWord =t(communityName_W)
-const communityCodeWord =t(communityCode_W)
-const submitSignUpPhrase =t(submitSignUp_P)
+  const communityNameLongerPhrase =t(communityNameLonger_P)
+  const verificationCodePhrase =t(verificationCode_P)
+  const wrongVerificationCodePhrase =t(wrongVerificationCode_P)
+  const signUpPhrase =t(signUp_P)
+  const aCodeHasBeenSentPhrase =t(aCodeHasBeenSent_P)
+  const pleaseEnterCodePhrase =t(pleaseEnterCode_P)
+  const verficationCodeInputPhrase =t(verficationCodeInput_P)
+  const goBackPhrase =t(goBack_P)
+  const verifyWord =t(verify_W)
+  const alreadyHaveAccountPhrase =t(alreadyHaveAccount_P)
+  const phoneNumberWord =t(phoneNumber_W)
+  const usernameWord =t(username_W)
+  const passwordWord =t(password_W)
+  const confirmPasswordPhrase =t(confirmPassword_P)
+  const communityNameWord =t(communityName_W)
+  const communityCodeWord =t(communityCode_W)
+  const submitSignUpPhrase =t(submitSignUp_P)
+  const phoneError = t(phoneNumber_EP)
+  const usernameError = t(username_EP)
+  const passwordError = t(password_EP)
+  const confirmPasswordError = (confirmPassword_EP)
+  const communityNameError = t(communityName_EP)
+  const communityCodeError = t(communityCode_EP)
+  const numTokensError = t(numTokens_EP)
+
   const { authContext } = React.useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
@@ -72,8 +87,35 @@ const submitSignUpPhrase =t(submitSignUp_P)
   const [loading,setLoading]=useState(false)
   const [username,setUsername]=useState("")
   const [numTokens,setNumTokens] =useState("")
+  const [error, setError] = useState([])
 
   async function register() {
+    var curError = [];
+    if(password.length < 8){
+      curError.push("password");
+    }
+    if(!parseInt(phoneNumber) && phoneNumber.length == 0){
+      curError.push("phone");
+    }
+    if(password!=confirmPassword){
+      curError.push("confirm");
+    }
+    if(username.length < 5){
+      curError.push("username");
+    }
+    if(communityName.length < 5){
+      curError.push("communityName");
+    }
+    if(code.length < 5){
+      curError.push("communityCode");
+    }
+    if(numTokens.length == 0){
+      curError.push("numTokens");
+    }
+    if(curError.length != 0){
+      setError(curError);
+      return;
+    }
     if(password!=confirmPassword){
       showMessage({message:t(passwordsUnequal_P), type:'warning'})
       return;
@@ -167,66 +209,203 @@ const submitSignUpPhrase =t(submitSignUp_P)
     <ScrollView contentContainerStyle={styles.container}>
       
       <Text style={styles.logo}>{signUpPhrase}</Text>
-      <View style={styles.inputView} >
-        <TextInput
-          keyboardType="numeric"
-          style={styles.inputText}
-          placeholder={phoneNumberWord}
-          placeholderTextColor="#003f5c"
-          onChangeText={text => setPhoneNumber(text)}
-          value={phoneNumber} />
-      </View>
-      <View style={styles.inputView} >
-        <TextInput
-          style={styles.inputText}
-          placeholder={usernameWord}
-          placeholderTextColor="#003f5c"
-          onChangeText={text => setUsername(text)}
-          value={username} />
-      </View>
-      <View style={styles.inputView} >
-        <TextInput
-          secureTextEntry
-          style={styles.inputText}
-          placeholder={passwordWord}
-          placeholderTextColor="#003f5c"
-          onChangeText={text => setPassword(text)}
-          value={password} />
-      </View>
-      <View style={styles.inputView} >
-        <TextInput
-          secureTextEntry
-          style={styles.inputText}
-          placeholder={confirmPasswordPhrase}
-          placeholderTextColor="#003f5c"
-          onChangeText={text => setConfirmPassword(text)}
-          value={confirmPassword} />
-      </View>
+
+      {
+        (()=>{
+          if(error.includes("phone")){
+            return(<View style={{...styles.inputView, ...styles.error}} >
+              <TextInput
+                keyboardType="numeric"
+                style={styles.inputText}
+                placeholder={phoneNumberWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPhoneNumber(text)}
+                value={phoneNumber} />
+            </View>)
+          } else {
+            return(<View style={{...styles.inputView}} >
+              <TextInput
+                keyboardType="numeric"
+                style={styles.inputText}
+                placeholder={phoneNumberWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPhoneNumber(text)}
+                value={phoneNumber} />
+            </View>)
+          }
+        })()
+      }
+
+      {
+        (()=>{
+          if(error.includes("username")){
+            return(<View style={{...styles.inputView, ...styles.error}} >
+              <TextInput
+                style={styles.inputText}
+                placeholder={usernameWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setUsername(text)}
+                value={username} />
+            </View>)
+          } else {
+            return(<View style={{...styles.inputView}} >
+              <TextInput
+                style={styles.inputText}
+                placeholder={usernameWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setUsername(text)}
+                value={username} />
+            </View>)
+          }
+        })()
+      }
+
+      {
+        (()=>{
+          if(error.includes("password")){
+            return(<View style={{...styles.inputView, ...styles.error}} >
+              <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder={passwordWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPassword(text)}
+                value={password} />
+            </View>)
+          } else {
+            return(<View style={{...styles.inputView}} >
+              <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder={passwordWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPassword(text)}
+                value={password} />
+            </View>)
+          }
+        })()
+      }
+      
+      {
+        (()=>{
+          if(error.includes("confirm")){
+            return(<View style={{...styles.inputView, ...styles.error}} >
+              <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder={confirmPasswordPhrase + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setConfirmPassword(text)}
+                value={confirmPassword} />
+            </View>)
+          } else {
+            return(<View style={{...styles.inputView}} >
+              <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder={confirmPasswordPhrase + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setConfirmPassword(text)}
+                value={confirmPassword} />
+            </View>)
+          }
+        })()
+      }
       
       <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>{t(isAdmin_W)}</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
       
         {admin ?
         <>
-          <View style={styles.inputView} ><TextInput
-            style={styles.inputText}
-            placeholder={communityNameWord}
-            placeholderTextColor="#003f5c"
-            onChangeText={text => setCommunityName(text)}
-            value={communityName} /></View>
-            <View style={styles.inputView}><TextInput
-          keyboardType={'numeric'}
-          style={styles.inputText}
-          placeholder={t(numTokens_P)}
-          placeholderTextColor="#003f5c"
-          onChangeText={text => setNumTokens(text)}
-          value={numTokens} /></View>
+        {
+          (()=>{
+            if(error.includes("communityName")){
+              return(<View style={{...styles.inputView, ...styles.error}} ><TextInput
+                style={styles.inputText}
+                placeholder={communityNameWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setCommunityName(text)}
+                value={communityName} /></View>)
+            } else {
+              return(<View style={{...styles.inputView}} ><TextInput
+                style={styles.inputText}
+                placeholder={communityNameWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setCommunityName(text)}
+                value={communityName} /></View>)
+            }
+          })()
+        }
+        {
+          (()=>{
+            if(error.includes("numTokens")){
+              return( <View style={{...styles.inputView, ...styles.error}}><TextInput
+                keyboardType={'numeric'}
+                style={styles.inputText}
+                placeholder={t(numTokens_P) + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setNumTokens(text)}
+                value={numTokens} /></View>)
+            } else {
+              return( <View style={{...styles.inputView}}><TextInput
+                keyboardType={'numeric'}
+                style={styles.inputText}
+                placeholder={t(numTokens_P) + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setNumTokens(text)}
+                value={numTokens} /></View>)
+            }
+          })()
+        }
       </>
-          : <View style={styles.inputView} ><TextInput
-            style={styles.inputText}
-            placeholder={communityCodeWord}
-            placeholderTextColor="#003f5c"
-            onChangeText={text => setCode(text)}
-            value={code} /></View>}
+          :
+          <>
+          {
+          (()=>{
+            if(error.includes("communityCode")){
+              return(<View style={{...styles.inputView, ...styles.error}} ><TextInput
+                style={styles.inputText}
+                placeholder={communityCodeWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setCode(text)}
+                value={code} /></View>)
+            } else {
+              return(<View style={{...styles.inputView}} ><TextInput
+                style={styles.inputText}
+                placeholder={communityCodeWord + "..."}
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setCode(text)}
+                value={code} /></View>)
+            }
+          })()
+        }
+          </>}
+      <View style={{width:"80%"}}>
+          {(()=>{
+            let arr = [];
+            if(error.includes("phone")){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{phoneNumberWord}</Text>{phoneError}</Text>);
+            }
+            if(error.includes("username")){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{usernameWord}</Text>{usernameError}</Text>);
+            }
+            if(error.includes("password")){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{passwordWord}</Text>{passwordError}</Text>);
+            }
+            if(error.includes("confirm")){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{confirmPasswordPhrase}</Text>{confirmPasswordError}</Text>);
+            }
+            if(error.includes("communityName") && admin){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityNameWord}</Text>{communityNameError}</Text>);
+            }
+            if(error.includes("communityCode") && !admin){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityCodeWord}</Text>{communityCodeError}</Text>);
+            }
+            if(error.includes("numTokens") && admin){
+              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{t(numTokens_P)}</Text>{numTokensError}</Text>);
+            }
+            return arr;
+          })()}
+      </View>
       <TouchableOpacity style={styles.loginBtn} onPress={
         () => {
           register()
@@ -300,5 +479,9 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
     marginBottom: 35
-  }
+  },
+  error:{
+    borderColor:"#cc0000",
+    borderWidth:2,
+  },
 });

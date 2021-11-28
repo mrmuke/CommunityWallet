@@ -35,7 +35,12 @@ export const CreateServicesScreen = {
     insertImage_P: 'Insert-Image-Here instructions',
     create_W: 'Create button',
     uploaded_W:"Uploaded message",
-    created_W:"Created message"
+    created_W:"Created message",
+    nameofService_EP: 'Name-of-Service error phrase',
+    category_EP: 'Category error phrase',
+    price_EP: 'Price error phrase',
+    description_EP: 'Description error phrase',
+    photo_EP: 'Photo error phrase',
 }
 
 export const SendScreen = {
@@ -114,6 +119,8 @@ export const LoginScreen = {
     forgotPassword_P: 'Forgot_Password phrase',
     login_W: 'LOGIN button',
     signUp_P: 'Sign-Up phrase/question',
+    phoneNumber_EP: "Phone Number error phrase",
+    password_EP: "Password error phrase"
 }
 
 export const SignupScreen = {
@@ -136,5 +143,12 @@ export const SignupScreen = {
     submitSignUp_P: 'SIGNUP final button',
     numTokens_P:'Placeholder - Number of Tokens in Economy',
     passwordsUnequal_P:"Unequal passwords warning",
-    isAdmin_W:"Is Admin"
+    isAdmin_W:"Is Admin",
+    phoneNumber_EP:"Phone Number error phrase",
+    username_EP: "Username error phrase",
+    password_EP: "Password error phrase",
+    confirmPassword_EP: "Confirm Password error phrase",
+    communityName_EP: "Community Name error phrase",
+    communityCode_EP: "Community Code error phrase",
+    numTokens_EP: "Num Tokens error phrase",
 }

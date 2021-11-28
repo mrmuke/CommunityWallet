@@ -4,6 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../../API_URL';
 import axios from 'axios'
 import { useIsFocused } from '@react-navigation/native';
+import { width } from 'styled-system';
+
+var w = Dimensions.get("screen").width;
 
 // LANGUAGE LOCALIZATION
 import tokens from '../../i18n/tokens';
@@ -16,8 +19,9 @@ export default function Services({ navigation }) {
   const {t}=useTranslation()
   const allWord = t(all_W)
   const [arrayItems, setArrayItems] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const isFocused = useIsFocused();
-
 
   async function getServices() {
     axios.get(api + '/services/allServices').then(response => {
@@ -25,11 +29,38 @@ export default function Services({ navigation }) {
     }).catch(e => { })
   }
 
+  async function searchServices(){
+    axios({
+      method: "get",
+      url: api + "/services/searchServices",
+      params:{
+        searchText:searchText
+      }
+    }).then((response)=>{
+      setArrayItems(response.data);
+    }).catch(e=>{
+      console.log(e);
+    });
+  }
+
+  async function searchCategory(category){
+    axios({
+      method: "get",
+      url: api + "/services/category",
+      params:{
+        category:category
+      }
+    }).then((response)=>{
+      setArrayItems(response.data);
+    }).catch(e=>{
+      console.log(e);
+    });
+  }
+
   useEffect(()=>{
     if(isFocused){
       getServices();
     }
-   
   },[isFocused]);
 
   return (
@@ -40,23 +71,49 @@ export default function Services({ navigation }) {
         }}>
           <Icon name="arrow-back-ios" style={styles.logo}></Icon>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity style={{ backgroundColor: "#ec802e", borderRadius: 100, padding: 5, marginRight: 10 }}>
-            <Icon name="search" style={{ fontSize: Dimensions.get("screen").width * 0.08, color: "white" }}></Icon>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={{ backgroundColor: "black", borderRadius: 100, padding: 5 }} onPress={() => {
-            navigation.navigate("Create", {
-              previous: "Services"
-            })
+        <View style={{flexDirection:"row"}}>
+        {
+            (()=>{
+              if(searching){
+                return(
+                  <TextInput defaultValue={searchText} placeholder="" onChangeText={(text)=>{setSearchText(text)}} style={styles.searchBar}></TextInput>
+                )
+              }
+            })()
+          }
+          <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
+            if(searching){
+              searchServices();
+            }
+            setSearchText("");
+            setSearching(!searching);
           }}>
-            <Icon name="add" style={{ fontSize: Dimensions.get("screen").width * 0.08, color: "#ec802e" }}></Icon>
+            <Icon name="search" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"white"}}></Icon>
           </TouchableOpacity>
+          {
+            (()=>{
+              if(!searching){
+                return(
+                  <TouchableOpacity style={{backgroundColor:"black", borderRadius: 100, padding: 5}} onPress={()=>{
+                    navigation.navigate("Create", {
+                      previous:"Services"
+                    })
+                  }}>
+                    <Icon name="add" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"#ec802e"}}></Icon>
+                  </TouchableOpacity>
+                )
+              }
+            })()
+          }
         </View>
       </View>
       <View style={styles.menuContainer}>
         <TouchableOpacity><Text style={styles.menuTextSelected}>{allWord}</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.menuText}>Haircuts</Text></TouchableOpacity>
+        <TouchableOpacity  onPress={
+          ()=>{
+            searchCategory("House");
+          }
+        }><Text style={styles.menuText}>House</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Gears</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Candles</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Groceries</Text></TouchableOpacity>
@@ -175,5 +232,12 @@ const styles = StyleSheet.create({
     fontSize:Dimensions.get("screen").height * 0.023,
     color:"#ec802e",
     fontWeight:"bold",
+  },
+  searchBar:{
+    borderWidth:2,
+    borderRadius:30,
+    width:w*0.55,
+    marginRight:20,
+    paddingLeft:20
   }
 });
