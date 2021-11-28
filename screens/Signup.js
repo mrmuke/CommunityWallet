@@ -132,6 +132,7 @@ export default function Signup({ navigation }) {
     })
     //mongo set info
   }
+
   function checkVerify() {
     
     if (verifyCode == verificationCode) {
@@ -155,6 +156,14 @@ export default function Signup({ navigation }) {
         message: wrongVerificationCodePhrase,
         type: "error",
       });
+    }
+  }
+
+  function getErrorStyle(str){
+    if(error.includes(str)){
+      return {...styles.inputView,...styles.error}
+    } else {
+      return {...styles.inputView}
     }
   }
 
@@ -204,174 +213,74 @@ export default function Signup({ navigation }) {
       
       <Text style={styles.logo}>{signUpPhrase}</Text>
 
-      {
-        (()=>{
-          if(error.includes("phone")){
-            return(<View style={{...styles.inputView, ...styles.error}} >
-              <TextInput
-                keyboardType="numeric"
-                style={styles.inputText}
-                placeholder={phoneNumberWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPhoneNumber(text)}
-                value={phoneNumber} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}} >
-              <TextInput
-                keyboardType="numeric"
-                style={styles.inputText}
-                placeholder={phoneNumberWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPhoneNumber(text)}
-                value={phoneNumber} />
-            </View>)
-          }
-        })()
-      }
+      <View style={getErrorStyle("phone")}>
+        <TextInput
+          keyboardType="numeric"
+          style={styles.inputText}
+          placeholder={phoneNumberWord + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setPhoneNumber(text)}
+          value={phoneNumber} />
+      </View>
 
-      {
-        (()=>{
-          if(error.includes("username")){
-            return(<View style={{...styles.inputView, ...styles.error}} >
-              <TextInput
-                style={styles.inputText}
-                placeholder={usernameWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setUsername(text)}
-                value={username} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}} >
-              <TextInput
-                style={styles.inputText}
-                placeholder={usernameWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setUsername(text)}
-                value={username} />
-            </View>)
-          }
-        })()
-      }
+      <View style={getErrorStyle("username")} >
+        <TextInput
+          style={styles.inputText}
+          placeholder={usernameWord + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setUsername(text)}
+          value={username} />
+      </View>
 
-      {
-        (()=>{
-          if(error.includes("password")){
-            return(<View style={{...styles.inputView, ...styles.error}} >
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={passwordWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPassword(text)}
-                value={password} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}} >
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={passwordWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPassword(text)}
-                value={password} />
-            </View>)
-          }
-        })()
-      }
+      <View style={getErrorStyle("password")} >
+        <TextInput
+          secureTextEntry
+          style={styles.inputText}
+          placeholder={passwordWord + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setPassword(text)}
+          value={password} />
+      </View>
       
-      {
-        (()=>{
-          if(error.includes("confirm")){
-            return(<View style={{...styles.inputView, ...styles.error}} >
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={confirmPasswordPhrase + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setConfirmPassword(text)}
-                value={confirmPassword} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}} >
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={confirmPasswordPhrase + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setConfirmPassword(text)}
-                value={confirmPassword} />
-            </View>)
-          }
-        })()
-      }
+      <View style={getErrorStyle("confirm")} >
+        <TextInput
+          secureTextEntry
+          style={styles.inputText}
+          placeholder={confirmPasswordPhrase + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setConfirmPassword(text)}
+          value={confirmPassword} />
+      </View>
       
       <HStack justifyContent="space-between" width={"75%"} alignItems="center" marginBottom={5}><Text style={{ fontWeight: 'bold' }}>{t(isAdmin_W)}</Text><Switch isChecked={admin} onToggle={e => setAdmin(e)} /></HStack>
       
         {admin ?
         <>
-        {
-          (()=>{
-            if(error.includes("communityName")){
-              return(<View style={{...styles.inputView, ...styles.error}} ><TextInput
-                style={styles.inputText}
-                placeholder={communityNameWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setCommunityName(text)}
-                value={communityName} /></View>)
-            } else {
-              return(<View style={{...styles.inputView}} ><TextInput
-                style={styles.inputText}
-                placeholder={communityNameWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setCommunityName(text)}
-                value={communityName} /></View>)
-            }
-          })()
-        }
-        {
-          (()=>{
-            if(error.includes("numTokens")){
-              return( <View style={{...styles.inputView, ...styles.error}}><TextInput
-                keyboardType={'numeric'}
-                style={styles.inputText}
-                placeholder={t(numTokens_P) + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setNumTokens(text)}
-                value={numTokens} /></View>)
-            } else {
-              return( <View style={{...styles.inputView}}><TextInput
-                keyboardType={'numeric'}
-                style={styles.inputText}
-                placeholder={t(numTokens_P) + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setNumTokens(text)}
-                value={numTokens} /></View>)
-            }
-          })()
-        }
+
+        <View style={getErrorStyle("communityName")} ><TextInput
+        style={styles.inputText}
+        placeholder={communityNameWord + "..."}
+        placeholderTextColor="#003f5c"
+        onChangeText={text => setCommunityName(text)}
+        value={communityName} /></View>
+        
+        <View style={getErrorStyle("numTokens")}><TextInput
+        keyboardType={'numeric'}
+        style={styles.inputText}
+        placeholder={t(numTokens_P) + "..."}
+        placeholderTextColor="#003f5c"
+        onChangeText={text => setNumTokens(text)}
+        value={numTokens} /></View>
       </>
           :
           <>
-          {
-          (()=>{
-            if(error.includes("communityCode")){
-              return(<View style={{...styles.inputView, ...styles.error}} ><TextInput
-                style={styles.inputText}
-                placeholder={communityCodeWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setCode(text)}
-                value={code} /></View>)
-            } else {
-              return(<View style={{...styles.inputView}} ><TextInput
-                style={styles.inputText}
-                placeholder={communityCodeWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setCode(text)}
-                value={code} /></View>)
-            }
-          })()
-        }
+          
+          <View style={getErrorStyle("communityCode")} ><TextInput
+          style={styles.inputText}
+          placeholder={communityCodeWord + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setCode(text)}
+          value={code} /></View>
           </>}
       <View style={{width:"80%"}}>
           {(()=>{

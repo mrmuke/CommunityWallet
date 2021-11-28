@@ -24,12 +24,20 @@ const signUpPhrase = t(signUp_P)
   const [password, setPassword] = useState("")
   const [error, setError] = useState([]);
 
+  function getErrorStyle(str){
+    if(error.includes(str)){
+      return {...styles.inputView,...styles.error}
+    } else {
+      return {...styles.inputView}
+    }
+  }
+
   function submit() {
     var curError = [];
     if(password.length < 8){
       curError.push("password");
     }
-    if(!parseInt(phoneNumber) && phoneNumber.length != 0){
+    if(!parseInt(phoneNumber) && phoneNumber.length == 0){
       curError.push("phone");
     }
     if(curError.length != 0){
@@ -54,50 +62,21 @@ const signUpPhrase = t(signUp_P)
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>{baoWord}</Text>
-      {
-        (()=>{
-          if(error.includes("phone")){
-            return(<View style={{...styles.inputView, ...styles.error}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={phoneNumberWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPhoneNumber(text)} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={phoneNumberWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPhoneNumber(text)} />
-            </View>)
-          }
-        })()
-      }
-      {
-        (()=>{
-          if(error.includes("password")){
-            return(<View style={{...styles.inputView, ...styles.error}}>
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={passwordWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPassword(text)} />
-            </View>)
-          } else {
-            return(<View style={{...styles.inputView}}>
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder={passwordWord + "..."}
-                placeholderTextColor="#003f5c"
-                onChangeText={text => setPassword(text)} />
-            </View>)
-          }
-        })()
-      }
+        <View style={getErrorStyle("phone")}>
+          <TextInput
+            style={styles.inputText}
+            placeholder={phoneNumberWord + "..."}
+            placeholderTextColor="#003f5c"
+            onChangeText={text => setPhoneNumber(text)} />
+        </View>
+      <View style={getErrorStyle("password")}>
+        <TextInput
+          secureTextEntry
+          style={styles.inputText}
+          placeholder={passwordWord + "..."}
+          placeholderTextColor="#003f5c"
+          onChangeText={text => setPassword(text)} />
+      </View>
 
 
       <TouchableOpacity>
