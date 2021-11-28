@@ -31,7 +31,6 @@ const {
   communityCode_W,
   submitSignUp_P,
   numTokens_P,
-  passwordsUnequal_P,
   isAdmin_W,
   phoneNumber_EP,
   username_EP,
@@ -80,8 +79,7 @@ export default function Signup({ navigation }) {
   const [verificationCode, setVerificationCode] = useState("")
   const [verifyCode, setVerifyCode] = useState("")
   const [verifying, setVerifying] = useState(false);
-/*   const [error, setError] = useState("")
- */
+
   const [admin, setAdmin] = useState(false)
   const [communityName, setCommunityName] = useState("")
   const [loading,setLoading]=useState(false)
@@ -94,7 +92,7 @@ export default function Signup({ navigation }) {
     if(password.length < 8){
       curError.push("password");
     }
-    if(!parseInt(phoneNumber) && phoneNumber.length == 0){
+    if(phoneNumber.length == 0){
       curError.push("phone");
     }
     if(password!=confirmPassword){
@@ -116,11 +114,7 @@ export default function Signup({ navigation }) {
       setError(curError);
       return;
     }
-    if(password!=confirmPassword){
-      showMessage({message:t(passwordsUnequal_P), type:'warning'})
-      return;
-      //translate messages, admin
-    }
+
     if (admin && communityName.length < 4) {
       showMessage({
         message: communityNameLongerPhrase,

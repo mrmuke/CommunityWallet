@@ -100,8 +100,7 @@ export const english = {
     [LoginScreen.forgotPassword_P]: 'Forgot Password?',
     [LoginScreen.login_W]: 'LOGIN',
     [LoginScreen.signUp_P]: "Don't have an account? Signup now!",
-    [LoginScreen.phoneNumber_EP]: " must be only numbers!",
-    [LoginScreen.password_EP]: "Invalid ",
+
 
     [SignupScreen.communityNameLonger_P]: 'Your community name should be longer!',
     [SignupScreen.verificationCode_P]: 'Your verification code is',
@@ -121,7 +120,6 @@ export const english = {
     [SignupScreen.communityCode_W]: 'Community Code',
     [SignupScreen.submitSignUp_P]: 'SIGNUP',
     [SignupScreen.numTokens_P]:'Number of Tokens in Economy',
-    [SignupScreen.passwordsUnequal_P]:"Your passwords are not the same!",
     [SignupScreen.isAdmin_W]:"Admin",
     [Common.chooseToken_P]:"Choose Token",
     [SignupScreen.phoneNumber_EP]:" can only be numbers!",

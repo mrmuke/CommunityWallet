@@ -118,9 +118,7 @@ export const LoginScreen = {
     password_W: 'Password placeholder',
     forgotPassword_P: 'Forgot_Password phrase',
     login_W: 'LOGIN button',
-    signUp_P: 'Sign-Up phrase/question',
-    phoneNumber_EP: "Phone Number error phrase",
-    password_EP: "Password error phrase"
+    signUp_P: 'Sign-Up phrase/question'
 }
 
 export const SignupScreen = {
@@ -142,7 +140,6 @@ export const SignupScreen = {
     communityCode_W: 'Community-Code placeholder',
     submitSignUp_P: 'SIGNUP final button',
     numTokens_P:'Placeholder - Number of Tokens in Economy',
-    passwordsUnequal_P:"Unequal passwords warning",
     isAdmin_W:"Is Admin",
     phoneNumber_EP:"Phone Number error phrase",
     username_EP: "Username error phrase",

@@ -9,15 +9,14 @@ import { useTranslation } from 'react-i18next';
 export default function Login({ navigation }) {
   const {t} = useTranslation()
 
-const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P, phoneNumber_EP, password_EP } = tokens.screens.login
+const { wrongCredentials_P, bao_W, phoneNumber_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
 const wrongCredentialsPhrase = t(wrongCredentials_P)
 const baoWord = t(bao_W)
 const phoneNumberWord = t(phoneNumber_W)
 const passwordWord = t(password_W)
 const forgotPasswordPhrase = t(forgotPassword_P)
 const loginWord = t(login_W)
-const phoneError = t(phoneNumber_EP)
-const passwordError = t(password_EP)
+
 const signUpPhrase = t(signUp_P)
   const { authContext } = React.useContext(AuthContext);
 
@@ -100,18 +99,6 @@ const signUpPhrase = t(signUp_P)
         })()
       }
 
-      <View style={{width:"80%", marginBottom: 10}}>
-          {(()=>{
-            let arr = [];
-            if(error.includes("phone")){
-              arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{phoneNumberWord}</Text>{phoneError}</Text>);
-            }
-            if(error.includes("password")){
-              arr.push(<Text style={{fontSize:12, color:"#cc0000"}}>{passwordError}<Text style={{fontWeight:"bold"}}>{passwordWord}!</Text></Text>);
-            }
-            return arr;
-          })()}
-      </View>
 
       <TouchableOpacity>
         <Text style={styles.forgot}>{forgotPasswordPhrase}</Text>
