@@ -69,6 +69,7 @@ export const english = {
     [AdminNavigatorScreen.members_W]: 'Members',
     [AdminNavigatorScreen.economy_W]: 'Economy',
     [AdminNavigatorScreen.createToken_P]:"Create Token",
+    [AdminNavigatorScreen.mintToken_P]:"Mint Token",
     [AdminNavigatorScreen.adminHome_P]:"Admin Home",
     [AdminNavigatorScreen.nameToken_P]:"Name of Token",
     [AdminNavigatorScreen.amount_W]:"Amount",

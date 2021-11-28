@@ -75,6 +75,7 @@ export const AdminNavigatorScreen = {
     send_W: 'Send button',
     timeToken_W: 'Time-Token header',
     burnToken_P: 'Burn-Token phrase',
+    mintToken_P: 'Mint-Token phrase',
     sendToken_P: 'Send-Token phrase',
     createToken_P:'Create-Token phrase',
     analytics_W:"Analytics tab",
@@ -85,7 +86,7 @@ export const AdminNavigatorScreen = {
     nameToken_P:"Token Name",
     amount_W:"Amount Tokens",
     invalidAmount_P:"Invalid # Tokens",
-    invalidName_P:"Invalid Token Name"
+    invalidName_P:"Invalid Token Name",
 }
 
 export const DrawerScreen = {

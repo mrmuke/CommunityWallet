@@ -35,20 +35,13 @@ const servWord =t(serv_W)
                 <ScrollView>
 
                     {members.map((m, index) => (
-                        <View key={index}>
-                        {index % 2 == 0 ?
-                            <View style={styles.oddList}>
+                        <View key={index} style={[index%2==0?styles.oddList:styles.evenList]}>
+
                                 <Text style={{ width: width * 0.92 * 0.35 }}>{m.phoneNumber}</Text>
                                 <Text style={{ width: width * 0.92 * 0.32 }}>10/14/2021</Text>
                                 <Text style={{ width: width * 0.92 * 0.19 }}>{m.balance}</Text>
-                                <Text style={{ width: width * 0.92 * 0.115 }}>4</Text>
-                            </View> :
-                            <View style={styles.evenList}>
-                                <Text style={{ width: width * 0.92 * 0.35 }}>{m.phoneNumber}</Text>
-                                <Text style={{ width: width * 0.92 * 0.32 }}>10/15/2021</Text>
-                                <Text style={{ width: width * 0.92 * 0.19 }}>{m.balance}</Text>
-                                <Text style={{ width: width * 0.92 * 0.115 }}>4</Text>
-                            </View>}
+                                <Text style={{ width: width * 0.92 * 0.115 }}>{m.serviceCount}</Text>
+                
                     </View>))
                     }
 

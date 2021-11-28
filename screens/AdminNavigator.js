@@ -27,7 +27,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { analytics_W,tokens_W,members_W,economy_W,adminHome_P } = tokens.screens.adminNavigator
 const {language_W} = tokens.tabs
-const { amount_W,invalidName_P,transactions_W, progress_W, nameToken_P,statistics_W, invalidAmount_P,signOut_P, back_W, send_W, timeToken_W, burnToken_P, sendToken_P, createToken_P } = tokens.screens.adminNavigator
+const { amount_W,invalidName_P,transactions_W, progress_W, nameToken_P,statistics_W, invalidAmount_P,signOut_P, back_W, send_W, timeToken_W, burnToken_P, sendToken_P, createToken_P,mintToken_P } = tokens.screens.adminNavigator
 
 const Stack = createStackNavigator();
 
@@ -41,22 +41,9 @@ export default function AdminNavigator() {
     i18n.changeLanguage(newLang)
     setActive(t(analytics_W))
   }
-  const [active, setActive] = useState(t(analytics_W))
-  return <Stack.Navigator>
-    <Stack.Screen name="Admin Home" options={{headerTitle:t(adminHome_P),headerRight:()=><TouchableOpacity onPress={switchLanguage} style={{marginRight:20}}><Text>{t(language_W)}</Text></TouchableOpacity>}} component={props=><AdminHome active={active} setActive={setActive} {...props}/>} />
-    <Stack.Screen name="Send" component={Send} options={{ headerShown: false }} />
-  </Stack.Navigator>
-}
-function AdminHome({ navigation,active,setActive }) {
-  const {t} = useTranslation()
-  const tabs = {
-    [t(analytics_W)]: "analytics",
-    [t(tokens_W)]: "logo-bitcoin",
-    [t(members_W)]: "people",
-    [t(economy_W)]: "stats-chart"
-  }
-
   const [community, setCommunity] = useState(null)
+  const [active, setActive] = useState(t(analytics_W))
+
   
   useEffect(() => {
 
@@ -66,6 +53,21 @@ function AdminHome({ navigation,active,setActive }) {
 
     })
   }, [])
+  return <Stack.Navigator>
+    <Stack.Screen name="Admin Home" options={{headerTitle:t(adminHome_P),headerRight:()=><TouchableOpacity onPress={switchLanguage} style={{marginRight:20}}><Text>{t(language_W)}</Text></TouchableOpacity>}} component={props=><AdminHome active={active} setActive={setActive} community={community} {...props}/>} />
+    <Stack.Screen name="Send" component={Send} options={{ headerShown: false }} />
+  </Stack.Navigator>
+}
+function AdminHome({ navigation,active,setActive,community }) {
+  const {t} = useTranslation()
+  const tabs = {
+    [t(analytics_W)]: "analytics",
+    [t(tokens_W)]: "logo-bitcoin",
+    [t(members_W)]: "people",
+    [t(economy_W)]: "stats-chart"
+  }
+
+  
   if (!community) {
     return <Loader />
   }
@@ -75,11 +77,11 @@ function AdminHome({ navigation,active,setActive }) {
       {Object.keys(tabs).map(c => (
         <Tab active={active == c} navigate={() => setActive(c)} key={c} name={c} image={tabs[c]} ></Tab>
       ))}</View>
-    <Page setCommunity={setCommunity} community={community} name={active} navigation={navigation} />
+    <Page community={community} name={active} navigation={navigation} />
   </ScrollView></View>
 }
 
-function Page({ name,setCommunity, community, navigation }) {
+function Page({ name, community, navigation }) {
   const {t} = useTranslation()
   const transactionsWord = t(transactions_W)
   const progressWord = t(progress_W)
@@ -91,17 +93,21 @@ function Page({ name,setCommunity, community, navigation }) {
   const burnTokenPhrase = t(burnToken_P)
   const sendTokenPhrase = t(sendToken_P)
   const createTokenPhrase = t(createToken_P)
+  const mintTokenPhrase = t(mintToken_P)
   
   const { authContext } = React.useContext(AuthContext);
   const [loading, setLoading] = useState(false)
   const [tokens, setTokens] = useState({})
   const [showModal, setShowModal] = useState(null)
   const [members, setMembers] = useState([])
+  const [communityMembers,setCommunityMembers]=useState([])
   const [showMembers, setShowMembers] = useState(false);
   const [contractAddress,setContractAddress]=useState("")
   const [creating,setCreating]=useState(false)
   const [amount,setAmount]=useState("")
   const [tokenName,setTokenName]=useState("")
+  const [burning,setBurning]=useState(false)
+  const [minting,setMinting]=useState(false)
   
   useEffect(() => {
     if (name == t(tokens_W)) {
@@ -117,7 +123,7 @@ function Page({ name,setCommunity, community, navigation }) {
     }
     else if (name == t(members_W)) {
       setLoading(true)
-      getMembers()
+      getCommunityMembers()
     }
   }, [name])
 
@@ -127,6 +133,44 @@ function Page({ name,setCommunity, community, navigation }) {
       setLoading(false)
     }).catch(e => {
 
+    })
+  }
+  function getCommunityMembers() {
+    axios.get(API_URL + '/community/communityMembers').then(response => {
+      setCommunityMembers(response.data)
+      setLoading(false)
+    }).catch(e => {
+
+    })
+  }
+  function burnToken(){
+    if(amount.length==0){
+      showMessage({type:"info",message:t(invalidAmount_P)})
+      return;
+    }
+    setLoading(true)
+    axios.post(API_URL+"/community/burnToken",{contractAddress:showModal,amount:amount})
+    .then(()=>{
+      let prev = tokens[showModal]
+      setTokens({...tokens,[showModal]:{...prev,balance:""+parseInt(prev["balance"])-parseInt(amount)}})
+      setBurning(false)
+      setAmount("")
+      setLoading(false)
+    })
+  }
+  function mintToken(){
+    if(amount.length==0){
+      showMessage({type:"info",message:t(invalidAmount_P)})
+      return;
+    }
+    setLoading(true)
+    axios.post(API_URL+"/community/mintMore",{contractAddress:showModal,amount:amount})
+    .then(()=>{
+      let prev = tokens[showModal]
+      setTokens({...tokens,[showModal]:{...prev,balance:""+(parseInt(prev["balance"])+parseInt(amount))}})
+      setMinting(false)
+      setAmount("")
+      setLoading(false)
     })
   }
   function createToken(){
@@ -209,7 +253,7 @@ function Page({ name,setCommunity, community, navigation }) {
             let arr = [];
             for(let member of members){
               arr.push(<View key={member.address} style={[{width:"100%", padding: 20, flexDirection:"row",borderTopWidth:1,borderTopColor:"lightgrey", borderBottomColor:'lightgrey'},member==members[members.length-1]&&{borderBottomWidth:1}]}>
-                <View style={{width:"50%"}}><Text style={{width:"100%", textAlign:"center", fontSize:25}}>{member.phoneNumber}</Text></View>
+                <View style={{width:"50%",justifyContent:'center'}}><Text style={{width:"100%", textAlign:"center", fontSize:25}}>{member.phoneNumber}</Text></View>
                 <View style={{width:"50%"}}>
                   <TouchableOpacity style={{ backgroundColor:"#FFD580", padding: 10,flexDirection:'row',justifyContent:'center'}} onPress={()=>{
                     navigation.navigate("Send", {
@@ -231,7 +275,7 @@ function Page({ name,setCommunity, community, navigation }) {
       if(creating){
         return (
           <View style={styles.formContainer}>
-            <TouchableOpacity style={{marginTop:10,marginBottom:20}} onPress={()=>setCreating(false)}><Text>{backWord}</Text></TouchableOpacity>
+            <TouchableOpacity style={{marginTop:10,marginBottom:20}} onPress={()=>{setAmount("");setCreating(false)}}><Text>{backWord}</Text></TouchableOpacity>
             <Text style={styles.formHeader}>{createTokenPhrase}</Text>
             <View style={styles.formContent}>
               <View style={{flexDirection:"row"}}>
@@ -243,7 +287,7 @@ function Page({ name,setCommunity, community, navigation }) {
               </View>
               <View style={{flexDirection:"row"}}>
                 <MaterialIcon name="attach-money" style={{color:"orange", fontSize:Dimensions.get("screen").height * 0.05, marginRight: 5}}></MaterialIcon>
-                <TextInput keyboardType="number-pad" placeholder={t(amount_W)} onChangeText={text=>setAmount(text)}  style={{width:"100%"}}></TextInput>
+                <TextInput value={amount} keyboardType="number-pad" placeholder={t(amount_W)} onChangeText={text=>setAmount(text)}  style={{width:"100%"}}></TextInput>
               </View> 
               
               <Button onPress={()=>createToken()} backgroundColor="orange" marginTop={3}>{createTokenPhrase}</Button>
@@ -253,6 +297,20 @@ function Page({ name,setCommunity, community, navigation }) {
         )
           
           
+      }
+      else if(burning){
+        return <View style={styles.formContainer}>
+        <TouchableOpacity style={{marginTop:10,marginBottom:20}} onPress={()=>{setAmount("");setBurning(false)}}><Text>{backWord}</Text></TouchableOpacity>
+        <TextInput value={amount} style={{ borderWidth:1,borderColor:"#ccc",borderRadius: 10, marginTop: 30,padding:10}} onChangeText={text=>{if(parseInt(text)<tokens[showModal].balance||text.length==0){setAmount(text)}else{showMessage({message:t(invalidAmount_P),type:"warning"})}}} placeholder={t(amount_W)} keyboardType='number-pad'/>
+        <Button onPress={()=>burnToken()} backgroundColor="orange" marginTop={3}>{burnTokenPhrase}</Button>
+       {/* add placeholder */}</View>
+      }
+      else if(minting){
+        return <View style={styles.formContainer}>
+        <TouchableOpacity style={{marginTop:10,marginBottom:20}} onPress={()=>{setAmount("");setMinting(false)}}><Text>{backWord}</Text></TouchableOpacity>
+        <TextInput value={amount} style={{ borderWidth:1,borderColor:"#ccc",borderRadius: 10, marginTop: 30,padding:10}} onChangeText={text=>setAmount(text)} placeholder={t(amount_W)} keyboardType='number-pad'/>
+        <Button onPress={()=>mintToken()} backgroundColor="orange" marginTop={3}>{mintTokenPhrase}</Button>
+        {/* add placeholder */}</View>
       }      return <VStack style={{ paddingTop: 10,width:"100%",flex:1 }}>
       <List>
 {Object.keys(tokens).map(c=>(
@@ -270,10 +328,12 @@ function Page({ name,setCommunity, community, navigation }) {
 ))}</List>
   {showModal&&
   <View style={{flexDirection:'row',marginTop:10}}>
-    <Button style={{flex:1,marginLeft:5}} backgroundColor="orange">{burnTokenPhrase}</Button>
+    <Button onPress={()=>setBurning(true)} style={{flex:1,marginLeft:5}} backgroundColor="orange">{burnTokenPhrase}</Button>
+    <Button onPress={()=>setMinting(true)} style={{flex:1,marginLeft:5}} backgroundColor="orange">{mintTokenPhrase}</Button>
     <Button style={{flex:1,marginLeft:5,marginRight:5}} backgroundColor="orange" onPress={
       ()=>{
         setContractAddress(showModal)
+        setLoading(true)
         getMembers();
         setShowMembers(true);
       }
@@ -290,7 +350,7 @@ function Page({ name,setCommunity, community, navigation }) {
 
   }
   else if (name == t(members_W)) {
-    return <><Members joinCode={community.code} members={members}></Members></>
+    return <><Members joinCode={community.code} members={communityMembers}></Members></>
   }
   else {
     return <></>

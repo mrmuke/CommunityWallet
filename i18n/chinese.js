@@ -70,10 +70,11 @@ export const chinese = {
     [AdminNavigatorScreen.members_W]: '成员',
     [AdminNavigatorScreen.economy_W]: '经济',
     [AdminNavigatorScreen.createToken_P]:"创建代幣",
+    [AdminNavigatorScreen.mintToken_P]:"鑄幣",
     [AdminNavigatorScreen.adminHome_P]:"管理员主页",
     [AdminNavigatorScreen.nameToken_P]:"代幣名稱",
     [AdminNavigatorScreen.amount_W]:"數量",
-    [AdminNavigatorScreen.invalidAmount_P]:"請輸入代幣數量",
+    [AdminNavigatorScreen.invalidAmount_P]:"請輸入有效的代幣數量",
     [AdminNavigatorScreen.invalidName_P]:"代幣名稱至少四個字",
 
     [DrawerScreen.home_W]: '回家',
