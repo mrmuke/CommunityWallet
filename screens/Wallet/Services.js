@@ -19,9 +19,9 @@ export default function Services({ navigation }) {
   const {t}=useTranslation()
   const allWord = t(all_W)
   const [arrayItems, setArrayItems] = useState([]);
-  const [ searching, setSearching ] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const isFocused = useIsFocused();
-
 
   async function getServices() {
     axios.get(api + '/services/allServices').then(response => {
@@ -29,11 +29,38 @@ export default function Services({ navigation }) {
     }).catch(e => { })
   }
 
+  async function searchServices(){
+    axios({
+      method: "get",
+      url: api + "/services/searchServices",
+      params:{
+        searchText:searchText
+      }
+    }).then((response)=>{
+      setArrayItems(response.data);
+    }).catch(e=>{
+      console.log(e);
+    });
+  }
+
+  async function searchCategory(category){
+    axios({
+      method: "get",
+      url: api + "/services/category",
+      params:{
+        category:category
+      }
+    }).then((response)=>{
+      setArrayItems(response.data);
+    }).catch(e=>{
+      console.log(e);
+    });
+  }
+
   useEffect(()=>{
     if(isFocused){
       getServices();
     }
-   
   },[isFocused]);
 
   return (
@@ -49,12 +76,16 @@ export default function Services({ navigation }) {
             (()=>{
               if(searching){
                 return(
-                  <TextInput placeholder="" style={styles.searchBar}></TextInput>
+                  <TextInput defaultValue={searchText} placeholder="" onChangeText={(text)=>{setSearchText(text)}} style={styles.searchBar}></TextInput>
                 )
               }
             })()
           }
           <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
+            if(searching){
+              searchServices();
+            }
+            setSearchText("");
             setSearching(!searching);
           }}>
             <Icon name="search" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"white"}}></Icon>
@@ -78,7 +109,11 @@ export default function Services({ navigation }) {
       </View>
       <View style={styles.menuContainer}>
         <TouchableOpacity><Text style={styles.menuTextSelected}>{allWord}</Text></TouchableOpacity>
-        <TouchableOpacity><Text style={styles.menuText}>Haircuts</Text></TouchableOpacity>
+        <TouchableOpacity  onPress={
+          ()=>{
+            searchCategory("House");
+          }
+        }><Text style={styles.menuText}>House</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Gears</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Candles</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Groceries</Text></TouchableOpacity>

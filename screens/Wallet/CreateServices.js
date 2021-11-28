@@ -5,6 +5,7 @@ import axios from 'axios'
 import api from '../../API_URL';
 import * as ImagePicker from 'expo-image-picker';
 import { showMessage } from 'react-native-flash-message';
+import { useIsFocused } from '@react-navigation/native';
 
 // LANGUAGE LOCALIZATION
 import tokens from '../../i18n/tokens';
@@ -14,27 +15,39 @@ import { useTranslation } from 'react-i18next';
 var orange = "#ec802e";
 
 export default function CreateServices({ navigation, route }) {
-const {t}= useTranslation()
-const { created_W,cameraRollPermission_P,uploaded_W, createServices_P, info_W, nameOfService_P, category_W, price_W, description_W, describeService_P, photo_W, insertImage_P, create_W } = tokens.screens.wallet.createServices
-const cameraRollPermissionPhrase = t(cameraRollPermission_P)
-const createServicesPhrase = t(createServices_P)
-const infoWord = t(info_W)
-const nameOfSerivcePhrase = t(nameOfService_P)
-const categoryWord = t(category_W)
-const priceWord = t(price_W)
-const descriptionWord = t(description_W)
-const describeServicePhrase = t(describeService_P)
-const photoWord = t(photo_W)
-const insertImagePhrase = t(insertImage_P)
-const createWord = t(create_W)
-const uploaded = t(uploaded_W)
-const created = t(created_W)
+  
+  const {t}= useTranslation()
+  const { created_W,cameraRollPermission_P,uploaded_W, createServices_P, info_W, nameOfService_P, category_W, price_W, description_W, describeService_P, photo_W, insertImage_P, create_W, nameofService_EP, category_EP, price_EP, description_EP, photo_EP} = tokens.screens.wallet.createServices
+  const cameraRollPermissionPhrase = t(cameraRollPermission_P)
+  const createServicesPhrase = t(createServices_P)
+  const infoWord = t(info_W)
+  const nameOfSerivcePhrase = t(nameOfService_P)
+  const categoryWord = t(category_W)
+  const priceWord = t(price_W)
+  const descriptionWord = t(description_W)
+  const describeServicePhrase = t(describeService_P)
+  const photoWord = t(photo_W)
+  const insertImagePhrase = t(insertImage_P)
+  const createWord = t(create_W)
+  const uploaded = t(uploaded_W)
+  const created = t(created_W)
+  const nameError = t(nameofService_EP)
+  const categoryError = t(category_EP)
+  const priceError = t(price_EP)
+  const descriptionError = t(description_EP)
+  const photoError = t(photo_EP)
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [cost, setCost] = useState("");
   const [description, setDescription] = useState("");
   const [localUri, setLocalUri] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [error, setError] = useState([]);
+  const isFocused = useIsFocused();
+
+  useEffect(()=>{
+    setError([]);
+  }, [isFocused])
 
   const pickImage = async () => {
     (async () => {
@@ -61,6 +74,26 @@ const created = t(created_W)
   };
 
   function createItem() {
+    let curError = [];
+    if(name.length <= 3){
+      curError.push("name");
+    }
+    if(category.length == 0){
+      curError.push("category");
+    }
+    if(cost.length == 0){
+      curError.push("cost");
+    }
+    if(description.length == 0){
+      curError.push("description");
+    }
+    if(localUri == null){
+      curError.push("photo");
+    }
+    setError(curError);
+    if(curError.length != 0){
+      return;
+    }
     // Infer the type of the image
     let match = /\.(\w+)$/.exec(fileName);
     let type = match ? `image/${match[1]}` : `image`;
@@ -111,8 +144,10 @@ const created = t(created_W)
       <View style={styles.headingContainer}>
         <Text style={styles.headingText}>{createServicesPhrase}</Text>
       </View>
+
       <ScrollView>
-<View style={{paddingBottom:100}}>
+      <View style={{paddingBottom:100}}>
+
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>{infoWord}</Text>
           <View style={styles.formContent}>
@@ -136,6 +171,23 @@ const created = t(created_W)
             </View>
           </View>
         </View>
+
+        <View style={{marginTop:10}}>
+          {(()=>{
+            let arr = [];
+            if(error.includes("name")){
+              arr.push(<Text style={styles.errorText}><Text style={{fontWeight:"bold"}}>{nameOfSerivcePhrase}:</Text>{nameError}</Text>);
+            }
+            if(error.includes("category")){
+              arr.push(<Text style={styles.errorText}><Text style={{fontWeight:"bold"}}>{categoryWord}:</Text>{categoryError}</Text>);
+            }
+            if(error.includes("cost")){
+              arr.push(<Text style={styles.errorText}><Text style={{fontWeight:"bold"}}>{priceWord}:</Text>{priceError}</Text>);
+            }
+            return arr;
+          })()}
+        </View>
+
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>{descriptionWord}</Text>
           <View style={styles.formContent}>
@@ -145,6 +197,17 @@ const created = t(created_W)
             </View>
           </View>
         </View>
+
+        <View style={{marginTop:10}}>
+          {(()=>{
+            if(error.includes("description")){
+              return(
+                <Text style={styles.errorText}><Text style={{fontWeight:"bold"}}>{describeServicePhrase}:</Text>{descriptionError}</Text>
+              )
+            }
+          })()}
+        </View>
+
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>{photoWord}</Text>
           <TouchableOpacity style={styles.formContent} onPress={()=>pickImage()}>
@@ -154,8 +217,20 @@ const created = t(created_W)
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{height:Dimensions.get("screen").height * 0.07,}}></View>
+
+        <View style={{marginTop:10}}>
+          {(()=>{
+            if(error.includes("photo")){
+              return(
+                <Text style={styles.errorText}><Text style={{fontWeight:"bold"}}>{photoWord}:</Text>{photoError}</Text>
+              )
+            }
+          })()}
         </View>
+
+        <View style={{height:Dimensions.get("screen").height * 0.07,}}></View>
+
+      </View>
       </ScrollView>
       <TouchableOpacity style={styles.CreateContainer} onPress={
         () => { createItem() }
@@ -221,7 +296,7 @@ const styles = StyleSheet.create({
     paddingLeft: Dimensions.get("screen").width * 0.08,
     paddingRight: Dimensions.get("screen").width * 0.08,
     marginTop: 30,
-    bottom: 30
+    bottom: 30,
   },
   formHeader: {
     color: orange,
@@ -232,5 +307,10 @@ const styles = StyleSheet.create({
     borderColor: "#d2d2d2",
     marginTop: 15,
     padding: 10,
+  },
+  errorText:{
+    color:"#cc0000",
+    bottom: 30,
+    paddingLeft: Dimensions.get("screen").width * 0.08,
   }
 });

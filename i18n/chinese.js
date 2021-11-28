@@ -34,6 +34,11 @@ export const chinese = {
     [CreateServicesScreen.insertImage_P]: '上傳照片',
     [CreateServicesScreen.create_W]: '創造',
     [CreateServicesScreen.uploaded_W]:"上傳了",
+    [CreateServicesScreen.nameofService_EP]: ' Longer than 3 characters!',
+    [CreateServicesScreen.category_EP]: ' Can not be left blank!',
+    [CreateServicesScreen.price_EP]: ' Can not be left blank!',
+    [CreateServicesScreen.description_EP]: ' Can not be left blank!',
+    [CreateServicesScreen.photo_EP]: ' Please upload a photo!',
 
     [SendScreen.success_W]: '成功!',
     [SendScreen.goHome_P]: '回家',
@@ -91,11 +96,13 @@ export const chinese = {
 
     [LoginScreen.wrongCredentials_P]: '號碼或密碼有錯誤',
     [LoginScreen.bao_W]: '包',
-    [LoginScreen.phoneNumber_W]: '電話號碼...',
-    [LoginScreen.password_W]: '密碼...',
+    [LoginScreen.phoneNumber_W]: '電話號碼',
+    [LoginScreen.password_W]: '密碼',
     [LoginScreen.forgotPassword_P]: '忘記密碼?',
     [LoginScreen.login_W]: '登錄',
     [LoginScreen.signUp_P]: "沒有賬戶？報名！",
+    [LoginScreen.phoneNumber_EP]: " must be only numbers!",
+    [LoginScreen.password_EP]: "Invalid ",
 
     [SignupScreen.communityNameLonger_P]: '您的社區名稱應該更長！',
     [SignupScreen.verificationCode_P]: '您的驗證碼是',
@@ -117,5 +124,12 @@ export const chinese = {
     [SignupScreen.numTokens_P]:'代幣数量',
     [SignupScreen.passwordsUnequal_P]:'密碼不一致',
     [SignupScreen.isAdmin_W]:"管理員",
-    [Common.chooseToken_P]:"選擇代幣"
+    [Common.chooseToken_P]:"選擇代幣",
+    [SignupScreen.phoneNumber_EP]:" can only be numbers!",
+    [SignupScreen.username_EP]: " must be longer than 4 characters!",
+    [SignupScreen.password_EP]: " is invalid!",
+    [SignupScreen.confirmPassword_EP]: " must match!",
+    [SignupScreen.communityName_EP]: " must be longer than 4 characters!",
+    [SignupScreen.communityCode_EP]: " must be longer than 4 characters!",
+    [SignupScreen.numTokens_EP]: " can not be left blank!",
 }
