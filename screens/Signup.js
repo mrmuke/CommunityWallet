@@ -108,17 +108,17 @@ export default function Signup({ navigation }) {
     if(numTokens.length == 0&&admin){
       curError.push("numTokens");
     }
-    console.log(curError)
     if(curError.length != 0){
       setError(curError);
       return;
     }
 
-
+    setError([])
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
     axios.post("https://rest.nexmo.com/sms/json", { "from": "18334641476", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "e5444577", "api_secret": "PcOaBXuHxxySxTe6" }).then(response => {
+      console.log(response)
       setVerifyCode(random)
       console.log(random)
       setVerifying(true)
