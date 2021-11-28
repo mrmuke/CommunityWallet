@@ -83,7 +83,7 @@ export default function Services({ navigation }) {
         }}>
           <Icon name="arrow-back-ios" style={styles.logo}></Icon>
         </TouchableOpacity>
-        <View style={{flexDirection:"row"}}>
+        <View style={{flexDirection:"row",marginRight:20}}>
           {
             (()=>{
               if(searching){
@@ -91,11 +91,9 @@ export default function Services({ navigation }) {
                   <TextInput defaultValue={searchText} placeholder="" onChangeText={(text)=>{setSearchText(text)}} style={styles.searchBar}></TextInput>
                 )
               } else {
-                if(loading){
-                  return <View style={{width:w*0.35,marginRight:20,paddingLeft:20, alignItems:"center", justifyContent:"center"}}><ActivityIndicator size="large" color="#0000ff"/></View>
-                } else {
-                  return <View style={{width:w*0.35,marginRight:20,paddingLeft:20, alignItems:"center", justifyContent:"center"}}><Text>{searchText}</Text></View>
-                }
+                
+                  return <View style={{justifyContent:"center",flex:1,marginLeft:20}}><Text>{searchText}</Text></View>
+                
               }
             })()
           }
@@ -147,6 +145,9 @@ export default function Services({ navigation }) {
         <TouchableOpacity><Text style={styles.menuText}>Candles</Text></TouchableOpacity>
         <TouchableOpacity><Text style={styles.menuText}>Groceries</Text></TouchableOpacity>
       </View>
+
+                  {loading?
+                    <View style={{alignItems:'center',marginTop:20}}><ActivityIndicator size="large"/></View>:
       <ScrollView>
         {
           (function () {
@@ -186,7 +187,7 @@ export default function Services({ navigation }) {
             return rowArray
           })()
         }
-      </ScrollView>
+      </ScrollView>}
     </View>
   )
 }

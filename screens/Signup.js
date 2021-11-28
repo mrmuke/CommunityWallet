@@ -117,7 +117,7 @@ export default function Signup({ navigation }) {
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
-    axios.post("https://rest.nexmo.com/sms/json", { "from": "18334641476", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "e5444577", "api_secret": "PcOaBXuHxxySxTe6" }).then(response => {
+    axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => {
       console.log(response)
       setVerifyCode(random)
       console.log(random)
@@ -140,7 +140,8 @@ export default function Signup({ navigation }) {
         authContext.signUp(data)
 
       }).catch(e => {
-        /* showMessage({message:e.}) */
+        showMessage({message:communityCodeWord+communityCodeError})
+        setLoading(false)
       })
 
     }

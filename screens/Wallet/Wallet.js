@@ -21,6 +21,10 @@ import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from 'react-i18next';
 const { myWallet_P, totalBalance_P, receiveTokens_P, today_W } = tokens.screens.wallet.wallets
 const {chooseToken_P} = tokens.common
+const images = {
+    "incoming":require('../../assets/incoming.png'),
+    "outgoing":require('../../assets/outgoing.png')
+}
 export default function Wallet() {
     const {t} = useTranslation()
 
@@ -112,16 +116,18 @@ export default function Wallet() {
 const Transaction = (props) => {
     let color = "orange";
     if(props.text < 0){
-        color = "#E4252D";
+        color = "#ff6961";
     }
     let date = (new Date(props.date));
+    console.log(props)
+    let outgoing = (""+props.text).includes("-")
     return (
         <View style={styles.item}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../../assets/service.png')} style={{ width: 50, height: 50, backgroundColor: 'lightgrey', borderRadius: 100 }} /><View style={{ marginLeft: 20 }}><Text style={styles.itemText}>{props.topic}</Text>
+                <Image source={images[outgoing?"outgoing":"incoming"]} style={{ width: 50, height: 50, backgroundColor: color, borderRadius: 100 }} /><View style={{ marginLeft: 20 }}><Text style={styles.itemText}>{props.topic}</Text>
                     <Text style={{ color: "grey" }}>{date.toLocaleDateString() + ", " + date.toLocaleTimeString()}</Text></View>
             </View>
-            <View style={{ borderRadius: 10, padding: 5, backgroundColor: color, height: 30 }}><Text style={{ fontSize: 17, color: "white" }}>{props.text}</Text></View>
+            <View style={{ borderRadius: 10, padding: 5, backgroundColor: color, height: 30 }}><Text style={{ fontSize: 17, color: "white" }}>{outgoing?props.text:"+"+props.text}</Text></View>
         </View>
     )
 }

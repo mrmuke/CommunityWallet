@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "CommunityWallet",
-    "slug": "CommunityWallet",
+    "name": "Bao",
+    "slug": "bao-wallet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/wallet.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,11 +16,15 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+
     "ios": {
-      "supportsTablet": true,
-      "usesAppleSignIn":true
+      "bundleIdentifier": "com.bao.baowallet",
+      "buildNumber": "1.0.0",
+      "supportsTablet":true
     },
     "android": {
+      "package": "com.bao.baowallet",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
