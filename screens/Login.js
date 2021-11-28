@@ -22,28 +22,10 @@ const signUpPhrase = t(signUp_P)
 
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState([]);
 
-  function getErrorStyle(str){
-    if(error.includes(str)){
-      return {...styles.inputView,...styles.error}
-    } else {
-      return {...styles.inputView}
-    }
-  }
 
   function submit() {
-    var curError = [];
-    if(password.length < 8){
-      curError.push("password");
-    }
-    if(!parseInt(phoneNumber) && phoneNumber.length == 0){
-      curError.push("phone");
-    }
-    if(curError.length != 0){
-      setError(curError);
-      return;
-    }
+    
     axios.post(API_URL + "/user/login", { phoneNumber, password }).then(response => {
       let data = {
         mnemonic: response.data.mnemonic,
@@ -62,14 +44,15 @@ const signUpPhrase = t(signUp_P)
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>{baoWord}</Text>
-        <View style={getErrorStyle("phone")}>
+        <View style={styles.inputView}>
           <TextInput
+          keyboardType="numeric"
             style={styles.inputText}
             placeholder={phoneNumberWord + "..."}
             placeholderTextColor="#003f5c"
             onChangeText={text => setPhoneNumber(text)} />
         </View>
-      <View style={getErrorStyle("password")}>
+      <View style={styles.inputView}>
         <TextInput
           secureTextEntry
           style={styles.inputText}

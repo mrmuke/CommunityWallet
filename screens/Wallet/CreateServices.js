@@ -153,21 +153,21 @@ export default function CreateServices({ navigation, route }) {
           <View style={styles.formContent}>
             <View style={{ flexDirection: "row" }}>
               <Icon name="drive-file-rename-outline" style={{ color: orange, fontSize: Dimensions.get("screen").height * 0.05, marginRight: 5 }}></Icon>
-              <TextInput defaultValue={name} placeholder={nameOfSerivcePhrase} onChangeText={text => setName(text)}></TextInput>
+              <TextInput style={{width:"100%"}} defaultValue={name} placeholder={nameOfSerivcePhrase} onChangeText={text => setName(text)}></TextInput>
             </View>
             <View style={{ marginTop: 10, marginBottom: 10, alignItems: "center" }}>
               <View style={{ width: "90%", borderWidth: 0.5, borderColor: "#d2d2d2" }}></View>
             </View>
             <View style={{ flexDirection: "row" }}>
               <Icon name="category" style={{ color: orange, fontSize: Dimensions.get("screen").height * 0.05, marginRight: 5 }}></Icon>
-              <TextInput defaultValue={category} placeholder={categoryWord} onChangeText={text => setCategory(text)}></TextInput>
+              <TextInput  style={{width:"100%"}} defaultValue={category} placeholder={categoryWord} onChangeText={text => setCategory(text)}></TextInput>
             </View>
             <View style={{ marginTop: 10, marginBottom: 10, alignItems: "center" }}>
               <View style={{ width: "90%", borderWidth: 0.5, borderColor: "#d2d2d2" }}></View>
             </View>
             <View style={{ flexDirection: "row" }}>
               <Icon name="attach-money" style={{ color: orange, fontSize: Dimensions.get("screen").height * 0.05, marginRight: 5 }}></Icon>
-              <TextInput defaultValue={cost} keyboardType="number-pad" placeholder={priceWord} onChangeText={text => setCost(text)}></TextInput>
+              <TextInput  style={{width:"100%"}} defaultValue={cost} keyboardType="number-pad" placeholder={priceWord} onChangeText={text => setCost(text)}></TextInput>
             </View>
           </View>
         </View>

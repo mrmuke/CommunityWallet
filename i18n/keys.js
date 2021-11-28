@@ -122,7 +122,6 @@ export const LoginScreen = {
 }
 
 export const SignupScreen = {
-    communityNameLonger_P: 'Longer-Community-Name longer alert',
     verificationCode_P: 'Your-Verification-Code-Is phrase',
     wrongVerificationCode_P: 'Wrong-Verification-Code phrase',
     signUp_P: 'Sign-Up header',

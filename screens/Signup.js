@@ -13,7 +13,6 @@ import tokens from '../i18n/tokens';
 import { useTranslation } from 'react-i18next';
 
 const {
-  communityNameLonger_P,
   verificationCode_P,
   wrongVerificationCode_P,
   signUp_P,
@@ -46,7 +45,6 @@ const {
 export default function Signup({ navigation }) {
   const {t} = useTranslation()
 
-  const communityNameLongerPhrase =t(communityNameLonger_P)
   const verificationCodePhrase =t(verificationCode_P)
   const wrongVerificationCodePhrase =t(wrongVerificationCode_P)
   const signUpPhrase =t(signUp_P)
@@ -66,7 +64,7 @@ export default function Signup({ navigation }) {
   const phoneError = t(phoneNumber_EP)
   const usernameError = t(username_EP)
   const passwordError = t(password_EP)
-  const confirmPasswordError = (confirmPassword_EP)
+  const confirmPasswordError = t(confirmPassword_EP)
   const communityNameError = t(communityName_EP)
   const communityCodeError = t(communityCode_EP)
   const numTokensError = t(numTokens_EP)
@@ -92,7 +90,7 @@ export default function Signup({ navigation }) {
     if(password.length < 8){
       curError.push("password");
     }
-    if(phoneNumber.length == 0){
+    if(phoneNumber.length <10){
       curError.push("phone");
     }
     if(password!=confirmPassword){
@@ -101,27 +99,22 @@ export default function Signup({ navigation }) {
     if(username.length < 5){
       curError.push("username");
     }
-    if(communityName.length < 5){
+    if(communityName.length < 5&&admin){
       curError.push("communityName");
     }
-    if(code.length < 5){
+    if(code.length < 6&&!admin){
       curError.push("communityCode");
     }
-    if(numTokens.length == 0){
+    if(numTokens.length == 0&&admin){
       curError.push("numTokens");
     }
+    console.log(curError)
     if(curError.length != 0){
       setError(curError);
       return;
     }
 
-    if (admin && communityName.length < 4) {
-      showMessage({
-        message: communityNameLongerPhrase,
-        type: "warning",
-      });
-      return;
-    }
+
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
@@ -297,13 +290,13 @@ export default function Signup({ navigation }) {
             if(error.includes("confirm")){
               arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{confirmPasswordPhrase}</Text>{confirmPasswordError}</Text>);
             }
-            if(error.includes("communityName") && admin){
+            if(error.includes("communityName")){
               arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityNameWord}</Text>{communityNameError}</Text>);
             }
-            if(error.includes("communityCode") && !admin){
+            if(error.includes("communityCode")){
               arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityCodeWord}</Text>{communityCodeError}</Text>);
             }
-            if(error.includes("numTokens") && admin){
+            if(error.includes("numTokens")){
               arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{t(numTokens_P)}</Text>{numTokensError}</Text>);
             }
             return arr;
