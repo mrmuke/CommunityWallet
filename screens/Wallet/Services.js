@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Image, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../../API_URL';
 import axios from 'axios'
@@ -22,10 +22,13 @@ export default function Services({ navigation }) {
   const [searching, setSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchState, setSearchState] = useState(false);
+  const [loading, setLoading] = useState(false);
   const isFocused = useIsFocused();
 
   async function getServices() {
+    setLoading(true);
     axios.get(api + '/services/allServices').then(response => {
+      setLoading(false);
       setArrayItems(response.data)//decrypt mnemonic with sent password
     }).catch(e => { })
   }
@@ -34,6 +37,7 @@ export default function Services({ navigation }) {
     if(searchText == ""){
       return;
     }
+    setLoading(true);
     axios({
       method: "get",
       url: api + "/services/searchServices",
@@ -41,6 +45,7 @@ export default function Services({ navigation }) {
         searchText:searchText
       }
     }).then((response)=>{
+      setLoading(false);
       setSearchState(true);
       setArrayItems(response.data);
     }).catch(e=>{
@@ -49,6 +54,7 @@ export default function Services({ navigation }) {
   }
 
   async function searchCategory(category){
+    setLoading(true);
     axios({
       method: "get",
       url: api + "/services/category",
@@ -56,6 +62,7 @@ export default function Services({ navigation }) {
         category:category
       }
     }).then((response)=>{
+      setLoading(false);
       setArrayItems(response.data);
     }).catch(e=>{
       console.log(e);
@@ -83,12 +90,18 @@ export default function Services({ navigation }) {
                 return(
                   <TextInput defaultValue={searchText} placeholder="" onChangeText={(text)=>{setSearchText(text)}} style={styles.searchBar}></TextInput>
                 )
+              } else {
+                if(loading){
+                  return <View style={{width:w*0.35,marginRight:20,paddingLeft:20, alignItems:"center", justifyContent:"center"}}><ActivityIndicator size="large" color="#0000ff"/></View>
+                } else {
+                  return <View style={{width:w*0.35,marginRight:20,paddingLeft:20, alignItems:"center", justifyContent:"center"}}><Text>{searchText}</Text></View>
+                }
               }
             })()
           }
-
           { (()=>{if(searchState && !searching) return(<TouchableOpacity style={{backgroundColor:"black", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
             getServices();
+            setSearchText("");
             setSearchState(false);
           }}>
             <Icon name="loop" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"#ec802e"}}></Icon>
@@ -97,8 +110,9 @@ export default function Services({ navigation }) {
           <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
             if(searching){
               searchServices();
+            } else {
+              setSearchText("");
             }
-            setSearchText("");
             setSearching(!searching);
           }}>
             <Icon name="search" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"white"}}></Icon>
