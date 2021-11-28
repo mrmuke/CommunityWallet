@@ -103,13 +103,13 @@ export default function Signup({ navigation }) {
     if(username.length < 5){
       curError.push("username");
     }
-    if(communityName.length < 5){
+    if(communityName.length < 5 && admin){
       curError.push("communityName");
     }
-    if(code.length < 5){
+    if(code.length < 5 && !admin){
       curError.push("communityCode");
     }
-    if(numTokens.length == 0){
+    if(numTokens.length == 0 && admin){
       curError.push("numTokens");
     }
     if(curError.length != 0){
