@@ -21,6 +21,7 @@ export default function Services({ navigation }) {
   const [arrayItems, setArrayItems] = useState([]);
   const [searching, setSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [searchState, setSearchState] = useState(false);
   const isFocused = useIsFocused();
 
   async function getServices() {
@@ -30,6 +31,9 @@ export default function Services({ navigation }) {
   }
 
   async function searchServices(){
+    if(searchText == ""){
+      return;
+    }
     axios({
       method: "get",
       url: api + "/services/searchServices",
@@ -37,6 +41,7 @@ export default function Services({ navigation }) {
         searchText:searchText
       }
     }).then((response)=>{
+      setSearchState(true);
       setArrayItems(response.data);
     }).catch(e=>{
       console.log(e);
@@ -72,7 +77,7 @@ export default function Services({ navigation }) {
           <Icon name="arrow-back-ios" style={styles.logo}></Icon>
         </TouchableOpacity>
         <View style={{flexDirection:"row"}}>
-        {
+          {
             (()=>{
               if(searching){
                 return(
@@ -81,6 +86,14 @@ export default function Services({ navigation }) {
               }
             })()
           }
+
+          { (()=>{if(searchState && !searching) return(<TouchableOpacity style={{backgroundColor:"black", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
+            getServices();
+            setSearchState(false);
+          }}>
+            <Icon name="loop" style={{fontSize:Dimensions.get("screen").width * 0.08, color:"#ec802e"}}></Icon>
+          </TouchableOpacity>)})()}
+
           <TouchableOpacity style={{backgroundColor:"#ec802e", borderRadius: 100, padding: 5, marginRight:10}} onPress={()=>{
             if(searching){
               searchServices();
@@ -108,7 +121,9 @@ export default function Services({ navigation }) {
         </View>
       </View>
       <View style={styles.menuContainer}>
-        <TouchableOpacity><Text style={styles.menuTextSelected}>{allWord}</Text></TouchableOpacity>
+        <TouchableOpacity><Text style={styles.menuTextSelected} onPress={()=>{
+          getServices();
+        }}>{allWord}</Text></TouchableOpacity>
         <TouchableOpacity  onPress={
           ()=>{
             searchCategory("House");
