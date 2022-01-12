@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import axios from 'axios';
 import API_URL from '../API_URL';
 import { HStack, Switch } from 'native-base';
@@ -37,6 +37,7 @@ const {
   confirmPassword_EP,
   communityName_EP,
   communityCode_EP,
+  notUnique_EP,
   numTokens_EP
 } = tokens.screens.signup
 
@@ -117,12 +118,10 @@ export default function Signup({ navigation }) {
     var min = 123456
     var max = 999999
     var random = Math.floor(Math.random() * (max - min) + min);
-    axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => {
-      console.log(response)
+    /* axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => { */
       setVerifyCode(random)
-      console.log(random)
       setVerifying(true)
-    })
+    /* }) */
     //mongo set info
   }
 
@@ -131,7 +130,6 @@ export default function Signup({ navigation }) {
     if (verifyCode == verificationCode) {
       setLoading(true)
       axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName,numTokens }).then(response => {
-        console.log(response.data)
         var data = {
           mnemonic: response.data.mnemonic,
           password: password,
@@ -140,7 +138,12 @@ export default function Signup({ navigation }) {
         authContext.signUp(data)
 
       }).catch(e => {
+        if(e.response.data=="Invalid User"){
+          showMessage({message:t(notUnique_EP),type:"danger"})
+        }
+        else{
         showMessage({message:communityCodeWord+communityCodeError})
+        }
         setLoading(false)
       })
 
@@ -170,7 +173,7 @@ export default function Signup({ navigation }) {
           <ActivityIndicator />
           :
           <>
-            <Text style={styles.verifaction}>{aCodeHasBeenSentPhrase} {phoneNumber}. {'\n'}{pleaseEnterCodePhrase}</Text>
+            <Text style={styles.verifaction}>{aCodeHasBeenSentPhrase} {phoneNumber}. {'\n'}{pleaseEnterCodePhrase} : {verifyCode}</Text>
             <View style={styles.inputView} >
 
               <TextInput
@@ -203,6 +206,8 @@ export default function Signup({ navigation }) {
     );
   }
   return (
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="padding" enabled   keyboardVerticalOffset={10}>
+
     <ScrollView contentContainerStyle={styles.container}>
       
       <Text style={styles.logo}>{signUpPhrase}</Text>
@@ -255,7 +260,7 @@ export default function Signup({ navigation }) {
         style={styles.inputText}
         placeholder={communityNameWord + "..."}
         placeholderTextColor="#003f5c"
-        onChangeText={text => setCommunityName(text)}
+        onChangeText={text => setCommunityName(text.replace(/\s/g, ''))}
         value={communityName} /></View>
         
         <View style={getErrorStyle("numTokens")}><TextInput
@@ -316,7 +321,7 @@ export default function Signup({ navigation }) {
         <Text style={styles.signup}>{alreadyHaveAccountPhrase}</Text>
       </TouchableOpacity>
       
-    </ScrollView>
+    </ScrollView></KeyboardAvoidingView>
   );
 }
 

@@ -36,7 +36,6 @@ export default function AdminNavigator() {
   async function switchLanguage(){
     let cur =  await AsyncStorage.getItem('setLanguage')
     let newLang= cur=="en"?"cn":"en"
-    console.log(newLang)
     await AsyncStorage.setItem('setLanguage',newLang)
     i18n.changeLanguage(newLang)
     setActive(t(analytics_W))
@@ -113,7 +112,6 @@ function Page({ name, community, navigation }) {
     if (name == t(tokens_W)) {
       setLoading(true)
       axios.get(API_URL + '/user/wallet').then(response => {
-        console.log(response.data.balances)
         setTokens(response.data.balances)
         setLoading(false)
 
@@ -353,7 +351,7 @@ function Page({ name, community, navigation }) {
     return <><Members joinCode={community.code} members={communityMembers}></Members></>
   }
   else {
-    return <></>
+    return <View style={{flex:1,padding:20}}><Text>Economy Page Empty</Text></View>
   }
 
 }

@@ -16,7 +16,7 @@ const communityWord = t(community_W)
   return (
     <View style={{ height: "100%", width: "100%", backgroundColor: "white" }}>
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={require("./../assets/logo.png")}></Image>
+        <TouchableOpacity onPress={()=>navigation.openDrawer()}><Image style={styles.logo} source={require("./../assets/logo.png")}></Image></TouchableOpacity>
         <View style={styles.logoText}>
           <TouchableOpacity style={{ width: Dimensions.get("screen").width * 0.15, height: Dimensions.get("screen").width * 0.15, backgroundColor: "black", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ color: "white", fontSize: 20 }}>T</Text>

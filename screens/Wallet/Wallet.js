@@ -52,7 +52,6 @@ export default function Wallet() {
         axios.get(API_URL + '/user/wallet').then(response => {
             setTokens(response.data.balances)
             setAddress(response.data.address)
-            console.log(response.data.balances)
             setCurToken(Object.keys(response.data.balances)[0])
             setTransactions(response.data.transactions);
         })
@@ -62,7 +61,6 @@ export default function Wallet() {
             <ActivityIndicator />
         </View>
     }
-    console.log(tokens)
     return (
         <View style={styles.background}>
             <Modal visible={receive} transparent={false} animationType="slide" ><View style={{
@@ -119,7 +117,6 @@ const Transaction = (props) => {
         color = "#ff6961";
     }
     let date = (new Date(props.date));
-    console.log(props)
     let outgoing = (""+props.text).includes("-")
     return (
         <View style={styles.item}>

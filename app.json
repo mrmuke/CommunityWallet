@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bao",
     "slug": "bao-wallet",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/whitewallet.png",
     "splash": {
@@ -19,7 +19,7 @@
 
     "ios": {
       "bundleIdentifier": "com.bao.baowallet",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "supportsTablet":true
     },
     "android": {

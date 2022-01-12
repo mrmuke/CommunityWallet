@@ -68,7 +68,7 @@ export const english = {
     [AdminNavigatorScreen.send_W]: 'Send!',
     [AdminNavigatorScreen.timeToken_W]: 'Time Token',
     [AdminNavigatorScreen.burnToken_P]: 'Burn Token',
-    [AdminNavigatorScreen.sendToken_P]: 'Send Token',
+    [AdminNavigatorScreen.sendToken_P]: 'Send',
     [AdminNavigatorScreen.analytics_W]: 'Analytics',
     [AdminNavigatorScreen.tokens_W]: 'Tokens',
     [AdminNavigatorScreen.members_W]: 'Members',
@@ -127,5 +127,6 @@ export const english = {
     [SignupScreen.confirmPassword_EP]: " must match",
     [SignupScreen.communityName_EP]: " must be longer than 4 characters",
     [SignupScreen.communityCode_EP]: " is invalid",
+    [SignupScreen.notUnique_EP]: "Your username or phone number already exists",
     [SignupScreen.numTokens_EP]: " Cannot be left blank",
 }

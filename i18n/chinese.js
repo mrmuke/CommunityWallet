@@ -129,5 +129,6 @@ export const chinese = {
     [SignupScreen.confirmPassword_EP]: "不一致",
     [SignupScreen.communityName_EP]: "不夠長",
     [SignupScreen.communityCode_EP]: "無效",
+    [SignupScreen.notUnique_EP]: "您的用戶名或電話號碼已存在",
     [SignupScreen.numTokens_EP]: "不能為空",
 }

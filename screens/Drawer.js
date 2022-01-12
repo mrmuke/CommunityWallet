@@ -29,7 +29,6 @@ const logoutWord = t(logout_W)
   async function switchLanguage(){
     let cur =  await AsyncStorage.getItem('setLanguage')
     let newLang= cur=="en"?"cn":"en"
-    console.log(newLang)
     await AsyncStorage.setItem('setLanguage',newLang)
     i18n.changeLanguage(newLang)
   }

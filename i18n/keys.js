@@ -146,5 +146,7 @@ export const SignupScreen = {
     confirmPassword_EP: "Confirm Password error phrase",
     communityName_EP: "Community Name error phrase",
     communityCode_EP: "Community Code error phrase",
+    notUnique_EP: "User not unique error phrase",
+
     numTokens_EP: "Num Tokens error phrase",
 }
