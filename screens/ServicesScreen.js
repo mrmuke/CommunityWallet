@@ -1,9 +1,9 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 
-export function SigninScreen() {
+export function ServicesScreen() {
     return (
         <View>
-            
+            <Text>Services!</Text>
         </View>
     )
 }
