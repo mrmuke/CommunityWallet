@@ -7,6 +7,7 @@ import { authenticate } from './utils/Authenticate'
 import { LoginScreen } from './screens/LoginScreen'
 import { SplashScreen } from './screens/SplashScreen'
 import { WalletScreen } from './screens/WalletScreen'
+import './i18n/index'
 
 const Stack = createNativeStackNavigator()
 

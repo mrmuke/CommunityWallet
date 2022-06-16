@@ -1,16 +1,35 @@
 import axios from 'axios'
 import * as React from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, View,  } from 'react-native'
-import { TextInput, TouchableOpacity } from 'react-native-web'
+import { TextInput, TouchableOpacity } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../utils/AuthContext'
+import tokens from '../i18n/tokens'
 
-export function LoginScreen() {
+export function LoginScreen({ navigation }) {
+    const API_URL = 'http://localhost' // ! TEST AND REMOVE
+
+
+    /** i18n */
+    const { t } = useTranslation()
+    const { wrongCredentials_P, bao_W, username_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+    const wrongCredentialsPhrase = t(wrongCredentials_P)
+    const baoWord = t(bao_W)
+    const usernameWord = t(username_W)
+    const passwordWord = t(password_W)
+    const forgotPasswordPhrase = t(forgotPassword_P)
+    const loginWord = t(login_W)
+    const signUpPhrase = t(signUp_P)
+
+    /** Authentication Context */
     const authContext = React.useContext(AuthContext)
 
+    /** Setting state variables */
     const [username, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     
+    /** Post request */
     const handleLogin = () => {
         axios.post(`${API_URL}/user/login`, { password, username })
         .then(res => {
@@ -34,7 +53,7 @@ export function LoginScreen() {
                 <TextInput
                     keyboardType="numeric"
                     style={styles.inputText}
-                    placeholder={phoneNumberWord + "..."}
+                    placeholder={usernameWord + "..."}
                     placeholderTextColor="#003f5c"
                     onChangeText={text => setPhoneNumber(text)}
                 />
@@ -53,7 +72,7 @@ export function LoginScreen() {
             <TouchableOpacity>
                 <Text style={styles.forgot}>{forgotPasswordPhrase}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={submit} style={styles.loginBtn}>
+            <TouchableOpacity onPress={handleLogin} style={styles.loginBtn}>
                 <Text style={styles.loginText}>{loginWord}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate("Signup") }}>
