@@ -1,58 +1,35 @@
-import { StatusBar } from 'expo-status-bar'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
+import { AuthContext } from './utils/AuthContext'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NativeBaseProvider } from 'native-base'
+import { NavigationContainer } from '@react-navigation/native'
+
+import { authenticate } from './utils/Authenticate'
+import { LoginScreen } from './screens/LoginScreen'
+import { SplashScreen } from './screens/SplashScreen'
 import { WalletScreen } from './screens/WalletScreen'
-import { ServicesScreen } from './screens/ServicesScreen'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { SigninScreen } from './screens/SigninScreen'
 
-import * as React from 'react'
-import * as SecureStore from 'expo-secure-store'
-
-const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
-// function authenticate() {
-//   const [state, dispatch] = React.useReducer(
-//     (prevState, action) => {
-//       switch (action.type) { 
-//         case 'RESTORE_TOKEN':
-//           return {
-//             ...prevState,
-//             userMnemonic: action.mnemonic,
-//             isLoading: false
-//           }
-//         case 'SIGN_IN':
-//           return {
-//             ...prevState,
-//             isSignout: false,
-//             userMnemonic: action.mnemonic 
-//           }
-//         case 'SIGN_OUT':
-//           return {
-//             ...prevState,
-//             isSignout: true,
-//             userMnemonic: null
-//           }
-//       }
-//     }
-//   )
-// }
-
 export default function App() {
+  const { authContext, state } = authenticate()
+
+  if (state.isLoading) { return <SplashScreen/> }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name='Signin' component={ SigninScreen }/>
-        {/* { state.userMnemonic == null || state.userMnemonic == undefined ? (
-        ) : (
-          <Tab.Navigator>
-            <Tab.Screen name='Wallet' component={ WalletScreen }></Tab.Screen>
-            <Tab.Screen name='Services' component={ ServicesScreen }></Tab.Screen>
-          </Tab.Navigator>
-        ) } */}
-      </Stack.Navigator>  
+      <NativeBaseProvider>
+        <AuthContext.Provider value={{authContext, state}}>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            {
+              !state.mnemonic ? (
+                <Stack.Screen name='Auth' component={ LoginScreen } />
+              ) : (
+                <Stack.Screen name='Wallet' component={ WalletScreen } />
+              )
+            }
+          </Stack.Navigator>
+        </AuthContext.Provider>
+      </NativeBaseProvider>
     </NavigationContainer>
   )
 }
