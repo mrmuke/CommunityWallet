@@ -114,7 +114,7 @@ export const HomeScreen = {
 export const LoginScreen = {
     wrongCredentials_P: 'Wrong-Number-Password',
     bao_W: 'Bao name',
-    username_W: 'Username placeholder',
+    phoneNumber_P: 'Phone number placeholder',
     password_W: 'Password placeholder',
     forgotPassword_P: 'Forgot_Password phrase',
     login_W: 'LOGIN button',
@@ -147,6 +147,5 @@ export const SignupScreen = {
     communityName_EP: "Community Name error phrase",
     communityCode_EP: "Community Code error phrase",
     notUnique_EP: "User not unique error phrase",
-
     numTokens_EP: "Num Tokens error phrase",
 }

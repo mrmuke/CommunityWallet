@@ -1,38 +1,33 @@
 import axios from 'axios'
 import * as React from 'react'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { KeyboardAvoidingView, StyleSheet, Text, View,  } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 import { AuthContext } from '../utils/AuthContext'
 import tokens from '../i18n/tokens'
 
+import { API_URL } from '../utils/API_URL'
+
 /** Translations */
-const { wrongCredentials_P, bao_W, username_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+const { wrongCredentials_P, bao_W, phoneNumber_P, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
 
 export function LoginScreen({ navigation }) {
-    const API_URL = 'http://localhost' // ! TEST AND REMOVE
-
     /** i18n */
     const { t } = useTranslation()
-    const wrongCredentialsPhrase = t(wrongCredentials_P)
-    const baoWord = t(bao_W)
-    const usernameWord = t(username_W)
-    const passwordWord = t(password_W)
-    const forgotPasswordPhrase = t(forgotPassword_P)
-    const loginWord = t(login_W)
-    const signUpPhrase = t(signUp_P)
 
     /** Authentication Context */
-    const authContext = React.useContext(AuthContext)
+    const authContext = React.useContext(AuthContext).authContext
 
     /** State variables */
-    const [username, setEmail] = React.useState('')
+    const [phoneNumber, setPhoneNumber] = React.useState('')
     const [password, setPassword] = React.useState('')
     
     /** Post request */
     const handleLogin = () => {
-        axios.post(`${API_URL}/user/login`, { password, username })
+        axios.post(`${API_URL}/user/login`, { password, phoneNumber })
         .then(res => {
             authContext.logIn({
                 mnemonic: res.data.data.mnemonic,
@@ -40,21 +35,23 @@ export function LoginScreen({ navigation }) {
             })
         })
         .catch(err => {
+            console.log(err)
             showMessage({
-                message: "ERROR",
-                type: "danger",
+                message: t(wrongCredentials_P),
+                type: "danger"
             })
         })
     }
 
     return (
+        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
         <KeyboardAvoidingView style={styles.container}>
-            <Text style={styles.logo}>{baoWord}</Text>
+            <Text style={styles.logo}>{ t(bao_W) }</Text>
             <View style={styles.inputView}>
                 <TextInput
                     keyboardType="numeric"
                     style={styles.inputText}
-                    placeholder={usernameWord + "..."}
+                    placeholder={ t(phoneNumber_P) + "..." }
                     placeholderTextColor="#003f5c"
                     onChangeText={text => setPhoneNumber(text)}
                 />
@@ -63,54 +60,53 @@ export function LoginScreen({ navigation }) {
                 <TextInput
                     secureTextEntry
                     style={styles.inputText}
-                    placeholder={passwordWord + "..."}
+                    placeholder={ t(password_W) + "..." }
                     placeholderTextColor="#003f5c"
                     onChangeText={text => setPassword(text)}
                 />
             </View>
-
-
             <TouchableOpacity>
-                <Text style={styles.forgot}>{forgotPasswordPhrase}</Text>
+                <Text style={styles.forgot}>{ t(forgotPassword_P) }</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleLogin} style={styles.loginBtn}>
-                <Text style={styles.loginText}>{loginWord}</Text>
+                <Text style={styles.loginText}>{ t(login_W) }</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { navigation.navigate("Signup") }}>
-                <Text style={styles.signup}>{signUpPhrase}</Text>
+            <TouchableOpacity onPress={() => { navigation.navigate("SignupScreen") }}>
+                <Text style={styles.signup}>{ t(signUp_P) }</Text>
              </TouchableOpacity>
         </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         alignItems: 'center',
+        flex: 1,
         justifyContent: 'center',
     },
     logo: {
-        fontWeight: "bold",
-        fontSize: 50,
         color: "#eb6060",
+        fontSize: 50,
+        fontWeight: "bold",
         marginBottom: 40
     },
     inputView: {
-        width: "80%",
         backgroundColor: "#e9ecfb",
         borderRadius: 25,
+        justifyContent: "center",
         height: 50,
         marginBottom: 20,
-        justifyContent: "center",
         padding: 20,
+        width: "80%",
     },
     error:{
         borderColor:"#cc0000",
         borderWidth:2,
     },
     inputText: {
-        height: 50,
         color: "black",
+        height: 50,
     },
     forgot: {
         color: "#eb6060",
@@ -119,20 +115,20 @@ const styles = StyleSheet.create({
     signup: {
         color: "#eb6060",
         fontSize: 12,
-        top: -10,
-        paddingTop: 10,
+        marginTop: 10,
         paddingBottom: 10,
-        marginTop: 10
+        paddingTop: 10,
+        top: -10,
     },
     loginBtn: {
-        width: "80%",
+        alignItems: "center",
         backgroundColor: "#6474E5",
         borderRadius: 25,
         height: 50,
-        alignItems: "center",
         justifyContent: "center",
+        marginBottom: 0,
         marginTop: 23,
-        marginBottom: 0
+        width: "80%",
     },
     loginText: {
         color: "white"

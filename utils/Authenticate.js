@@ -50,8 +50,6 @@ export function authenticate() {
                 
             }
 
-            console.log(mnemonic)
-
             dispatch({ 
                 type: 'RESTORE_TOKEN', 
                 mnemonic: mnemonic, 

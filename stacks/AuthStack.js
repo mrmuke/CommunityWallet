@@ -4,16 +4,16 @@ import { SignupScreen } from "../screens/SignupScreen"
 
 const Stack = createNativeStackNavigator()
 
-export function Auth() {
+export function AuthStack() {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
             <Stack.Screen
-                name="Login"
+                name="LoginScreen"
                 component={ LoginScreen }
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name="Signup"
+                name="SignupScreen"
                 component={ SignupScreen }
                 options={{
                     title: 'Register', //Set Header Title

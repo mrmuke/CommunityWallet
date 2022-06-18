@@ -95,7 +95,7 @@ export const english = {
 
     [LoginScreen.wrongCredentials_P]: 'Wrong Number or Password',
     [LoginScreen.bao_W]: 'Bao',
-    [LoginScreen.username_W]: 'Username',
+    [LoginScreen.phoneNumber_P]: 'Phone Number',
     [LoginScreen.password_W]: 'Password',
     [LoginScreen.forgotPassword_P]: 'Forgot Password?',
     [LoginScreen.login_W]: 'LOGIN',
