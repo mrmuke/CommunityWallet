@@ -7,13 +7,14 @@ import { useTranslation } from 'react-i18next'
 import { AuthContext } from '../utils/AuthContext'
 import tokens from '../i18n/tokens'
 
+/** Translations */
+const { wrongCredentials_P, bao_W, username_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
+
 export function LoginScreen({ navigation }) {
     const API_URL = 'http://localhost' // ! TEST AND REMOVE
 
-
     /** i18n */
     const { t } = useTranslation()
-    const { wrongCredentials_P, bao_W, username_W, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
     const wrongCredentialsPhrase = t(wrongCredentials_P)
     const baoWord = t(bao_W)
     const usernameWord = t(username_W)
@@ -25,7 +26,7 @@ export function LoginScreen({ navigation }) {
     /** Authentication Context */
     const authContext = React.useContext(AuthContext)
 
-    /** Setting state variables */
+    /** State variables */
     const [username, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
     
