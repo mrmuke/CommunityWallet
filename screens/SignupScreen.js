@@ -43,7 +43,6 @@ const {
 export function SignupScreen({ navigation }) {
     /** i18n */
     const { t } = useTranslation()
-    const verificationCodePhrase = t(verificationCode_P)
     const wrongVerificationCodePhrase = t(wrongVerificationCode_P)
     const signUpPhrase = t(signUp_P)
     const aCodeHasBeenSentPhrase = t(aCodeHasBeenSent_P)
@@ -51,98 +50,109 @@ export function SignupScreen({ navigation }) {
     const verficationCodeInputPhrase = t(verficationCodeInput_P)
     const goBackPhrase = t(goBack_P)
     const verifyWord = t(verify_W)
+    const submitSignUpPhrase = t(submitSignUp_P)
     const alreadyHaveAccountPhrase = t(alreadyHaveAccount_P)
     const phoneNumberWord = t(phoneNumber_W)
     const usernameWord = t(username_W)
     const passwordWord = t(password_W)
     const confirmPasswordPhrase = t(confirmPassword_P)
-    const communityNameWord = t(communityName_W)
-    const communityCodeWord = t(communityCode_W)
-    const submitSignUpPhrase = t(submitSignUp_P)
     const phoneError = t(phoneNumber_EP)
     const usernameError = t(username_EP)
     const passwordError = t(password_EP)
     const confirmPasswordError = t(confirmPassword_EP)
-    const communityNameError = t(communityName_EP)
-    const communityCodeError = t(communityCode_EP)
-    const numTokensError = t(numTokens_EP)
-    const isAdminWord = t(isAdmin_W)
 
     /** Authentication Context */
     const { authContext } = React.useContext(AuthContext)
 
     /** State Variables */
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [error, setError] = React.useState([])
+    const [loading, setLoading]=React.useState(false)
     const [phoneNumber, setPhoneNumber] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const [confirmPassword, setConfirmPassword] = React.useState('')
-    const [code, setCode] = React.useState('')
+    const [username, setUsername]=React.useState('')
     const [verificationCode, setVerificationCode] = React.useState('')
     const [verifyCode, setVerifyCode] = React.useState('')
     const [verifying, setVerifying] = React.useState(false)
 
-    const [admin, setAdmin] = React.useState(false)
-    const [communityName, setCommunityName] = React.useState('')
-    const [loading, setLoading]=React.useState(false)
-    const [username, setUsername]=React.useState('')
-    const [numTokens, setNumTokens] =React.useState('')
-    const [error, setError] = React.useState([])
+    const submitCheck = async () => {
+        axios.post(API_URL + '/user/checkCreate', { username, phoneNumber })
+        .then(res => {
+            console.log(res.data)
+            const errResList = res.data.data
+            let errMessage
+            if (errResList != 0) {
+                (errResList[0] === 'phonenumber') ? errMessage = 'Phone number already in use!' : errMessage = 'Username already in user!' // ! i18nize
+                showMessage({
+                    message: errMessage,
+                    type: "danger"
+                })
+            }
 
-    const register = async () => {
-        var curError = []
-        if (username.length < 5) { curError.push("username") }
-        if (phoneNumber.length < 10) { curError.push("phone") }
-        if (password.length < 8) { curError.push("password") }
-        if (password != confirmPassword) { curError.push("confirm") }
-        
-        if(curError.length != 0) {
-          setError(curError)
-          return
-        }
+            let errList = []
+            if (username.length < 5) { errList.push("username") }
+            if (phoneNumber.length < 10) { errList.push("phone") }
+            if (password.length < 8) { errList.push("password") }
+            if (password != confirmPassword) { errList.push("confirm") }
+            if(errList.length != 0) {
+                setError(errList || errResList != 0)
+                return
+            }
+
+            setError([])
     
-        // ! Should server be the one sending the code???
-        setError([])
-        var min = 123456
-        var max = 999999
-        var random = Math.floor(Math.random() * (max - min) + min)
-        /* axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => { */
-          setVerifyCode(random)
-          setVerifying(true)
-        /* }) */
+            const min = 123456
+            const max = 999999
+            const random = Math.floor(Math.random() * (max - min) + min)
+            setVerifyCode(random)
+            setVerifying(true)
+        })
+
+        // axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => {
+            // setVerifyCode(random)
+            // setVerifying(true)
+        // })
         //mongo set info
     }
 
-    const checkVerify = () => {
+    const register = () => {
         if (verifyCode == verificationCode) {
             setLoading(true)
-            axios.post(API_URL + "/user/create", { phoneNumber, name:username, admin, code, password,communityName,numTokens })
-            .then(response => {
-                var data = {
-                    mnemonic: response.data.mnemonic,
+            axios.post(API_URL + '/user/create', { password, phoneNumber, username })
+            .then(res => {
+                authContext.signUp({
+                    mnemonic: res.data.mnemonic,
                     password: password,
-                    admin: admin
-                }
-                authContext.signUp(data)
-    
+                    phoneNumber: res.data.data.phoneNumber,
+                    username: username,
+                    evmosAddress: res.data.data.evmosAddress,
+                    ethAddress: res.data.data.ethAddress,
+                    wasmAddress: res.data.data.wasmAddress,
+                    ixoAddress: res.data.data.ixoAddress,
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             })
-            .catch(e => {
-                e.response.data == 'Invalid User' ? showMessage({ message: t(notUnique_EP), type: "danger" }) : showMessage({ message: communityCodeWord+communityCodeError })
-                setLoading(false)
-            })
-        }
-        else {
+        } else {
             showMessage({
                 message: wrongVerificationCodePhrase,
-                type: "error",
+                type: 'error'
             })
         }
     }
 
+    /** Errors for formatting and etc. */
     const getErrorStyle = str => {
         if (error.includes(str)) {
-            return {...styles.inputView,...styles.error}
+            return {...styles.inputView, ...styles.error}
         } else {
             return {...styles.inputView}
         }
+    }
+
+    const getErrorMessage = (text, errorMessage) => {
+        return ( <Text style={styles.errorText}><Text style={styles.errorTextBold}>{ text }</Text>{ errorMessage }</Text> )
     }
 
     if (verifying) {
@@ -152,35 +162,35 @@ export function SignupScreen({ navigation }) {
                 {loading ?
                     <ActivityIndicator/>
                 :
-                <>
-                <Text style={styles.verifaction}>{aCodeHasBeenSentPhrase} {phoneNumber}. {'\n'}{pleaseEnterCodePhrase} : {verifyCode}</Text>
-                <View style={styles.inputView} >
-                    <TextInput
-                        keyboardType="numeric"
-                        style={styles.inputText}
-                        placeholder={verficationCodeInputPhrase}
-                        placeholderTextColor="#003f5c"
-                        onChangeText={text => { setVerificationCode(text) }}
-                        value={verificationCode}
-                    />
-                </View>
-                <TouchableOpacity onPress={() => setVerifying(false)} >
-                    <Text style={styles.forgot}>{goBackPhrase}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => checkVerify()} style={styles.loginBtn}>
-                    <Text style={styles.loginText}>{verifyWord}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
-                    <Text style={styles.signup}>{alreadyHaveAccountPhrase}!</Text>
-                </TouchableOpacity>
-                </>
+                    <>
+                    <Text style={styles.verifaction}>{aCodeHasBeenSentPhrase} {phoneNumber}. {'\n'}{pleaseEnterCodePhrase} : {verifyCode}</Text>
+                    <View style={styles.inputView} >
+                        <TextInput
+                            keyboardType="numeric"
+                            style={styles.inputText}
+                            placeholder={verficationCodeInputPhrase}
+                            placeholderTextColor="#003f5c"
+                            onChangeText={text => { setVerificationCode(text) }}
+                            value={verificationCode}
+                        />
+                    </View>
+                    <TouchableOpacity onPress={() => setVerifying(false)} >
+                        <Text style={styles.forgot}>{ goBackPhrase }</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => register()} style={styles.loginBtn}>
+                        <Text style={styles.loginText}>{ verifyWord }</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+                        <Text style={styles.signup}>{ alreadyHaveAccountPhrase }!</Text>
+                    </TouchableOpacity>
+                    </>
                 }
           </View>
         )
       }
       return (
         <KeyboardAvoidingView 
-            style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }} 
+            style={styles.kb} 
             behavior="padding" 
             enabled 
             keyboardVerticalOffset={10}
@@ -226,83 +236,29 @@ export function SignupScreen({ navigation }) {
                         value={confirmPassword} 
                     />
                 </View>
-                <HStack 
-                    justifyContent="space-between" 
-                    width={"75%"} 
-                    alignItems="center" 
-                    marginBottom={5}
-                >
-                    <Text style={{fontWeight: 'bold'}}>{ isAdminWord }</Text>
-                    <Switch isChecked={admin} onToggle={e => setAdmin(e)} />
-                </HStack>
-                {admin ?
-                <>
-                    <View style={getErrorStyle("communityName")}>
-                        <TextInput
-                            style={styles.inputText}
-                            placeholder={communityNameWord + "..."}
-                            placeholderTextColor="#003f5c"
-                            onChangeText={text => setCommunityName(text.replace(/\s/g, ''))}
-                            value={communityName}
-                        />
-                    </View>
-                    
-                    <View style={getErrorStyle("numTokens")}>
-                        <TextInput
-                            keyboardType={'numeric'}
-                            style={styles.inputText}
-                            placeholder={t(numTokens_P) + "..."}
-                            placeholderTextColor="#003f5c"
-                            onChangeText={text => setNumTokens(text)}
-                            value={numTokens} 
-                        />
-                    </View>
-                </>
-                :
-                <>
-                    <View style={getErrorStyle("communityCode")}>
-                        <TextInput
-                            style={styles.inputText}
-                            placeholder={communityCodeWord + "..."}
-                            placeholderTextColor="#003f5c"
-                            onChangeText={text => setCode(text)}
-                            value={code}
-                        />
-                    </View>
-                </>
-                }
                 <View style={{width:"80%"}}>
                         { (()=>{
                             let arr = []
-                            if(error.includes("phone")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{phoneNumberWord}</Text>{ phoneError }</Text>)
+                            if (error.includes("phone")) {
+                                arr.push(getErrorMessage(phoneNumberWord, phoneError))
                             }
-                            if(error.includes("username")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{usernameWord}</Text>{ usernameError }</Text>)
+                            if (error.includes("username")) {
+                                arr.push(getErrorMessage(usernameWord, usernameError))
                             }
-                            if(error.includes("password")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{passwordWord}</Text>{ passwordError }</Text>)
+                            if (error.includes("password")) {
+                                arr.push(getErrorMessage(passwordWord, passwordError))
                             }
-                            if(error.includes("confirm")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{confirmPasswordPhrase}</Text>{ confirmPasswordError }</Text>)
-                            }
-                            if(error.includes("communityName")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityNameWord}</Text>{ communityNameError }</Text>)
-                            }
-                            if(error.includes("communityCode")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{communityCodeWord}</Text>{ communityCodeError }</Text>)
-                            }
-                            if(error.includes("numTokens")){
-                            arr.push(<Text style={{fontSize:12, color:"#cc0000", marginBottom:5}}><Text style={{fontWeight:"bold"}}>{t(numTokens_P)}</Text>{ numTokensError }</Text>)
+                            if (error.includes("confirm")) {
+                                arr.push(getErrorMessage(confirmPasswordPhrase, confirmPasswordError))
                             }
                             return arr
                         })() }
                 </View>
-                <TouchableOpacity style={styles.loginBtn} onPress={() => { register() }}>
-                        <Text style={styles.loginText}>{submitSignUpPhrase}</Text>
+                <TouchableOpacity style={styles.loginBtn} onPress={() => {submitCheck()}}>
+                        <Text style={styles.loginText}>{ submitSignUpPhrase }</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { navigation.navigate("LoginScreen") }}>
-                        <Text style={styles.signup}>{alreadyHaveAccountPhrase}</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate('LoginScreen') }}>
+                        <Text style={styles.signup}>{ alreadyHaveAccountPhrase }</Text>
                 </TouchableOpacity>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -310,36 +266,41 @@ export function SignupScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    kb: { 
+        flex: 1, 
+        flexDirection: 'column', 
+        justifyContent: 'center' 
+    },
     container: {
         paddingVertical:50,
         alignItems: 'center',
         justifyContent: 'center',
     },
     logo: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 50,
-        color: "#eb6060",
+        color: '#eb6060',
         marginBottom: 40
     },
     inputView: {
-        width: "80%",
-        backgroundColor: "#e9ecfb",
+        width: '80%',
+        backgroundColor: '#e9ecfb',
         borderRadius: 25,
         height: 50,
         marginBottom: 20,
-        justifyContent: "center",
+        justifyContent: 'center',
         padding: 20
     },
     inputText: {
         height: 50,
-        color: "black"
+        color: 'black'
     },
     forgot: {
-        color: "#eb6060",
+        color: '#eb6060',
         fontSize: 11
     },
     signup: {
-        color: "#eb6060",
+        color: '#eb6060',
         fontSize: 12,
         top: -10,
         paddingTop: 10,
@@ -347,27 +308,35 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     loginBtn: {
-        width: "80%",
-        backgroundColor: "#6474E5",
+        width: '80%',
+        backgroundColor: '#6474E5',
         borderRadius: 25,
         height: 50,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 23,
         marginBottom: 0
     },
     loginText: {
-        color: "white"
+        color: 'white'
     },
     verifaction: {
         fontSize: 14,
-        color: "black",
-        width: "100%",
-        textAlign: "center",
+        color: 'black',
+        width: '100%',
+        textAlign: 'center',
         marginBottom: 35
     },
-    error:{
-        borderColor:"#cc0000",
+    error: {
+        borderColor:'#cc0000',
         borderWidth:2,
     },
+    errorText: {
+        fontSize: 12, 
+        color: '#cc0000', 
+        marginBottom: 5
+    },
+    errorTextBold: {
+        fontWeight: 'bold'
+    }
 })

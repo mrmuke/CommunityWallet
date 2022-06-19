@@ -1,17 +1,16 @@
-import axios from 'axios'
 import * as React from 'react'
+import axios from 'axios'
+import { showMessage } from 'react-native-flash-message'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { KeyboardAvoidingView, StyleSheet, Text, View,  } from 'react-native'
-import { showMessage } from 'react-native-flash-message'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
+import { API_URL } from '../utils/API_URL'
 import { AuthContext } from '../utils/AuthContext'
 import tokens from '../i18n/tokens'
 
-import { API_URL } from '../utils/API_URL'
-
-/** Translations */
+/** Translation tokens */
 const { wrongCredentials_P, bao_W, phoneNumber_P, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login
 
 export function LoginScreen({ navigation }) {
@@ -31,11 +30,16 @@ export function LoginScreen({ navigation }) {
         .then(res => {
             authContext.logIn({
                 mnemonic: res.data.data.mnemonic,
-                password: password
+                password: password,
+                phoneNumber: res.data.data.phoneNumber,
+                username: res.data.data.username,
+                evmosAddress: res.data.data.evmosAddress,
+                ethAddress: res.data.data.ethAddress,
+                wasmAddress: res.data.data.wasmAddress,
+                ixoAddress: res.data.data.ixoAddress
             })
         })
         .catch(err => {
-            console.log(err)
             showMessage({
                 message: t(wrongCredentials_P),
                 type: "danger"
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         justifyContent: "center",
         height: 50,
-        marginBottom: 20,
+        marginBottom: 10,
         padding: 20,
         width: "80%",
     },
@@ -113,9 +117,10 @@ const styles = StyleSheet.create({
         fontSize: 11
     },
     signup: {
-        color: "#eb6060",
+        color: "gray",
+        textDecorationLine: "underline",
         fontSize: 12,
-        marginTop: 10,
+        marginTop: 40,
         paddingBottom: 10,
         paddingTop: 10,
         top: -10,

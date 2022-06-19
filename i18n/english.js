@@ -59,6 +59,7 @@ export const english = {
     [WalletScreen.totalBalance_P]: 'Total Balance',
     [WalletScreen.receiveTokens_P]: 'Receive Tokens',
     [WalletScreen.today_W]: 'Today',
+    [WalletScreen.close_W]: 'Close',
 
     [AdminNavigatorScreen.transactions_W]: 'Transactions',
     [AdminNavigatorScreen.progress_W]: 'Progress',

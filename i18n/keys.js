@@ -69,6 +69,7 @@ export const WalletScreen = {
     totalBalance_P: 'Total-Balance header',
     receiveTokens_P: 'Receive-Tokens button',
     today_W: 'Today header',
+    close_W: 'Close button'
 }
 
 export const AdminNavigatorScreen = {

@@ -64,6 +64,13 @@ export function authenticate() {
         logIn: async data => {
             await SecureStore.setItemAsync('mnemonic', data.mnemonic)
             await SecureStore.setItemAsync('password', data.password)
+            await SecureStore.setItemAsync('phoneNumber', data.phoneNumber)
+            await SecureStore.setItemAsync('username', data.username)
+            await SecureStore.setItemAsync('evmosAddress', data.evmosAddress)
+            await SecureStore.setItemAsync('ethAddress', data.ethAddress)
+            await SecureStore.setItemAsync('wasmAddress', data.wasmAddress)
+            await SecureStore.setItemAsync('ixoAddress', data.ixoAddress)
+
             dispatch({
                 type: 'SIGN_IN', 
                 mnemonic: data.mnemonic,
@@ -73,6 +80,12 @@ export function authenticate() {
         signOut: async () => {
             await SecureStore.deleteItemAsync('mnemonic')
             await SecureStore.deleteItemAsync('password')
+            await SecureStore.deleteItemAsync('phoneNumber')
+            await SecureStore.deleteItemAsync('username')
+            await SecureStore.deleteItemAsync('evmosAddress')
+            await SecureStore.deleteItemAsync('ethAddress')
+            await SecureStore.deleteItemAsync('wasmAddress')
+            await SecureStore.deleteItemAsync('ixoAddress')
             dispatch({ 
                 type: 'SIGN_OUT' 
             })
@@ -80,6 +93,13 @@ export function authenticate() {
         signUp: async data => {
             await SecureStore.setItemAsync('mnemonic', data.mnemonic)
             await SecureStore.setItemAsync('password', data.password)
+            await SecureStore.setItemAsync('phoneNumber', data.phoneNumber)
+            await SecureStore.setItemAsync('username', data.username)
+            await SecureStore.setItemAsync('evmosAddress', data.evmosAddress)
+            await SecureStore.setItemAsync('ethAddress', data.ethAddress)
+            await SecureStore.setItemAsync('wasmAddress', data.wasmAddress)
+            await SecureStore.setItemAsync('ixoAddress', data.ixoAddress)
+            
             dispatch({ 
                 type: 'SIGN_IN', 
                 mnemonic: data.mnemonic,

@@ -1,6 +1,8 @@
 import { AuthContext } from './utils/AuthContext'
+import FlashMessage from 'react-native-flash-message'
 import { NativeBaseProvider } from 'native-base'
 import { NavigationContainer } from '@react-navigation/native'
+import { StyleSheet } from 'react-native-web'
 
 import { authenticate } from './utils/Authenticate'
 import { AuthStack } from './stacks/AuthStack'
@@ -25,6 +27,7 @@ export default function App() {
             )
           }
         </AuthContext.Provider>
+        <FlashMessage position="top" />
       </NativeBaseProvider>
     </NavigationContainer>
   )
