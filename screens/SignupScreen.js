@@ -1,6 +1,6 @@
-import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import * as React from 'react'
 import { HStack, Switch } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
 import { showMessage } from 'react-native-flash-message'
@@ -65,56 +65,96 @@ export function SignupScreen({ navigation }) {
     const { authContext } = React.useContext(AuthContext)
 
     /** State Variables */
-    const [confirmPassword, setConfirmPassword] = React.useState('')
-    const [error, setError] = React.useState([])
-    const [loading, setLoading]=React.useState(false)
     const [phoneNumber, setPhoneNumber] = React.useState('')
-    const [password, setPassword] = React.useState('')
     const [username, setUsername]=React.useState('')
+    const [password, setPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+
+    const [initialSubmit, setInitialSubmit] = React.useState(false)
+    const [inputErrors, setInputErrors] = React.useState([])
+    const [loading, setLoading]=React.useState(false)
+    const [verifying, setVerifying] = React.useState(false)
     const [verificationCode, setVerificationCode] = React.useState('')
     const [verifyCode, setVerifyCode] = React.useState('')
-    const [verifying, setVerifying] = React.useState(false)
 
+    React.useEffect(() => {
+        if (initialSubmit) { pushInputErrors() }
+    }, [confirmPassword, phoneNumber, password, username, initialSubmit])
+
+    
+    /** Errors for formatting and etc. */
+    const inputsFilled = () => {
+        return (phoneNumber.length == 0 || username.length == 0 || password.length == 0 || confirmPassword.length == 0)
+    }
+    const inputsValidated = () => {
+        return (username.length < 5 || phoneNumber.length < 10 || password.length < 8 || password != confirmPassword)
+    }
+    const pushInputErrors = () => {
+        setInputErrors([])
+        let errList = []
+        if (username.length < 5) { errList.push('username') }
+        if (phoneNumber.length < 10) { errList.push('phone') }
+        if (password.length < 8) { errList.push('password') }
+        if (password != confirmPassword) { errList.push('confirm') }
+        setInputErrors(errList)
+    }
+    const getInputStyle = str => {
+        if (inputErrors.includes(str)) {
+            return {...styles.inputView, ...styles.error}
+        } else {
+            return styles.inputView
+        }
+    }
+    const getErrorMessage = (text, errorMessage) => {
+        return ( <Text style={styles.errorText}><Text style={styles.errorTextBold}>{ text }</Text>{ errorMessage }</Text> )
+    }
+    
+    /** Submit button styles and enabling */
+    const getSubmitStyle = () => {
+        if (initialSubmit) {
+            if (inputsValidated()) {
+                return {...styles.loginBtn, ...styles.disabledButton}
+            } else {
+                return styles.loginBtn
+            }
+        } else {
+            if (inputsFilled()) {
+                return {...styles.loginBtn, ...styles.disabledButton}
+            } else {
+                return styles.loginBtn
+            }
+        }
+    }
+    const disableSubmit = () => {
+        if (initialSubmit) {
+            return inputsValidated()
+        } else {
+            return inputsFilled()
+        }
+    }
+    
+    /** Authentication and SMS */
     const submitCheck = async () => {
+        setInitialSubmit(true)
         axios.post(API_URL + '/user/checkCreate', { username, phoneNumber })
         .then(res => {
-            console.log(res.data)
             const errResList = res.data.data
             let errMessage
             if (errResList != 0) {
-                (errResList[0] === 'phonenumber') ? errMessage = 'Phone number already in use!' : errMessage = 'Username already in user!' // ! i18nize
+                (errResList[0] === 'phonenumber') ? errMessage = 'Phone number already in use!' : errMessage = 'Username already in use!' // ! i18nize
                 showMessage({
                     message: errMessage,
                     type: "danger"
                 })
+            } else {
+                const min = 123456
+                const max = 999999
+                const random = Math.floor(Math.random() * (max - min) + min)
+                setVerifying(true)
+                setVerifyCode(random)
             }
-
-            let errList = []
-            if (username.length < 5) { errList.push("username") }
-            if (phoneNumber.length < 10) { errList.push("phone") }
-            if (password.length < 8) { errList.push("password") }
-            if (password != confirmPassword) { errList.push("confirm") }
-            if(errList.length != 0) {
-                setError(errList || errResList != 0)
-                return
-            }
-
-            setError([])
-    
-            const min = 123456
-            const max = 999999
-            const random = Math.floor(Math.random() * (max - min) + min)
-            setVerifyCode(random)
-            setVerifying(true)
         })
-
-        // axios.post("https://rest.nexmo.com/sms/json", { "from": "18447608059", "text": verificationCodePhrase + ' ' + random, "to": phoneNumber, "api_key": "1a7462e6", "api_secret": "jvvTsbFHah9H6fMU" }).then(response => {
-            // setVerifyCode(random)
-            // setVerifying(true)
-        // })
-        //mongo set info
     }
-
     const register = () => {
         if (verifyCode == verificationCode) {
             setLoading(true)
@@ -130,9 +170,6 @@ export function SignupScreen({ navigation }) {
                     wasmAddress: res.data.data.wasmAddress,
                     ixoAddress: res.data.data.ixoAddress,
                 })
-                .catch(err => {
-                    console.log(err)
-                })
             })
         } else {
             showMessage({
@@ -142,21 +179,9 @@ export function SignupScreen({ navigation }) {
         }
     }
 
-    /** Errors for formatting and etc. */
-    const getErrorStyle = str => {
-        if (error.includes(str)) {
-            return {...styles.inputView, ...styles.error}
-        } else {
-            return {...styles.inputView}
-        }
-    }
-
-    const getErrorMessage = (text, errorMessage) => {
-        return ( <Text style={styles.errorText}><Text style={styles.errorTextBold}>{ text }</Text>{ errorMessage }</Text> )
-    }
-
     if (verifying) {
         return (
+            <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
             <View style={styles.container}>
                 <Text style={styles.logo}>{ signUpPhrase }</Text>
                 {loading ?
@@ -185,10 +210,12 @@ export function SignupScreen({ navigation }) {
                     </TouchableOpacity>
                     </>
                 }
-          </View>
+            </View>
+            </TouchableWithoutFeedback>
         )
       }
       return (
+        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
         <KeyboardAvoidingView 
             style={styles.kb} 
             behavior="padding" 
@@ -197,7 +224,8 @@ export function SignupScreen({ navigation }) {
         >
             <ScrollView contentContainerStyle={styles.container}>
                 <Text style={styles.logo}>{ signUpPhrase }</Text>
-                <View style={getErrorStyle("phone")}>
+                {inputErrors.includes('phone') ? getErrorMessage(phoneNumberWord, phoneError) : <></>}
+                <View style={getInputStyle("phone")}>
                     <TextInput
                         keyboardType="numeric"
                         style={styles.inputText}
@@ -207,7 +235,8 @@ export function SignupScreen({ navigation }) {
                         value={phoneNumber} 
                     />
                 </View>
-                <View style={getErrorStyle("username")}>
+                {inputErrors.includes('username') ? getErrorMessage(usernameWord, usernameError) : <></>}
+                <View style={getInputStyle("username")}>
                     <TextInput
                         style={styles.inputText}
                         placeholder={usernameWord + "..."}
@@ -216,8 +245,11 @@ export function SignupScreen({ navigation }) {
                         value={username}
                     />
                 </View>
-                <View style={getErrorStyle("password")}>
+                {inputErrors.includes('password') ? getErrorMessage(passwordWord, passwordError) : <></>}
+                <View style={getInputStyle("password")}>
                     <TextInput
+                        blurOnSubmit={false}
+                        onSubmitEditing={()=> Keyboard.dismiss()}
                         secureTextEntry
                         style={styles.inputText}
                         placeholder={passwordWord + "..."}
@@ -226,7 +258,8 @@ export function SignupScreen({ navigation }) {
                         value={password}
                     />
                 </View>
-                <View style={getErrorStyle("confirm")}>
+                {inputErrors.includes('confirm') ? getErrorMessage(confirmPasswordPhrase, confirmPasswordError) : <></>}
+                <View style={getInputStyle("confirm")}>
                     <TextInput
                         secureTextEntry
                         style={styles.inputText}
@@ -236,25 +269,11 @@ export function SignupScreen({ navigation }) {
                         value={confirmPassword} 
                     />
                 </View>
-                <View style={{width:"80%"}}>
-                        { (()=>{
-                            let arr = []
-                            if (error.includes("phone")) {
-                                arr.push(getErrorMessage(phoneNumberWord, phoneError))
-                            }
-                            if (error.includes("username")) {
-                                arr.push(getErrorMessage(usernameWord, usernameError))
-                            }
-                            if (error.includes("password")) {
-                                arr.push(getErrorMessage(passwordWord, passwordError))
-                            }
-                            if (error.includes("confirm")) {
-                                arr.push(getErrorMessage(confirmPasswordPhrase, confirmPasswordError))
-                            }
-                            return arr
-                        })() }
-                </View>
-                <TouchableOpacity style={styles.loginBtn} onPress={() => {submitCheck()}}>
+                <TouchableOpacity 
+                    style={getSubmitStyle()} 
+                    onPress={() => {submitCheck()}} 
+                    disabled={disableSubmit()}
+                >
                         <Text style={styles.loginText}>{ submitSignUpPhrase }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { navigation.navigate('LoginScreen') }}>
@@ -262,6 +281,7 @@ export function SignupScreen({ navigation }) {
                 </TouchableOpacity>
             </ScrollView>
         </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       )
 }
 
@@ -338,5 +358,8 @@ const styles = StyleSheet.create({
     },
     errorTextBold: {
         fontWeight: 'bold'
+    },
+    disabledButton: {
+        backgroundColor: '#aab3f1'
     }
 })

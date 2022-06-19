@@ -23,9 +23,46 @@ export function LoginScreen({ navigation }) {
     /** State variables */
     const [phoneNumber, setPhoneNumber] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [initialSubmit, setInitialSubmit] = React.useState(false)
+    const [inputErrors, setInputErrors] = React.useState([])
+
+    React.useEffect(() => {
+        console.log(initialSubmit)
+        if (initialSubmit) { pushInputErrors() }
+    }, [phoneNumber, password, initialSubmit])
+
+    /** Checking inputs */
+    const inputsFilled = () => {
+        return (phoneNumber.length == 0 || password.length == 0)
+    }
+    const pushInputErrors = () => {
+        setInputErrors([])
+        let errList = []
+        if (phoneNumber.length == 0) { errList.push('phoneNumber') }
+        if (password.length == 0) { errList.push('password') }
+        setInputErrors(errList)
+    }
+    const getInputStyle = str => {
+        console.log(inputErrors)
+        if (inputErrors.includes(str)) {
+            return {...styles.inputView, ...styles.error}
+        } else {
+            return styles.inputView
+        }
+    }
+
+    /** Submit button styles and enabling */
+    const getSubmitStyle = () => {
+        if (inputsFilled()) {
+            return {...styles.loginBtn, ...styles.disabledButton}
+        } else {
+            return styles.loginBtn
+        }
+    }
     
-    /** Post request */
+    /** Handle login request */
     const handleLogin = () => {
+        setInitialSubmit(true)
         axios.post(`${API_URL}/user/login`, { password, phoneNumber })
         .then(res => {
             authContext.logIn({
@@ -51,7 +88,7 @@ export function LoginScreen({ navigation }) {
         <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
         <KeyboardAvoidingView style={styles.container}>
             <Text style={styles.logo}>{ t(bao_W) }</Text>
-            <View style={styles.inputView}>
+            <View style={getInputStyle('phoneNumber')}>
                 <TextInput
                     keyboardType="numeric"
                     style={styles.inputText}
@@ -60,7 +97,7 @@ export function LoginScreen({ navigation }) {
                     onChangeText={text => setPhoneNumber(text)}
                 />
             </View>
-            <View style={styles.inputView}>
+            <View style={getInputStyle('password')}>
                 <TextInput
                     secureTextEntry
                     style={styles.inputText}
@@ -72,7 +109,11 @@ export function LoginScreen({ navigation }) {
             <TouchableOpacity>
                 <Text style={styles.forgot}>{ t(forgotPassword_P) }</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogin} style={styles.loginBtn}>
+            <TouchableOpacity 
+                onPress={handleLogin} 
+                style={getSubmitStyle()}
+                disabled={inputsFilled()}
+            >
                 <Text style={styles.loginText}>{ t(login_W) }</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate("SignupScreen") }}>
@@ -137,5 +178,8 @@ const styles = StyleSheet.create({
     },
     loginText: {
         color: "white"
+    },
+    disabledButton: {
+        backgroundColor: '#aab3f1'
     }
 })
