@@ -1,11 +1,11 @@
-import { AuthContext } from './utils/AuthContext'
 import FlashMessage from 'react-native-flash-message'
 import { NativeBaseProvider } from 'native-base'
 import { NavigationContainer } from '@react-navigation/native'
-import { StyleSheet } from 'react-native-web'
 
+import { AuthContext, UserContext, CommunityContext } from './utils/Contexts'
 import { authenticate } from './utils/Authenticate'
 import { AuthStack } from './stacks/AuthStack'
+import { CommunityStack } from './stacks/CommunityStack'
 import { WalletStack } from './stacks/WalletStack'
 import { SplashScreen } from './screens/SplashScreen'
 import './i18n/index'
@@ -19,15 +19,22 @@ export default function App() {
     <NavigationContainer>
       <NativeBaseProvider>
         <AuthContext.Provider value={{authContext, state}}>
-          {
-            !state.mnemonic ? (
-              AuthStack()
-            ) : (
-              WalletStack()
-            )
-          }
+          <UserContext.Provider value={state.user}>
+            <CommunityContext.Provider value={}>
+              {
+                !state.mnemonic ? (
+                  AuthStack()
+                ) : 
+                !state.community ? (
+                  CommunityStack()
+                ) : (
+                  WalletStack()
+                )
+              }
+            </CommunityContext.Provider>
+          </UserContext.Provider>
         </AuthContext.Provider>
-        <FlashMessage position="top" />
+        <FlashMessage position="top"/>
       </NativeBaseProvider>
     </NavigationContainer>
   )

@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, View, List } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import * as React from 'react'
 
-import { AuthContext } from '../utils/AuthContext'
+import { AuthContext } from '../utils/Contexts'
 
 export function UserScreen() {
 

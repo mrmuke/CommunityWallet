@@ -13,6 +13,7 @@ export function authenticate() {
                     isLoading: false,
                     mnemonic: action.mnemonic,
                     password: action.password,
+                    user: action.user
                 }
             case 'SIGN_IN':
                 axios.defaults.headers.common['mnemonic'] = action.mnemonic
@@ -21,6 +22,7 @@ export function authenticate() {
                     ...prevState,
                     mnemonic: action.mnemonic,
                     password: action.password,
+                    user: action.user
                 }
             case 'SIGN_OUT':
                 delete axios.defaults.headers.common['mnemonic']
@@ -29,6 +31,7 @@ export function authenticate() {
                     ...prevState,
                     mnemonic: null,
                     password: null,
+                    user: null
                 }
         }
     },
@@ -42,10 +45,12 @@ export function authenticate() {
         const bootstrapAsync = async () => {
             let mnemonic
             let password
+            let user
 
             try {
                 mnemonic = await SecureStore.getItemAsync('mnemonic')
                 password = await SecureStore.getItemAsync('password')
+                user = await SecureStore.getItemAsync('user')
             } catch (e) {
                 
             }
@@ -54,6 +59,7 @@ export function authenticate() {
                 type: 'RESTORE_TOKEN', 
                 mnemonic: mnemonic, 
                 password: password,
+                user: user
             })
         }
 
@@ -64,12 +70,7 @@ export function authenticate() {
         logIn: async data => {
             await SecureStore.setItemAsync('mnemonic', data.mnemonic)
             await SecureStore.setItemAsync('password', data.password)
-            await SecureStore.setItemAsync('phoneNumber', data.phoneNumber)
-            await SecureStore.setItemAsync('username', data.username)
-            await SecureStore.setItemAsync('evmosAddress', data.evmosAddress)
-            await SecureStore.setItemAsync('ethAddress', data.ethAddress)
-            await SecureStore.setItemAsync('wasmAddress', data.wasmAddress)
-            await SecureStore.setItemAsync('ixoAddress', data.ixoAddress)
+            await SecureStore.setItemAsync('user', data.user)
 
             dispatch({
                 type: 'SIGN_IN', 
@@ -80,12 +81,7 @@ export function authenticate() {
         signOut: async () => {
             await SecureStore.deleteItemAsync('mnemonic')
             await SecureStore.deleteItemAsync('password')
-            await SecureStore.deleteItemAsync('phoneNumber')
-            await SecureStore.deleteItemAsync('username')
-            await SecureStore.deleteItemAsync('evmosAddress')
-            await SecureStore.deleteItemAsync('ethAddress')
-            await SecureStore.deleteItemAsync('wasmAddress')
-            await SecureStore.deleteItemAsync('ixoAddress')
+            await SecureStore.deleteItemAsync('user')
             dispatch({ 
                 type: 'SIGN_OUT' 
             })
@@ -93,17 +89,13 @@ export function authenticate() {
         signUp: async data => {
             await SecureStore.setItemAsync('mnemonic', data.mnemonic)
             await SecureStore.setItemAsync('password', data.password)
-            await SecureStore.setItemAsync('phoneNumber', data.phoneNumber)
-            await SecureStore.setItemAsync('username', data.username)
-            await SecureStore.setItemAsync('evmosAddress', data.evmosAddress)
-            await SecureStore.setItemAsync('ethAddress', data.ethAddress)
-            await SecureStore.setItemAsync('wasmAddress', data.wasmAddress)
-            await SecureStore.setItemAsync('ixoAddress', data.ixoAddress)
+            await SecureStore.setItemAsync('user', data.user)
             
             dispatch({ 
                 type: 'SIGN_IN', 
                 mnemonic: data.mnemonic,
                 password: data.password,
+                user: data.user
             })
         },
     }), [])
