@@ -1,8 +1,14 @@
 import axios from 'axios'
 import * as React from 'react'
 import * as SecureStore from 'expo-secure-store'
+import { AuthContext } from './Contexts'
+
+import { API_URL } from './API_URL'
+
 
 export function initCommunity() {
+    /** Contexts */
+
     const [communityState, dispatch] = React.useReducer((prevState, action) => {
         switch (action.type) {
             case 'RESTORE_COMM':
@@ -10,7 +16,7 @@ export function initCommunity() {
                     ...prevState,
                     isLoading: false,
                     currentCommunity: action.currentCommunity,
-                    currentPermission: action.currentPermission
+                    currentPermission: action.currentPermission,
                 }
             case 'ENTER_COMM':
                 return {
@@ -75,7 +81,7 @@ export function initCommunity() {
             dispatch({
                 type: 'EXIT_COMM'
             })
-        }
+        },
     }))
 
     return { communityContext, communityState }

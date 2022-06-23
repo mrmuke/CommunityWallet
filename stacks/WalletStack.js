@@ -16,14 +16,17 @@ export function WalletStack() {
             <Tab.Screen
                 name="Services"
                 component={ ServicesScreen }
+                options={{ headerShown: false }}
             />
             <Tab.Screen
                 name="Community"
                 component={ CommunityScreen }
+                options={{ headerShown: false }}
             />
             <Tab.Screen
                 name="User"
                 component={ UserScreen }
+                options={{ headerShown: false }}
             />
         </Tab.Navigator>
     )

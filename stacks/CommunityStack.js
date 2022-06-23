@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { CommunityCodeScreen } from '../screens/CommunityCodeScreen'
-import { CommunityListScreen } from '../screens/CommunityList'
 
 const Stack = createNativeStackNavigator()
 
@@ -12,6 +11,6 @@ export function CommunityStack() {
                 component={ CommunityCodeScreen }
                 options={{ headerShown: false }}
             />
-      </Stack.Navigator>
+        </Stack.Navigator>
     )
 }
