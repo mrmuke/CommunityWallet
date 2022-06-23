@@ -9,38 +9,45 @@ export function initCommunity() {
                 return {
                     ...prevState,
                     isLoading: false,
-                    currentCommunity: action.currentCommunity
+                    currentCommunity: action.currentCommunity,
+                    currentPermission: action.currentPermission
                 }
             case 'ENTER_COMM':
                 return {
                     ...prevState,
-                    currentCommunity: action.currentCommunity
+                    currentCommunity: action.currentCommunity,
+                    currentPermission: action.currentPermission
                 }
             case 'EXIT_COMM':
                 return {
                     ...prevState,
-                    currentCommunity: null
+                    currentCommunity: null,
+                    currentPermission: null
                 }
         }
     },
     {
         isLoading: true,
-        currentCommunity: null
+        currentCommunity: null,
+        currentPermission: null
     })
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
             let currentCommunity
+            let currentPermission
 
             try {
                 currentCommunity = await SecureStore.getItemAsync('currentCommunity')
+                currentPermission = await SecureStore.getItemAsync('currentPermission')
             } catch (e) {
 
             }
 
             dispatch({
                 type: 'RESTORE_COMM',
-                currentCommunity
+                currentCommunity,
+                currentPermission
             })
         }
 
@@ -49,17 +56,21 @@ export function initCommunity() {
 
     const communityContext = React.useMemo(() => ({
         enterCommunity: async data => {
-            const communityData = data.community
+            const communityData = JSON.stringify(data.community)
+            const permissionData = JSON.stringify(data.permission)
 
             await SecureStore.setItemAsync('currentCommunity', communityData)
+            await SecureStore.setItemAsync('currentPermission', permissionData)
 
             dispatch({
                 type: 'ENTER_COMM',
-                currentCommunity: communityData
+                currentCommunity: communityData,
+                currentPermission: permissionData
             })
         },
-        exitCommunity: async data => {
+        exitCommunity: async () => {
             await SecureStore.deleteItemAsync('currentCommunity')
+            await SecureStore.deleteItemAsync('currentPermission')
 
             dispatch({
                 type: 'EXIT_COMM'

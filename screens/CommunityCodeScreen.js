@@ -19,7 +19,6 @@ import { AuthContext, CommunityContext } from '../utils/Contexts'
 export function CommunityCodeScreen() {
 
     /** Contexts */
-    const authContext = React.useContext(AuthContext).authContext
     const commContext = React.useContext(CommunityContext).communityContext
 
     /** State variables */
@@ -63,10 +62,11 @@ export function CommunityCodeScreen() {
         setInitialSubmit(true)
         axios.post(`${API_URL}/community/getOneByCode`, { communityCode: commCode })
         .then(async res1 => {
-            const communityId = res1.data.data.id.toString()
+            const communityId = res1.data.data._id
             const res2 = await axios.post(`${API_URL}/user/addCommunity`, { communityId })
             commContext.enterCommunity({
-                community: res2.data.data
+                community: res1.data.data,
+                permission: res2.data.data,
             })
         })
         .catch(err => {
