@@ -27,7 +27,6 @@ export function LoginScreen({ navigation }) {
     const [inputErrors, setInputErrors] = React.useState([])
 
     React.useEffect(() => {
-        console.log(initialSubmit)
         if (initialSubmit) { pushInputErrors() }
     }, [phoneNumber, password, initialSubmit])
 
@@ -43,7 +42,6 @@ export function LoginScreen({ navigation }) {
         setInputErrors(errList)
     }
     const getInputStyle = str => {
-        console.log(inputErrors)
         if (inputErrors.includes(str)) {
             return {...styles.inputView, ...styles.error}
         } else {
@@ -66,14 +64,8 @@ export function LoginScreen({ navigation }) {
         axios.post(`${API_URL}/user/login`, { password, phoneNumber })
         .then(res => {
             authContext.logIn({
-                mnemonic: res.data.data.mnemonic,
                 password: password,
-                phoneNumber: res.data.data.phoneNumber,
-                username: res.data.data.username,
-                evmosAddress: res.data.data.evmosAddress,
-                ethAddress: res.data.data.ethAddress,
-                wasmAddress: res.data.data.wasmAddress,
-                ixoAddress: res.data.data.ixoAddress
+                user: res.data.data
             })
         })
         .catch(err => {

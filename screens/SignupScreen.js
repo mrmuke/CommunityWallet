@@ -161,14 +161,8 @@ export function SignupScreen({ navigation }) {
             axios.post(API_URL + '/user/create', { password, phoneNumber, username })
             .then(res => {
                 authContext.signUp({
-                    mnemonic: res.data.mnemonic,
                     password: password,
-                    phoneNumber: res.data.data.phoneNumber,
-                    username: username,
-                    evmosAddress: res.data.data.evmosAddress,
-                    ethAddress: res.data.data.ethAddress,
-                    wasmAddress: res.data.data.wasmAddress,
-                    ixoAddress: res.data.data.ixoAddress,
+                    user: res.data.data
                 })
             })
         } else {

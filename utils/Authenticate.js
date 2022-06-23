@@ -3,7 +3,7 @@ import * as React from 'react'
 import * as SecureStore from 'expo-secure-store'
 
 export function authenticate() {
-    const [state, dispatch] = React.useReducer((prevState, action) => {
+    const [authState, dispatch] = React.useReducer((prevState, action) => {
         switch (action.type) {
             case 'RESTORE_TOKEN':
                 axios.defaults.headers.common['mnemonic'] = action.mnemonic
@@ -13,7 +13,7 @@ export function authenticate() {
                     isLoading: false,
                     mnemonic: action.mnemonic,
                     password: action.password,
-                    user: action.user
+                    user: action.user,
                 }
             case 'SIGN_IN':
                 axios.defaults.headers.common['mnemonic'] = action.mnemonic
@@ -22,7 +22,7 @@ export function authenticate() {
                     ...prevState,
                     mnemonic: action.mnemonic,
                     password: action.password,
-                    user: action.user
+                    user: action.user,
                 }
             case 'SIGN_OUT':
                 delete axios.defaults.headers.common['mnemonic']
@@ -31,7 +31,7 @@ export function authenticate() {
                     ...prevState,
                     mnemonic: null,
                     password: null,
-                    user: null
+                    user: null,
                 }
         }
     },
@@ -39,6 +39,7 @@ export function authenticate() {
         isLoading: true,
         password: null,
         mnemonic: null,
+        user: null,
     })
 
     React.useEffect(() => {    
@@ -59,7 +60,7 @@ export function authenticate() {
                 type: 'RESTORE_TOKEN', 
                 mnemonic: mnemonic, 
                 password: password,
-                user: user
+                user: user,
             })
         }
 
@@ -68,14 +69,19 @@ export function authenticate() {
 
     const authContext = React.useMemo(() => ({
         logIn: async data => {
-            await SecureStore.setItemAsync('mnemonic', data.mnemonic)
-            await SecureStore.setItemAsync('password', data.password)
-            await SecureStore.setItemAsync('user', data.user)
+            const mnemonic = data.user.mnemonic
+            const password = data.password
+            const user = JSON.stringify(data.user)
+
+            await SecureStore.setItemAsync('mnemonic', mnemonic)
+            await SecureStore.setItemAsync('password', password)
+            await SecureStore.setItemAsync('user', user)
 
             dispatch({
                 type: 'SIGN_IN', 
-                mnemonic: data.mnemonic,
-                password: data.password,
+                mnemonic,
+                password,
+                user,
             })
         },
         signOut: async () => {
@@ -87,18 +93,22 @@ export function authenticate() {
             })
         },
         signUp: async data => {
-            await SecureStore.setItemAsync('mnemonic', data.mnemonic)
-            await SecureStore.setItemAsync('password', data.password)
-            await SecureStore.setItemAsync('user', data.user)
+            const mnemonic = data.user.mnemonic
+            const password = data.password
+            const user = JSON.stringify(data.user)
+
+            await SecureStore.setItemAsync('mnemonic', mnemonic)
+            await SecureStore.setItemAsync('password', password)
+            await SecureStore.setItemAsync('user', user)
             
             dispatch({ 
                 type: 'SIGN_IN', 
-                mnemonic: data.mnemonic,
-                password: data.password,
-                user: data.user
+                mnemonic,
+                password,
+                user,
             })
         },
     }), [])
 
-    return { authContext, state }
+    return { authContext, authState }
 }
