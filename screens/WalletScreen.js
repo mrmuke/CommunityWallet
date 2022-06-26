@@ -1,113 +1,126 @@
 import * as SecureStore from 'expo-secure-store'
+import * as React from 'react'
 import axios from 'axios'
-import { Image, List, Modal, StyleSheet, Text, View } from 'react-native'
+import { Image, List, Modal, StyleSheet, Text, View, SafeAreaView,
+ScrollView, FlatList } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useIsFocused } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { AuthContext, CommunityContext } from '../utils/Contexts'
 
 import { API_URL } from '../utils/API_URL'
-import tokens from '../i18n/tokens'
-
-/** Translation tokens */
-const { myWallet_P, totalBalance_P, receiveTokens_P, today_W, close_W } = tokens.screens.wallet
 
 export function WalletScreen() {
-    /** i18n */
-    const { t } = useTranslation()
+
+    /** Contexts */
+    const authContext = React.useContext(AuthContext).authContext
+    const authState = React.useContext(AuthContext).authState
+    const communityContext = React.useContext(CommunityContext).communityContext
+    const communityState = React.useContext(CommunityContext).communityState
+
 
     /** State variables */
-    const [receive, setReceive] = useState(false)
-    const [tokens, setTokens] = useState([])
-    const [curToken, setCurToken] = useState('')
-    const [transactions, setTransactions] = useState([{ amount: 'loading', topic: 'loading...', dateTime: 'loading...' }])
-    const [wasmAddress, setWasmAddress] = useState('...')
-    const [ixoAddress, setIxoAddress] = useState('...')
-    const [evmosAddress, setEvmosAddress] = useState('...')
-    const [ethAddress, setEthAddress] = useState('...')
-    const [username, setUsername] = useState('...')
-    const [phoneNumber, setPhoneNumber] = useState('...')
-    const isFocused = useIsFocused()
+    const [balances, setBalances] = React.useState([{key: 1, name: 'ATOM', address: 'wasm34nf1348h'}])
+    const [transactions, setTransactions] = React.useState([])
+    const [communityData, setCommunityData] = React.useState({})
 
-    useEffect(() => {
-        if (isFocused) {
-            Promise.all([
-                getBalances(),
-                getTokens(),
-                getTransactions(),
-                fillData(),
-            ])
-        }
-    }, [isFocused])
+    React.useEffect(() => {
+        console.log(communityState)
+        setCommunityData(JSON.parse(communityState.currentCommunity))
+        console.log(communityData._id)
 
-    const getBalances = async () => {
-        axios.get(API_URL, '/user/...')
-        .then(res => {
-            
-        })
-    }
-
-    // const getTokens = async () => {
-    //     axios.get(API_URL, '/user/balancesAllCommunities')
-    //     .then(res => {
-    //         balances = res.data.data.
-    //     })
-    // }
-
-    const getTransactions = async () => {
-        axios.get(API_URL + '/user/wallet')
-        .then(res => {
-            setTokens(res.data.balances)
-            setCurToken(Object.keys(res.data.balances)[0])
-            setTransactions(res.data.transactions)
-        })
-    }
-
-    const fillData = async () => {
-        const data = await Promise.all([
-            SecureStore.getItemAsync('phoneNumber', data.phoneNumber),
-            SecureStore.getItemAsync('username', data.username),
-            SecureStore.getItemAsync('evmosAddress', data.evmosAddress),
-            SecureStore.getItemAsync('ethAddress', data.ethAddress),
-            SecureStore.getItemAsync('wasmAddress', data.wasmAddress),
-            SecureStore.getItemAsync('ixoAddress', data.ixoAddress),
+        Promise.all([
+            axios.post(`${API_URL}/user/balancesOneCommunity`, { communityId: communityData._id }),
+            axios.post(`${API_URL}/user/transactions`)
         ])
-        setPhoneNumber(data[0])
-        setUsername(data[1])
-        setEvmosAddress(data[2])
-        setEthAddress(data[3])
-        setWasmAddress(data[4])
-        setIxoAddress(data[5])
+        .then(resps => {
+            setBalances(responses[0].data.data)
+            setTransactions(responses[1].data.data)
+        })
+    }, [communityState])
+
+
+    const tokenView = token => {
+        return (
+            <View>
+                <Text>{ token.name }</Text>
+                <Text>{ token.address }</Text>
+            </View>
+        )
     }
 
     return (
-        <View>
-            <Text>Text</Text>
-            <Text>Address3418sdf4d88hisf83</Text>
-            <Modal 
-                visible={receive} 
-                transparent={false} 
-                animationType="slide" 
-            >
-                <View style={styles.qr}>
-                    <QRCode size={150} value={address}/>
-                    <TouchableOpacity style={styles.qrcodeExitBtn} onPress={() => setReceive(false)}>
-                        <Text>{ t(close_W) }</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.bigName}>Wallet</Text>
+
+            <View style={styles.listContainer}>
+                <Text style={styles.infoHeader}>Balances</Text>
+                <FlatList
+                    keyExtractor={balances => balances.key}
+                    data={balances}
+                    renderItem={balances => tokenView(balances.item)}
+                />
+            </View>
+
+            <View style={styles.listContainer}>
+                <Text style={styles.infoHeader}>Transactions</Text>
+                <FlatList
+                    keyExtractor={transaction => transaction._id}
+                    data={transactions}
+                    renderItem={transaction => tokenView(transaction.item)}
+                />
+            </View>
+
+            <View style={styles.center}>
+                <TouchableOpacity
+                    style={styles.sendBtn}
+                    onPress={() => {}}
+                >
+                    <Text style={styles.btnText}>Send</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+        
     )
 }
 
 const styles = StyleSheet.create({
-    qr: {
+    container : {
+        marginTop: 30,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    bigName: {
+        fontSize: 50,
+        color: '#eb6060',
+        fontWeight: 'bold',
+        marginBottom: 15
+    },
+    sendBtn: {
+        alignItems: "center",
+        backgroundColor: "#6474E5",
+        borderRadius: 25,
+        height: 50,
+        justifyContent: "center",
+        marginBottom: 0,
+        marginTop: 23,
+    },
+    btnText: {
+        color: '#ffffff'
+    },
+    center: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22
+        alignSelf: 'center',
+        width: '80%'
     },
-    qrExitBtn: {
-        padding: 15
+    infoHeader: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    listContainer: {
+        height: '30%',
+        marginBottom: 30
     }
 })

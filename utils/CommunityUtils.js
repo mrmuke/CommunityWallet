@@ -6,7 +6,7 @@ import { AuthContext } from './Contexts'
 import { API_URL } from './API_URL'
 
 
-export function initCommunity() {
+export function initCommService() {
     /** Contexts */
 
     const [communityState, dispatch] = React.useReducer((prevState, action) => {

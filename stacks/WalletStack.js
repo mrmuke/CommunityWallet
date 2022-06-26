@@ -9,10 +9,11 @@ const Tab = createBottomTabNavigator()
 export function WalletStack() {
     return (
         <Tab.Navigator>
-            {/* <Tab.Screen
+            <Tab.Screen
                 name="Wallet"
                 component={ WalletScreen }
-            /> */}
+                options={{ headerShown: false }}
+            />
             <Tab.Screen
                 name="Services"
                 component={ ServicesScreen }

@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { AuthContext, CommunityContext } from './utils/Contexts'
 import { authenticate } from './utils/AuthUtils'
 import { AuthStack } from './stacks/AuthStack'
-import { initCommunity } from './utils/CommunityUtils'
+import { initCommService } from './utils/CommunityUtils'
 import { CommunityStack } from './stacks/CommunityStack'
 import { WalletStack } from './stacks/WalletStack'
 import { SplashScreen } from './screens/SplashScreen'
@@ -13,7 +13,7 @@ import './i18n/index'
 
 export default function App() {
   const { authContext, authState } = authenticate()
-  const { communityContext, communityState } = initCommunity()
+  const { communityContext, communityState } = initCommService()
 
   if (authState.isLoading) { return <SplashScreen/> }
 

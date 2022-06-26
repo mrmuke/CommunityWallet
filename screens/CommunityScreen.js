@@ -30,13 +30,13 @@ export function CommunityScreen() {
                 <Text>list of users</Text>
             </View>
             <View>
-                    <TouchableOpacity
-                        style={styles.buttons}
-                        onPress={() => { exitProcedure() }}
-                    >
-                        <Text style={styles.buttonText}>Sign out</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    style={styles.buttons}
+                    onPress={() => { exitProcedure() }}
+                >
+                    <Text style={styles.buttonText}>Sign out</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     )
 }
