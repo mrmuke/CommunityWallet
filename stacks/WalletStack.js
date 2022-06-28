@@ -4,30 +4,37 @@ import { ServicesScreen } from "../screens/ServicesScreen"
 import { UserScreen } from "../screens/UserScreen"
 import { WalletScreen } from "../screens/WalletScreen"
 
+import { colors, sz } from "../styles/common"
+
 const Tab = createBottomTabNavigator()
 
 export function WalletStack() {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator 
+            screenOptions={{ 
+                headerShown: false, 
+                tabBarStyle: { 
+                    backgroundColor: colors.white,
+                    borderTopWidth: 0,
+                    elevation: 0,
+                    position: 'absolute',
+                    height: sz.xxl
+                },
+                tabBarShowLabel: false,
+            }}
+        >
             <Tab.Screen
-                name="Wallet"
-                component={ WalletScreen }
-                options={{ headerShown: false }}
-            />
-            <Tab.Screen
-                name="Services"
+                name='Services'
                 component={ ServicesScreen }
-                options={{ headerShown: false }}
             />
             <Tab.Screen
-                name="Community"
+                name='Community'
                 component={ CommunityScreen }
-                options={{ headerShown: false }}
             />
             <Tab.Screen
-                name="User"
+                name='User'
                 component={ UserScreen }
-                options={{ headerShown: false }}
+                options={{ tabBarStyle: { borderTopWidth: 1 } }}
             />
         </Tab.Navigator>
     )

@@ -3,13 +3,13 @@ import * as React from 'react'
 import axios from 'axios'
 import { Image, List, Modal, StyleSheet, Text, View, SafeAreaView,
 ScrollView, FlatList } from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useIsFocused } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { AuthContext, CommunityContext } from '../utils/Contexts'
 
 import { API_URL } from '../utils/API_URL'
+import { CommonStyle } from '../styles/common'
 
 export function WalletScreen() {
 
@@ -35,17 +35,39 @@ export function WalletScreen() {
             axios.post(`${API_URL}/user/transactions`)
         ])
         .then(resps => {
-            setBalances(responses[0].data.data)
-            setTransactions(responses[1].data.data)
+            setBalances(resps[0].data.data)
+            setTransactions(resps[1].data.data)
         })
     }, [communityState])
 
-
-    const tokenView = token => {
+    const balanceView = token => {
         return (
             <View>
-                <Text>{ token.name }</Text>
-                <Text>{ token.address }</Text>
+                <View>
+                    <Text>{ token.name }</Text>
+                    <Text>{ token.symbol }</Text>
+                </View>
+                <Text>{ token.balance }</Text>
+            </View>
+        )
+    }
+
+    const transactionView = transaction => {
+        return (
+            <View>
+                <View>
+                    {
+                        transaction.receiver == authState.user.wasmAddress ? (
+                            <Text>{ transaction.sender } paid you</Text>
+                        ) :
+                        (
+                            <Text>You paid { transaction.receiver }</Text>
+                        )
+                    }
+                    <Text>{transaction.createdAt}</Text>
+                    <Text>{transaction.memo}</Text>
+                </View>
+                <Text>{ transaction.amount }</Text>
             </View>
         )
     }
@@ -56,20 +78,16 @@ export function WalletScreen() {
 
             <View style={styles.listContainer}>
                 <Text style={styles.infoHeader}>Balances</Text>
-                <FlatList
-                    keyExtractor={balances => balances.key}
-                    data={balances}
-                    renderItem={balances => tokenView(balances.item)}
-                />
+                <View>
+                    {balances.map(balance => balanceView(balance))}
+                </View>
             </View>
 
             <View style={styles.listContainer}>
                 <Text style={styles.infoHeader}>Transactions</Text>
-                <FlatList
-                    keyExtractor={transaction => transaction._id}
-                    data={transactions}
-                    renderItem={transaction => tokenView(transaction.item)}
-                />
+                <View>
+                    {transactions.map(transaction => transactionView(transaction))}
+                </View>
             </View>
 
             <View style={styles.center}>

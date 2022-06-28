@@ -1,20 +1,30 @@
-import { Image, StyleSheet, Text, View, List } from 'react-native'
-import { TouchableOpacity, SafeAreaView } from 'react-native'
 import * as React from 'react'
+import { 
+    Animated,
+    Image,
+    SafeAreaView,
+    StyleSheet, 
+    Text, 
+    TouchableOpacity,
+    View,  
+} from 'react-native'
+import QRCode from 'react-qr-code'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 
-import { AuthContext, CommunityContext } from '../utils/Contexts'
+import { AuthContext } from '../utils/Contexts'
+import { colors, CommonStyle, sz } from '../styles/common'
 
 export function UserScreen() {
     /** Contexts */
     const authContext = React.useContext(AuthContext).authContext
     const authState = React.useContext(AuthContext).authState
     
+    /** State var */
     const [userData, setUserData] = React.useState({})
-
 
     React.useEffect(() => {
         setUserData(JSON.parse(authState.user))
-    }, [])
+    }, [authState.user])
 
     const exitProcedure = () => {
         authContext.signOut()
@@ -24,68 +34,81 @@ export function UserScreen() {
         console.log('changing')
     }
 
+    const getUserInitials = () => {
+        if (userData.username) return userData.username.substring(0, 1).toUpperCase()
+    }
+
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.infoBox}>
-                <Text style={styles.bigName}>Hi, { userData.username }</Text>
-            </View>
-            <View style={styles.infoBox}>
-                <Text style={styles.infoHeader}>Phone Number</Text>
-                <Text>{ userData.phoneNumber }</Text>
-            </View>
-            <View style={styles.infoBox}>
-                <Text style={styles.infoHeader}>Wallet Address</Text>
-                <Text>{ userData.wasmAddress }</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-                <View>
-                    <TouchableOpacity 
-                        style={styles.buttons}
-                        onPress={() => { changePassword() }}
-                    >
-                        <Text style={styles.buttonText}>Change password</Text>
-                    </TouchableOpacity>
+        <View style={styles.container}>
+        <SafeAreaView style={[CommonStyle.container, styles.seperator]}>
+            <View>
+                <View style={[styles.infoBox, styles.nameBox]}>
+                    <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials() }</Text></View>
+                    <Text style={CommonStyle.bigName}>Hi, { userData.username }</Text>
+                </View>
+                <View style={styles.infoBox}>
+                    <Text style={CommonStyle.infoHeader}>Phone Number</Text>
+                    <Text style={CommonStyle.infoText}>{ userData.phoneNumber }</Text>
                 </View>
                 <View>
-                    <TouchableOpacity
-                        style={styles.buttons}
-                        onPress={() => { exitProcedure() }}
-                    >
-                        <Text style={styles.buttonText}>Sign out</Text>
-                    </TouchableOpacity>
+                    <Text style={CommonStyle.infoHeader}>Wallet Address</Text>
+                    <Text style={CommonStyle.infoText} numberOfLines={1}>{ userData.wasmAddress }</Text>
                 </View>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                { !userData.wasmAddress ? (<></>) : (<QRCode size={128} value={userData.wasmAddress}/>) }
+            </View>
+            <View>
+                <TouchableOpacity 
+                    style={[CommonStyle.longButton, {marginBottom: sz.sm}]}
+                    onPress={() => { changePassword() }}
+                >
+                    <Text style={styles.buttonText}>Change password</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={CommonStyle.longButton}
+                    onPress={() => { exitProcedure() }}
+                >
+                    <Text style={styles.buttonText}>Sign out</Text>
+                </TouchableOpacity> 
             </View>
         </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        margin: 10
+    buttonText: {
+        color: colors.white
     },
-    bigName: {
-        fontSize: 50,
-        color: "#eb6060",
-        fontWeight: 'bold'
+    container: {
+        backgroundColor: colors.white,
+        marginBottom: sz.sm
     },
     infoBox: {
-        marginBottom: 20
+        marginBottom: sz.lg
     },
-    infoHeader: {
-        fontSize: 20,
-        fontWeight: 'bold'
+    seperator: {
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
-    buttons: {
-        alignItems: "center",
-        backgroundColor: "#6474E5",
-        borderRadius: 25,
-        height: 50,
-        justifyContent: "center",
-        marginBottom: 0,
-        marginTop: 23,
-        width: "80%",
+    initials: {
+        color: colors.info, 
+        fontSize: sz.xl
     },
-    buttonText: {
-        color: '#FFFFFF'
+    initialsBubble: {
+        alignItems: 'center', 
+        backgroundColor: colors.lightGray, 
+        borderColor: colors.info, 
+        borderRadius: sz.xl, 
+        borderWidth: 1,
+        justifyContent: 'center', 
+        height: sz.xxl,
+        marginRight: sz.sm,
+        width: sz.xxl, 
+    },
+    nameBox: {
+        flexDirection: 'row'
     }
 })

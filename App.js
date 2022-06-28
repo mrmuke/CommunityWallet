@@ -9,6 +9,7 @@ import { initCommService } from './utils/CommunityUtils'
 import { CommunityStack } from './stacks/CommunityStack'
 import { WalletStack } from './stacks/WalletStack'
 import { SplashScreen } from './screens/SplashScreen'
+import { MyTheme } from './styles/theme'
 import './i18n/index'
 
 export default function App() {
@@ -18,7 +19,7 @@ export default function App() {
   if (authState.isLoading) { return <SplashScreen/> }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <NativeBaseProvider>
         <AuthContext.Provider value={{authContext, authState}}>
             <CommunityContext.Provider value={{communityContext, communityState}}>
