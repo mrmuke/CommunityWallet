@@ -6,7 +6,7 @@ import { AuthContext, CommunityContext } from './utils/Contexts'
 import { authenticate } from './utils/AuthUtils'
 import { AuthStack } from './stacks/AuthStack'
 import { initCommService } from './utils/CommunityUtils'
-import { CommunityStack } from './stacks/CommunityStack'
+import { CommunitySignUpStack } from './stacks/CommunitySignUpStack'
 import { WalletStack } from './stacks/WalletStack'
 import { SplashScreen } from './screens/SplashScreen'
 import { MyTheme } from './styles/theme'
@@ -28,7 +28,7 @@ export default function App() {
                   AuthStack()
                 ) : 
                 !communityState.currentCommunity ? (
-                  CommunityStack()
+                  CommunitySignUpStack()
                 ) : (
                   WalletStack()
                 )

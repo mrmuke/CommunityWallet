@@ -1,20 +1,21 @@
-import { Image, StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import { 
+    Image, 
+    SafeAreaView,
+    StyleSheet, 
+    Text, 
+    View, 
+} from 'react-native'
+
+import { CommonStyle, colors, sz } from '../styles/common'
 
 export function ServicesScreen() {
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.bigName}>Services!</Text>
+        <SafeAreaView style={CommonStyle.container}>
+            <Text style={CommonStyle.bigName}>Services!</Text>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        margin: 10
-    },
-    bigName: {
-        fontSize: 50,
-        color: "#eb6060",
-        fontWeight: 'bold'
-    }
+    
 })

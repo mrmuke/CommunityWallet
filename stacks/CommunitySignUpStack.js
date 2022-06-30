@@ -3,13 +3,12 @@ import { CommunityCodeScreen } from '../screens/CommunityCodeScreen'
 
 const Stack = createNativeStackNavigator()
 
-export function CommunityStack() {
+export function CommunitySignUpStack() {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
                 name="CommunityCodeScreen"
                 component={ CommunityCodeScreen }
-                options={{ headerShown: false }}
             />
         </Stack.Navigator>
     )

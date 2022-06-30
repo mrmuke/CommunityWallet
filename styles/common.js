@@ -13,18 +13,24 @@ const sz = {
 }
 
 const colors = {
-    important: '#eb6060',
+    clicky: '#0075F2',
+    important: '#EB6060',
     info: '#696969',
     lightGray: '#F8F8F8',
-    header: '',
-    clicky: '#6474E5',
-    white: '#ffffff'
+    lighterGray: '#B7B7B7',
+    white: '#FFFFFF'
 }
 
 const CommonStyle = StyleSheet.create({
     container: {
         marginLeft: sz.md,
         marginRight: sz.md,
+        marginBottom: sz.md
+    },
+    bigHeader: {
+        fontSize: sz.xl,
+        color: colors.lighterGray,
+        fontWeight: '400'
     },
     bigName: {
         fontSize: sz.xxl,
@@ -35,8 +41,11 @@ const CommonStyle = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: colors.clicky,
         borderRadius: sz.xl,
-        height: sz.xxl,
+        height: sz.xxl-4,
         justifyContent: 'center'
+    },
+    infoBox: {
+        marginBottom: sz.md,
     },
     infoHeader: {
         fontSize: sz.lg,
@@ -44,6 +53,7 @@ const CommonStyle = StyleSheet.create({
     },
     infoText: {
         fontSize: sz.md,
+        color: colors.info
     }
 }) 
 
