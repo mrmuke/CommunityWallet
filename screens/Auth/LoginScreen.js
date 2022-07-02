@@ -6,9 +6,9 @@ import { KeyboardAvoidingView, StyleSheet, Text, View,  } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
-import { API_URL } from '../utils/API_URL'
-import { AuthContext } from '../utils/Contexts'
-import tokens from '../i18n/tokens'
+import { API_URL } from '../../utils/API_URL'
+import { AuthContext } from '../../utils/Contexts'
+import tokens from '../../i18n/tokens'
 
 /** Translation tokens */
 const { wrongCredentials_P, bao_W, phoneNumber_P, password_W, forgotPassword_P, login_W, signUp_P } = tokens.screens.login

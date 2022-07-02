@@ -1,11 +1,7 @@
 import * as React from 'react'
 import * as SecureStore from 'expo-secure-store'
 import axios from 'axios'
-import {
-    FlatList,
-    Image, 
-    List, 
-    Modal, 
+import { 
     SafeAreaView,
     ScrollView, 
     StyleSheet, 
@@ -15,9 +11,9 @@ import {
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
-import { API_URL } from '../utils/API_URL'
-import { AuthContext, CommunityContext } from '../utils/Contexts'
-import { CommonStyle, colors, sz } from '../styles/common'
+import { API_URL } from '../../utils/API_URL'
+import { AuthContext, CommunityContext } from '../../utils/Contexts'
+import { CommonStyle, colors, sz } from '../../styles/common'
 
 export function WalletScreen() {
     // /** Contexts */

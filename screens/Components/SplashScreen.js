@@ -1,10 +1,15 @@
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+import { 
+    ActivityIndicator, 
+    Image, 
+    StyleSheet, 
+    View 
+} from 'react-native'
 
 export function SplashScreen() {
     return (
         <View style={ styles.container }>
             <Image
-                source={ require('../assets/logo.png') }
+                source={ require('../../assets/logo.png')}
                 style={ styles.image }
             />
             <ActivityIndicator

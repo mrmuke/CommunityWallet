@@ -1,29 +1,16 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
+import { 
+    Image, 
+    StyleSheet 
+} from 'react-native'
 
-import { CommunityScreen } from '../screens/CommunityScreen'
-import { CommunityRequestScreen } from '../screens/CommunityRequestScreen'
-import { CommunityRequestListScreen } from '../screens/CommunityRequestListScreen'
-import { Image, StyleSheet } from 'react-native'
-import { ServicesScreen } from '../screens/ServicesScreen'
-import { UserScreen } from '../screens/UserScreen'
-import { WalletScreen } from '../screens/WalletScreen'
-import { LoadingScreen } from '../screens/LoadingScreen'
-
+import { CommunityStack } from './CommunityStack'
+import { ServicesScreen } from '../screens/Tab/ServicesScreen'
+import { UserScreen } from '../screens/Tab/UserScreen'
+import { WalletScreen } from '../screens/Tab/WalletScreen'
 import { colors, sz } from '../styles/common'
 
 const Tab = createBottomTabNavigator()
-const CommunityStack = createStackNavigator()
-
-function CommunityStackScreen() {
-    return (
-        <CommunityStack.Navigator screenOptions={{headerShown: false}}>
-            <CommunityStack.Screen name='Community' component={CommunityScreen}/>
-            <CommunityStack.Screen name='Request' component={CommunityRequestScreen}/>
-            <CommunityStack.Screen name='Community Requests' component={CommunityRequestListScreen}/>
-        </CommunityStack.Navigator>
-    )
-}
 
 export function WalletStack() {
     return (
@@ -62,7 +49,7 @@ export function WalletStack() {
             />
             <Tab.Screen
                 name='Community Stack'
-                component={ CommunityStackScreen }
+                component={ CommunityStack }
                 options={{
                     tabBarStyle: { borderTopWidth: 1 },
                     tabBarIcon: ({focused, color, size}) => (

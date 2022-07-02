@@ -31,6 +31,10 @@ const CommonStyle = StyleSheet.create({
         color: colors.lighterGray,
         fontWeight: '400'
     },
+    backButton: {
+        height: sz.md, 
+        width: sz.md
+    },
     bigName: {
         fontSize: sz.xxl,
         fontWeight: 'bold',
@@ -53,7 +57,12 @@ const CommonStyle = StyleSheet.create({
     infoText: {
         fontSize: sz.md,
         color: colors.info
-    }
+    },
+    mediumName: {
+        fontSize: sz.xl,
+        fontWeight: 'bold',
+        color: colors.important
+    },
 }) 
 
 export {

@@ -9,8 +9,8 @@ import {
 } from 'react-native'
 import QRCode from 'react-qr-code'
 
-import { AuthContext } from '../utils/Contexts'
-import { colors, CommonStyle, sz } from '../styles/common'
+import { AuthContext } from '../../utils/Contexts'
+import { colors, CommonStyle, sz } from '../../styles/common'
 
 export function UserScreen() {
     /** Contexts */
@@ -40,14 +40,14 @@ export function UserScreen() {
                         <Text style={CommonStyle.infoHeader}>Phone Number</Text>
                         <Text style={CommonStyle.infoText}>{ userData.phoneNumber }</Text>
                     </View>
-                    <Image style={{height: sz.xl-5, width: sz.xl-5}} source={require('../assets/telephone.png')}/>
+                    <Image style={{height: sz.xl-5, width: sz.xl-5}} source={require('../../assets/telephone.png')}/>
                 </View>
                 <View style={[styles.infoBox, {marginBottom: 0}]}>
                     <View style={{width: '80%'}}>
                         <Text style={CommonStyle.infoHeader}>Wallet Address</Text>
                         <Text style={CommonStyle.infoText} numberOfLines={1}>{ userData.wasmAddress }</Text>
                     </View>
-                    <Image style={{height: sz.xl, width: sz.xl}} source={require('../assets/address.png')}/>
+                    <Image style={{height: sz.xl, width: sz.xl}} source={require('../../assets/address.png')}/>
                 </View>
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>

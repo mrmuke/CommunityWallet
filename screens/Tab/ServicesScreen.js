@@ -6,7 +6,7 @@ import {
     View, 
 } from 'react-native'
 
-import { CommonStyle, colors, sz } from '../styles/common'
+import { CommonStyle, colors, sz } from '../../styles/common'
 
 export function ServicesScreen() {
     return (

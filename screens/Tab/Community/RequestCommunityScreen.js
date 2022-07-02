@@ -15,10 +15,10 @@ import {
 import { showMessage } from 'react-native-flash-message'
 import Modal from 'react-native-modal'
 
-import { API_URL } from '../utils/API_URL'
-import { CommonStyle, colors, sz } from '../styles/common'
+import { API_URL } from '../../../utils/API_URL'
+import { CommonStyle, colors, sz } from '../../../styles/common'
 
-export function CommunityRequestScreen({ navigation: { goBack } }) {
+export function CommunityRequestScreen({ navigation }) {
     const [screenActive, setScreenActive] = React.useState(true)
     const [modalVisible, setModalVisible] = React.useState(false)
     const [resLoading, setResLoading] = React.useState(true)
@@ -63,12 +63,12 @@ export function CommunityRequestScreen({ navigation: { goBack } }) {
         >
             <ScrollView style={CommonStyle.container} showsVerticalScrollIndicator={false}>
                 <View style={[CommonStyle.infoBox, {marginTop: sz.lg}]}>
-                    <TouchableOpacity onPress={() => goBack()}>
-                        <Image source={require('../assets/back.png')} style={{height: sz.md, width: sz.md}}/>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image style={CommonStyle.backButton} source={require('../../../assets/back.png')}/>
                     </TouchableOpacity>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={[CommonStyle.bigName, {fontSize: sz.xl}]}>Request a Community</Text>
+                    <Text style={CommonStyle.mediumName}>Request a Community</Text>
                 </View>
                 <View style={CommonStyle.infoBox}>
                     <Text style={CommonStyle.infoHeader}>Community Name</Text>

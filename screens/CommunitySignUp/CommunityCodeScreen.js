@@ -13,8 +13,8 @@ import {
     TextInput,
 } from 'react-native'
 
-import { API_URL } from '../utils/API_URL'
-import { AuthContext, CommunityContext } from '../utils/Contexts'
+import { API_URL } from '../../utils/API_URL'
+import { AuthContext, CommunityContext } from '../../utils/Contexts'
 
 export function CommunityCodeScreen() {
 

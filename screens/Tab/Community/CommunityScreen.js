@@ -11,10 +11,9 @@ import {
 } from 'react-native'
 import Modal from 'react-native-modal'
 
-import { API_URL } from '../utils/API_URL'
-import { CommunityContext } from '../utils/Contexts'
-import { CommonStyle, colors, sz } from '../styles/common'
-
+import { API_URL } from '../../../utils/API_URL'
+import { CommunityContext } from '../../../utils/Contexts'
+import { CommonStyle, colors, sz } from '../../../styles/common'
 
 export function CommunityScreen({ navigation }) {
     /** Contexts */
@@ -63,7 +62,7 @@ export function CommunityScreen({ navigation }) {
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                         <Text style={CommonStyle.bigHeader}>You are in,</Text>
                         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                            <Image style={{height: sz.lg, width: sz.lg}} source={require('../assets/menu.png')}></Image>
+                            <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/menu.png')}></Image>
                         </TouchableOpacity>
                     </View>
                     <Text style={CommonStyle.bigName}>{ communityData.name }</Text>
@@ -114,7 +113,7 @@ export function CommunityScreen({ navigation }) {
                 <TouchableOpacity 
                     style={[CommonStyle.longButton]} 
                     disabled={modalButtonAct}
-                    onPress={() => modalNavigate('Community Requests')}
+                    onPress={() => modalNavigate('Request List')}
                 >
                     <Text style={{color: colors.white}}>See your community requests</Text>
                 </TouchableOpacity>

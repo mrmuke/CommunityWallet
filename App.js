@@ -8,7 +8,7 @@ import { AuthStack } from './stacks/AuthStack'
 import { initCommService } from './utils/CommunityUtils'
 import { CommunitySignUpStack } from './stacks/CommunitySignUpStack'
 import { WalletStack } from './stacks/WalletStack'
-import { SplashScreen } from './screens/SplashScreen'
+import { SplashScreen } from './screens/Components/SplashScreen'
 import { MyTheme } from './styles/theme'
 import './i18n/index'
 

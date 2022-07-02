@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { CommunityCodeScreen } from '../screens/CommunityCodeScreen'
+import { CommunityCodeScreen } from '../screens/CommunitySignUp/CommunityCodeScreen'
 
 const Stack = createNativeStackNavigator()
 
