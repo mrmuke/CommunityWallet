@@ -15,7 +15,7 @@ import { showMessage } from 'react-native-flash-message'
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 
-export function CommunityRequestListScreen({ navigation }) {
+export function RequestListScreen({ navigation }) {
     const [requestList, setRequestList] = React.useState([])
 
     React.useEffect(() => {

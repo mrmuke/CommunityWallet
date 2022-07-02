@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 
 import { CommunityStack } from './CommunityStack'
+import { SuperuserStack } from './SuperuserStack'
 import { ServicesScreen } from '../screens/Tab/ServicesScreen'
 import { UserScreen } from '../screens/Tab/UserScreen'
 import { WalletScreen } from '../screens/Tab/WalletScreen'
@@ -12,7 +13,7 @@ import { colors, sz } from '../styles/common'
 
 const Tab = createBottomTabNavigator()
 
-export function WalletStack() {
+export function TabStack(superuser) {
     return (
         <Tab.Navigator 
             screenOptions={{ 
@@ -69,6 +70,22 @@ export function WalletStack() {
                         )
                     }}
             />
+            {
+                superuser ? (
+                    <Tab.Screen
+                       name='Superuser'
+                       component={ SuperuserStack }
+                       options={{ 
+                           tabBarStyle: { borderTopWidth: 1 },
+                           tabBarIcon: ({focused, color, size}) => (
+                               (focused) ? (<Image style={styles.iconImage} source={require('../assets/tab/padlockFocused.png')}/>) 
+                               : (<Image style={styles.iconImage} source={require('../assets/tab/padlock.png')}/>)
+                               )
+                           }}
+                   />
+                ) : 
+                (<></>)
+            }
         </Tab.Navigator>
     )
 }

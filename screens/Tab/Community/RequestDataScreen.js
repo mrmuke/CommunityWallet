@@ -9,7 +9,7 @@ import {
 
 import { CommonStyle, colors, sz } from '../../../styles/common'
 
-export function CommunityRequestDataScreen({ route, navigation }) {
+export function RequestDataScreen({ route, navigation }) {
     const { request } = route.params
 
     return (

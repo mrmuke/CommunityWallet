@@ -18,7 +18,7 @@ import Modal from 'react-native-modal'
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 
-export function CommunityRequestScreen({ navigation }) {
+export function RequestScreen({ navigation }) {
     const [screenActive, setScreenActive] = React.useState(true)
     const [modalVisible, setModalVisible] = React.useState(false)
     const [resLoading, setResLoading] = React.useState(true)

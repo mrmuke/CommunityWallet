@@ -7,7 +7,7 @@ import { authenticate } from './utils/AuthUtils'
 import { AuthStack } from './stacks/AuthStack'
 import { initCommService } from './utils/CommunityUtils'
 import { CommunitySignUpStack } from './stacks/CommunitySignUpStack'
-import { WalletStack } from './stacks/WalletStack'
+import { TabStack } from './stacks/TabStack'
 import { SplashScreen } from './screens/Components/SplashScreen'
 import { MyTheme } from './styles/theme'
 import './i18n/index'
@@ -30,7 +30,7 @@ export default function App() {
                 !communityState.currentCommunity ? (
                   CommunitySignUpStack()
                 ) : (
-                  WalletStack()
+                  TabStack(true)
                 )
               }
             </CommunityContext.Provider>
