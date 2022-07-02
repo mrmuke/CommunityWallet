@@ -1,11 +1,9 @@
 import * as React from 'react'
 import axios from 'axios'
 import {
-    Dimensions,
     Image,
     SafeAreaView, 
     ScrollView,
-    SectionList,
     StyleSheet, 
     Text, 
     TouchableOpacity,
@@ -27,8 +25,6 @@ export function CommunityScreen({ navigation }) {
     const [communityData, setCommunityData] = React.useState(JSON.parse(communityState.currentCommunity))
     const [adminData, setAdminData] = React.useState()
     const [memberList, setMemberList] = React.useState([])
-    
-
     const [modalVisible, setModalVisible] = React.useState(false)
     const [modalButtonAct, setModalButtonAct] = React.useState(false)
 
@@ -51,6 +47,11 @@ export function CommunityScreen({ navigation }) {
                 <View>{ member.address }</View>
             </View>
         )
+    }
+
+    const modalNavigate = screen => {
+        navigation.navigate(screen)
+        setModalVisible(false)
     }
 
     return (
@@ -106,15 +107,16 @@ export function CommunityScreen({ navigation }) {
                 <TouchableOpacity 
                     style={[CommonStyle.longButton, {marginBottom: sz.sm}]} 
                     disabled={modalButtonAct}
-                    onPress={() => {
-                        navigation.navigate('Community Request')
-                        setModalVisible(false)
-                    }} 
+                    onPress={() => modalNavigate('Request Community')} 
                 >
                     <Text style={{color: colors.white}}>Request to create a community</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[CommonStyle.longButton]} disabled={modalButtonAct}>
-                    <Text style={{color: colors.white}}>Exit community</Text>
+                <TouchableOpacity 
+                    style={[CommonStyle.longButton]} 
+                    disabled={modalButtonAct}
+                    onPress={() => modalNavigate('Community Requests')}
+                >
+                    <Text style={{color: colors.white}}>See your community requests</Text>
                 </TouchableOpacity>
             </View>
         </Modal>

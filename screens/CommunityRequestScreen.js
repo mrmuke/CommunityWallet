@@ -1,23 +1,66 @@
 import * as React from 'react'
+import axios from 'axios'
 import {
+    ActivityIndicator,
     Image,
+    KeyboardAvoidingView,
     Text,
     TextInput,
     TouchableOpacity,
+    SafeAreaView,
     ScrollView,
     StyleSheet,
     View,
 } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
+import Modal from 'react-native-modal'
+
+import { API_URL } from '../utils/API_URL'
 import { CommonStyle, colors, sz } from '../styles/common'
 
 export function CommunityRequestScreen({ navigation: { goBack } }) {
+    const [screenActive, setScreenActive] = React.useState(true)
+    const [modalVisible, setModalVisible] = React.useState(false)
+    const [resLoading, setResLoading] = React.useState(true)
+
+    const [name, setName] = React.useState('')
+    const [location, setLocation] = React.useState('')
     const [response1, setResponse1] = React.useState('')
     const [response2, setResponse2] = React.useState('')
     const [response3, setResponse3] = React.useState('')
 
+    const handleSubmit = () => {
+        setScreenActive(false)
+        setModalVisible(true)
+        const msg = {
+            communityName: name,
+            communityLocation: location,
+            response1: response1,
+            response2: response2,
+            response3: response3,
+        }
+        axios.post(`${API_URL}/communityrequest/create`, msg)
+        .then(res => {
+            setResLoading(false)
+            console.log(res)
+        })
+        .catch(err => {
+            setScreenActive(true)
+            setResLoading(false)
+            setModalVisible(false)
+            showMessage({
+                message: 'Something went wrong',
+                type: 'danger'
+            })
+        })
+    }
 
     return (
-        <View>
+        <KeyboardAvoidingView 
+            behavior='padding' 
+            enabled 
+            pointerEvents={screenActive ? 'auto' : 'none'}
+        >
             <ScrollView style={CommonStyle.container} showsVerticalScrollIndicator={false}>
                 <View style={[CommonStyle.infoBox, {marginTop: sz.lg}]}>
                     <TouchableOpacity onPress={() => goBack()}>
@@ -29,15 +72,19 @@ export function CommunityRequestScreen({ navigation: { goBack } }) {
                 </View>
                 <View style={CommonStyle.infoBox}>
                     <Text style={CommonStyle.infoHeader}>Community Name</Text>
-                    <TextInput style={[styles.smallTextInput, styles.textInput]} numberOfLines={1}>
-
-                    </TextInput>
+                    <TextInput 
+                        style={[styles.smallTextInput, styles.textInput]} 
+                        numberOfLines={1}
+                        onChangeText={text => setName(text)}
+                    />
                 </View>
                 <View style={CommonStyle.infoBox}>
                     <Text style={CommonStyle.infoHeader}>Location</Text>
-                    <TextInput style={[styles.smallTextInput, styles.textInput]} numberOfLines={1}>
-
-                    </TextInput>
+                    <TextInput 
+                        style={[styles.smallTextInput, styles.textInput]} 
+                        numberOfLines={1}
+                        onChangeText={text => setLocation(text)}
+                    />
                 </View>
                 <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lightGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
                 <View style={CommonStyle.infoBox}>
@@ -46,7 +93,7 @@ export function CommunityRequestScreen({ navigation: { goBack } }) {
                         multiline
                         numberOfLines={10}
                         onChangeText={text => setResponse1(text)}
-                        style={[styles.smallTextInput, styles.textInput]}
+                        style={[styles.largeTextInput, styles.textInput]}
                     />
                 </View>
                 <View style={CommonStyle.infoBox}>
@@ -67,22 +114,62 @@ export function CommunityRequestScreen({ navigation: { goBack } }) {
                         style={[styles.largeTextInput, styles.textInput]}
                     />
                 </View>
+                <View style={[CommonStyle.infoBox, {marginTop: sz.sm}]}>
+                    <TouchableOpacity style={CommonStyle.longButton} onPress={() => handleSubmit()}>
+                        <Text style={{color: colors.white}}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
-        </View>
+            <Modal
+                isVisible={modalVisible}
+                animationIn='fadeIn'
+                animationOut='fadeOut'
+                backdropOpacity={0.5}
+                hideModalContentWhileAnimating={true}
+                style={styles.modalContainer}
+            >
+                {
+                    resLoading ? (
+                        <View>
+                            <ActivityIndicator size='large' />
+                        </View> 
+                    ) : (
+                        <View style={{alignSelf: 'center', flexDirection: 'column'}}>
+                            <TouchableOpacity>
+                                <Text style={{}}>Done</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
+            </Modal>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = new StyleSheet.create({
+    largeTextInput: {
+        height: 100,
+    },
+    modalContainer: {
+        margin: 0,
+        width: '100%',
+        flex: 1,
+    },
+    modalContent: {
+        backgroundColor: 'black',
+        padding: sz.md,
+        borderRadius: sz.lg,
+        height: 100,
+        width: 100,
+
+    },
+    smallTextInput: {
+        height: sz.xl,
+    },
     textInput: {
         borderColor: colors.lighterGray,
         borderRadius: sz.xs,
         borderWidth: 1,
         padding: sz.xs,
-    },
-    smallTextInput: {
-        height: sz.xl,
-    },
-    largeTextInput: {
-        height: 100,
     },
 })

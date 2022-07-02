@@ -25,7 +25,6 @@ const CommonStyle = StyleSheet.create({
     container: {
         marginLeft: sz.md,
         marginRight: sz.md,
-        marginBottom: sz.md
     },
     bigHeader: {
         fontSize: sz.xl,
