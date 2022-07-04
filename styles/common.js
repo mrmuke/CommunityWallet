@@ -14,6 +14,7 @@ const sz = {
 
 const colors = {
     clicky: '#0075F2',
+    clicky2: '#6474E5',
     important: '#EB6060',
     info: '#696969',
     lightGray: '#F8F8F8',

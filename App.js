@@ -30,7 +30,7 @@ export default function App() {
                 !communityState.currentCommunity ? (
                   CommunitySignUpStack()
                 ) : (
-                  TabStack(true)
+                  TabStack(JSON.parse(authState.user).superuser)
                 )
               }
             </CommunityContext.Provider>

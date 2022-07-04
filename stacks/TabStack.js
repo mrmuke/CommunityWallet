@@ -59,6 +59,22 @@ export function TabStack(superuser) {
                         )
                     }}
             />
+            {
+                superuser ? (
+                    <Tab.Screen
+                        name='Superuser'
+                        component={ SuperuserStack }
+                        options={{ 
+                            tabBarStyle: { borderTopWidth: 1 },
+                            tabBarIcon: ({focused, color, size}) => (
+                                (focused) ? (<Image style={styles.iconImage} source={require('../assets/tab/keyFocused.png')}/>) 
+                                : (<Image style={styles.iconImage} source={require('../assets/tab/key.png')}/>)
+                                )
+                            }}
+                    />
+                ) : 
+                (<></>)
+            }
             <Tab.Screen
                 name='User'
                 component={ UserScreen }
@@ -70,22 +86,6 @@ export function TabStack(superuser) {
                         )
                     }}
             />
-            {
-                superuser ? (
-                    <Tab.Screen
-                       name='Superuser'
-                       component={ SuperuserStack }
-                       options={{ 
-                           tabBarStyle: { borderTopWidth: 1 },
-                           tabBarIcon: ({focused, color, size}) => (
-                               (focused) ? (<Image style={styles.iconImage} source={require('../assets/tab/padlockFocused.png')}/>) 
-                               : (<Image style={styles.iconImage} source={require('../assets/tab/padlock.png')}/>)
-                               )
-                           }}
-                   />
-                ) : 
-                (<></>)
-            }
         </Tab.Navigator>
     )
 }

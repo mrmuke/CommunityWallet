@@ -53,7 +53,7 @@ export function UserScreen() {
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 { !userData.wasmAddress ? (<></>) : (<QRCode size={128} value={userData.wasmAddress}/>) }
             </View>
-            <View>
+            <View style={CommonStyle.infoBox}>
                 <TouchableOpacity 
                     style={[CommonStyle.longButton, {marginBottom: sz.sm}]}
                     onPress={() => { changePassword() }}

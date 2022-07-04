@@ -134,10 +134,21 @@ export function RequestScreen({ navigation }) {
                             <ActivityIndicator size='large' />
                         </View> 
                     ) : (
-                        <View style={{alignSelf: 'center', flexDirection: 'column'}}>
-                            <TouchableOpacity>
-                                <Text style={{}}>Done</Text>
-                            </TouchableOpacity>
+                        <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center', flexDirection: 'column', backgroundColor: colors.white, height: 100, width: 200, borderRadius: sz.lg}}>
+                            <View style={CommonStyle.infoBox}>
+                                <Text style={CommonStyle.infoText}>Your request has been sent!</Text>
+                            </View>
+                            <View style={CommonStyle.infoBox}>
+                                <TouchableOpacity 
+                                    style={{borderRadius: sz.lg, heigth: 50, width: 100, alignItems: 'center', backgroundColor: colors.clicky2}} 
+                                    onPress={() => {
+                                        setModalVisible(false)
+                                        navigation.goBack()
+                                    }}
+                                >
+                                    <Text style={{color: colors.white}}>Done</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     )
                 }
