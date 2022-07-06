@@ -12,11 +12,11 @@ import {
 import { showMessage } from 'react-native-flash-message'
 
 import { API_URL } from '../../../utils/API_URL'
-import { ReqListContext } from '../../../utils/Contexts'
 import { CommonStyle, colors, sz } from '../../../styles/common'
+import { ReqListContext } from '../../../utils/Contexts'
 
 export function ReqDataScreen({ route, navigation }) {
-    /** Contexts */
+    /** Contexts and States */
     const reqListContext = React.useContext(ReqListContext).reqListContext
     const reqListState = React.useContext(ReqListContext).reqListState
 
@@ -49,14 +49,14 @@ export function ReqDataScreen({ route, navigation }) {
         <SafeAreaView style={CommonStyle.container}>
         <ScrollView style={{height: '100%'}}>
             <View style={CommonStyle.infoBox}>
-                <View style={[CommonStyle.infoBox, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+                <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween, {alignItems: 'center'}]}>
                     <View style={{width: '10%'}}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Image style={CommonStyle.backButton} source={require('../../../assets/back.png')}/>
                         </TouchableOpacity>
                     </View>
                     <View style={{width: '80%', alignItems: 'center'}}>
-                        <Text style={{color: colors.lightGray, fontSize: sz.xl}}></Text>
+                        <Text style={CommonStyle.bigHeader}>{request.name}</Text>
                     </View>
                     <View style={{width: '10%'}}></View>
                 </View>

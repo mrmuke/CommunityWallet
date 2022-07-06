@@ -9,7 +9,9 @@ const sz = {
     sm: 12,
     xs: 6,
     xxs: 4,
-    xxxs: 2
+    xxxs: 2,
+    bold: '600',
+    plain: '400',
 }
 
 const colors = {
@@ -31,19 +33,31 @@ const CommonStyle = StyleSheet.create({
         marginLeft: sz.md,
         marginRight: sz.md,
     },
-    bigHeader: {
-        fontSize: sz.xl,
-        color: colors.lightGray,
-        fontWeight: '400'
-    },
     backButton: {
         height: sz.md, 
         width: sz.md
     },
-    bigName: {
+    divider: {
+        backgroundColor: colors.lighterGray, 
+        borderRadius: sz.sm, 
+        height: sz.xxxs, 
+        marginTop: sz.sm,
+        width: '100%', 
+    },
+    headerBox: {
+        marginBottom: sz.lg
+    },
+    headerLg: {
         fontSize: sz.xxl,
-        fontWeight: 'bold',
-        color: colors.red
+        fontWeight: sz.bold,
+    },
+    headerMd: {
+        fontSize: sz.xl,
+        fontWeight: sz.bold,
+    },
+    headerSm: {
+        fontSize: sz.lg,
+        fontWeight: sz.bold,
     },
     longButton: {
         alignItems: 'center',
@@ -55,18 +69,31 @@ const CommonStyle = StyleSheet.create({
     infoBox: {
         marginBottom: sz.md,
     },
-    infoHeader: {
-        fontSize: sz.lg,
-        fontWeight: 'bold'
-    },
-    infoText: {
+    infoLg: {
+        color: colors.info,
         fontSize: sz.md,
-        color: colors.info
+        fontWeight: sz.plain,
     },
-    mediumName: {
-        fontSize: sz.xl,
-        fontWeight: 'bold',
-        color: colors.red
+    infoMd: {
+        color: colors.info,
+        fontSize: sz.sm,
+        fontWeight: sz.plain,
+    },
+    infoSm: {
+        color: colors.info,
+        fontSize: sz.xs,
+        fontWeight: sz.plain,
+    },
+    infoHighlight: {
+        fontWeight: sz.bold,
+    },
+    spaceBetween: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    sideBySide: {
+        flexDirection: 'row'
     },
 }) 
 

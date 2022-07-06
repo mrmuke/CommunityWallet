@@ -24,7 +24,7 @@ export function ReqListService() {
         }
     }, {
         isLoading: true,
-        communityRequestList: [],
+        communityRequestList: null,
     })
 
     React.useEffect(() => {
