@@ -1,3 +1,4 @@
+import * as React from 'react'
 import axios from 'axios'
 import {
     Image,
@@ -11,24 +12,35 @@ import {
 import { showMessage } from 'react-native-flash-message'
 
 import { API_URL } from '../../../utils/API_URL'
+import { ReqListContext } from '../../../utils/Contexts'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 
 export function ReqDataScreen({ route, navigation }) {
-    const { request } = route.params
+    /** Contexts */
+    const reqListContext = React.useContext(ReqListContext).reqListContext
+    const reqListState = React.useContext(ReqListContext).reqListState
 
-    const handleReqRes = bool => {
+    /** State variables */
+    const [requestList, setRequestList] = React.useState(reqListState.communityRequestList) // put requestList as a state to enable rerender when data changes
+    const [request, setRequest] = React.useState(requestList.find(req => route.params.request._id === req._id)) // request that was passed down through navigation
+
+    /**
+     * Handling response to community request event
+     * @param {*} verdict boolean of  whether or not the request is approved
+     */
+    const handleReqRes = verdict => {
         const msg = {
             requestId: request._id, 
-            verdict: bool
+            verdict: verdict
         }
         axios.post(`${API_URL}/communityrequest/respond`, msg)
         .then(res => {
-
+            reqListContext.updateReqList(request._id, verdict)
         })
         .catch(err => {
             showMessage({
                 message: 'Something went wrong',
-                color: 'danger'
+                type: 'danger'
             })
         })
     }
@@ -44,40 +56,50 @@ export function ReqDataScreen({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                     <View style={{width: '80%', alignItems: 'center'}}>
-                        <Text style={{color: colors.lighterGray, fontSize: sz.xl}}></Text>
+                        <Text style={{color: colors.lightGray, fontSize: sz.xl}}></Text>
                     </View>
                     <View style={{width: '10%'}}></View>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={{color: colors.lighterGray, fontSize: sz.xl}}>Request for</Text>
-                    <Text style={CommonStyle.mediumName}>{request.name}</Text>
+                    <Text style={{color: colors.lightGray, fontSize: sz.xl}}>Request for</Text>
+                    <Text style={[CommonStyle.mediumName, {color: colors.gold}]}>{request.name}</Text>
                 </View>
                 <View style={CommonStyle.infoBox}>
                     <Text style={CommonStyle.infoHeader}>Response 1</Text>
                     <Text>{request.response1}</Text>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={CommonStyle.infoHeader}>Response 1</Text>
+                    <Text style={CommonStyle.infoHeader}>Response 2</Text>
                     <Text>{request.response2}</Text>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={CommonStyle.infoHeader}>Response 1</Text>
+                    <Text style={CommonStyle.infoHeader}>Response 3</Text>
                     <Text>{request.response3}</Text>
                 </View>
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                <TouchableOpacity 
-                    style={[styles.circleButton, {marginBottom: sz.sm}]}
-                    onPress={() => handleReqRes(true)}
-                >
-                    <Text style={{color: colors.white}}>Approve</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[styles.circleButton, CommonStyle.infoBox]}
-                    onPress={() => handleReqRes(false)}
-                >
-                    <Text style={{color: colors.white}}>Deny</Text>
-                </TouchableOpacity>
+            <View>
+                {
+                    request.completed ? (
+                        <View style={[styles.completedResponseMessageBox, {backgroundColor: request.approved ? colors.green : colors.red}]}>
+                            <Text style={{color: colors.white, fontSize: sz.lg}}>{request.approved ? 'Approved' : 'Denied'}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                            <TouchableOpacity 
+                                style={[CommonStyle.longButton, CommonStyle.infoBox, {marginBottom: sz.sm, backgroundColor: colors.green}]}
+                                onPress={() => handleReqRes(true)}
+                            >
+                                <Text style={{color: colors.white}}>Approve</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[CommonStyle.longButton, CommonStyle.infoBox, {backgroundColor: colors.red}]}
+                                onPress={() => handleReqRes(false)}
+                            >
+                                <Text style={{color: colors.white}}>Deny</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
             </View>
         </ScrollView>
         </SafeAreaView>
@@ -85,12 +107,11 @@ export function ReqDataScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    circleButton: {
-        height: sz.xxl * 2,
-        width: sz.xxl * 2,
-        borderRadius: sz.xxl,
-        backgroundColor: colors.clicky2,
+    completedResponseMessageBox: {
         alignItems: 'center',
-        justifyContent: 'center'
+        borderRadius: sz.md,
+        height: sz.xxxl, 
+        justifyContent: 'center',
+        width: '100%',
     }
 })

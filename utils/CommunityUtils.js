@@ -1,14 +1,7 @@
-import axios from 'axios'
 import * as React from 'react'
 import * as SecureStore from 'expo-secure-store'
-import { AuthContext } from './Contexts'
-
-import { API_URL } from './API_URL'
-
 
 export function initCommService() {
-    /** Contexts */
-
     const [communityState, dispatch] = React.useReducer((prevState, action) => {
         switch (action.type) {
             case 'RESTORE_COMM':

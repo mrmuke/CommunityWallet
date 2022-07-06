@@ -41,7 +41,7 @@ export function RequestListScreen({ navigation }) {
                 <Text style={CommonStyle.infoHeader}>Request for: { request.name }</Text>
                 <Text style={CommonStyle.infoText}>Status: {request.completed ? 'Complete' : 'Incomplete'}</Text>
                 <Text style={CommonStyle.infoText}>Approved: {!request.completed ? 'Pending' : request.approved ? 'True' : 'False'}</Text>
-                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lightGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
+                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lighterGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
             </TouchableOpacity>
         )
     }

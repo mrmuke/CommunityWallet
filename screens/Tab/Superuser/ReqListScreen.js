@@ -1,5 +1,4 @@
 import * as React from 'react'
-import axios from 'axios'
 import {
     SafeAreaView,
     ScrollView,
@@ -9,27 +8,29 @@ import {
     View,
 } from 'react-native'
 
-import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
-
+import { ReqListContext } from '../../../utils/Contexts'
+import { ReqListService } from '../../../utils/ReqListUtils'
+ 
 export function ReqListScreen({ navigation }) {
-    const [compReq, setCompReq] = React.useState([])
-    const [incompReq, setIncompReq] = React.useState([])
+    /** Context */
+    const reqListContext = React.useContext(ReqListContext).reqListContext
+    const reqListState = React.useContext(ReqListContext).reqListState
 
+    /** State variabels */
+    const [completedReq, setCompletedReq] = React.useState([])
+    const [incompleteReq, setIncompleteReq] = React.useState([])
     React.useEffect(() => {
-        axios.post(`${API_URL}/communityrequest/all`)
-        .then(res => {
-            let complete = []
-            let incomplete = []
-            res.data.data.forEach(req => {
-                if (req.completed) complete.push(req)
-                else incomplete.push(req)
-            })
-            setCompReq(complete)
-            setIncompReq(incomplete)
-        })
-    }, [])
+        console.log(reqListState.communityRequestList)
+        
+        setCompletedReq(reqListState.communityRequestList.filter(req => req.completed)) // setting the completed community requests to its own array
+        setIncompleteReq(reqListState.communityRequestList.filter(req => !req.completed)) // likewise for the incomplete community requests
+    }, [reqListState])
 
+    /**
+     * Components to display community requests.
+     * @param {*} req object containing all the details of the request
+     */
     const reqView = req => {
         return (
             <TouchableOpacity 
@@ -38,34 +39,48 @@ export function ReqListScreen({ navigation }) {
                 onPress={() => navigation.navigate('Request', { request: req })}
             >
                 <Text style={CommonStyle.infoHeader}>Request for: { req.name }</Text>
-                <Text style={CommonStyle.infoText}>Status: {req.completed ? 'Complete' : 'Incomplete'}</Text>
-                <Text style={CommonStyle.infoText}>Approved: {!req.completed ? 'Pending' : req.approved ? 'True' : 'False'}</Text>
-                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lightGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={CommonStyle.infoText}>Requester: </Text>
+                    <View>
+                        <Text style={CommonStyle.infoText}>{ req.requester.username }</Text>
+                        <Text style={CommonStyle.infoText}>{ req.requester.phoneNumber }</Text>
+                    </View>
+                </View>
+                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lighterGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
             </TouchableOpacity>
         )
     }
 
     return (
-        <SafeAreaView style={CommonStyle.container}>
-        <ScrollView style={{height: '100%'}}>
-            <View style={CommonStyle.infoBox}>
-                <Text style={CommonStyle.bigName}>Request List</Text>
-            </View>
-            <View>
-                <Text>Requests to review</Text>
-                {
-                    incompReq.map(req => reqView(req))
-                    
-                }
-            </View>
-            <View>
-                <Text>Completed requests</Text>
-                {
-                    compReq.map(req => reqView(req))
-                }
-            </View>
-        </ScrollView>
-        </SafeAreaView>
+        <ReqListContext.Provider value={{reqListContext, reqListState}}>
+            <SafeAreaView style={CommonStyle.container}>
+            <ScrollView style={{height: '100%'}}>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={CommonStyle.bigName}>Request List</Text>
+                </View>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={[CommonStyle.bigHeader, CommonStyle.infoBox]}>Requests to review</Text>
+                    {
+                        (incompleteReq.length == 0) ? (
+                            <Text styl={CommonStyle.infoText}>All requests reviewed!</Text>
+                        ) : (
+                            incompleteReq.map(req => reqView(req)) // List all incomplete requests to review
+                        )
+                    }
+                </View>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={[CommonStyle.bigHeader, CommonStyle.infoBox]}>Completed requests</Text>
+                    {
+                        (completedReq.length == 0) ? (
+                            <Text style={CommonStyle.infoText}>No completed requests</Text>
+                        ) : (
+                            completedReq.map(req => reqView(req)) // List all completed requests
+                        )
+                    }
+                </View>
+            </ScrollView>
+            </SafeAreaView>
+        </ReqListContext.Provider>
     )
 }
 

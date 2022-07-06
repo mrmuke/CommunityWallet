@@ -21,12 +21,12 @@ export function RequestDataScreen({ route, navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={{width: '80%', alignItems: 'center'}}>
-                    <Text style={{color: colors.lighterGray, fontSize: sz.xl}}> </Text>
+                    <Text style={{color: colors.lightGray, fontSize: sz.xl}}> </Text>
                 </View>
                 <View style={{width: '10%'}}></View>
             </View>
             <View style={CommonStyle.infoBox}>
-                <Text style={{color: colors.lighterGray, fontSize: sz.xl}}>Request for</Text>
+                <Text style={{color: colors.lightGray, fontSize: sz.xl}}>Request for</Text>
                 <Text style={CommonStyle.mediumName}>{request.name}</Text>
             </View>
             <View style={CommonStyle.infoBox}>

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     },
     initialsBubble: {
         alignItems: 'center', 
-        backgroundColor: colors.lightGray, 
+        backgroundColor: colors.lighterGray, 
         borderColor: colors.info, 
         borderRadius: sz.xxl, 
         borderWidth: 1,

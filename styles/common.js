@@ -13,12 +13,16 @@ const sz = {
 }
 
 const colors = {
-    clicky: '#0075F2',
+    brown: '#BC735E',
+    clicky1: '#0075F2',
     clicky2: '#6474E5',
-    important: '#EB6060',
+    gold: '#F5C36B',
+    green: '#C3EBC0',
+    red: '#EB6060',
     info: '#696969',
-    lightGray: '#F8F8F8',
-    lighterGray: '#B7B7B7',
+    lightGray: '#B7B7B7',
+    lighterGray: '#F8F8F8',
+    pink: '#D47EAF',
     white: '#FFFFFF'
 }
 
@@ -29,7 +33,7 @@ const CommonStyle = StyleSheet.create({
     },
     bigHeader: {
         fontSize: sz.xl,
-        color: colors.lighterGray,
+        color: colors.lightGray,
         fontWeight: '400'
     },
     backButton: {
@@ -39,11 +43,11 @@ const CommonStyle = StyleSheet.create({
     bigName: {
         fontSize: sz.xxl,
         fontWeight: 'bold',
-        color: colors.important
+        color: colors.red
     },
     longButton: {
         alignItems: 'center',
-        backgroundColor: colors.clicky,
+        backgroundColor: colors.clicky1,
         borderRadius: sz.xl,
         height: sz.xxl-4,
         justifyContent: 'center'
@@ -62,7 +66,7 @@ const CommonStyle = StyleSheet.create({
     mediumName: {
         fontSize: sz.xl,
         fontWeight: 'bold',
-        color: colors.important
+        color: colors.red
     },
 }) 
 

@@ -86,7 +86,7 @@ export function RequestScreen({ navigation }) {
                         onChangeText={text => setLocation(text)}
                     />
                 </View>
-                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lightGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
+                <View style={[CommonStyle.infoBox, {width: '100%', height: sz.xxxs, backgroundColor: colors.lighterGray, borderRadius: sz.sm, marginTop: sz.sm}]}></View>
                 <View style={CommonStyle.infoBox}>
                     <Text style={CommonStyle.infoHeader}>Response 1</Text>
                     <TextInput
@@ -178,7 +178,7 @@ const styles = new StyleSheet.create({
         height: sz.xl,
     },
     textInput: {
-        borderColor: colors.lighterGray,
+        borderColor: colors.lightGray,
         borderRadius: sz.xs,
         borderWidth: 1,
         padding: sz.xs,
