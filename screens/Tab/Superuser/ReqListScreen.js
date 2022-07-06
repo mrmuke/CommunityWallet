@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
-import ContentLoader from 'react-content-loader/native'
+import { BulletList } from 'react-content-loader/native'
 
 import { CommonStyle, colors, sz } from '../../../styles/common'
 import { ReqListContext } from '../../../utils/Contexts'
@@ -77,7 +77,7 @@ export function ReqListScreen({ navigation }) {
                 </View>
                 {
                     !incompleteReq ? (
-                        <ContentLoader/>
+                        <BulletList />
                     ) :
                     incompleteReq.length == 0 ? (
                         <Text style={CommonStyle.infoLg}>All requests reviewed!</Text>
@@ -95,7 +95,7 @@ export function ReqListScreen({ navigation }) {
                 </View>
                 {
                     !completedReq ? (
-                        <ContentLoader/>
+                        <BulletList />
                     ) :
                     completedReq.length == 0 ? (
                         <Text style={CommonStyle.infoLg}>No completed requests</Text>

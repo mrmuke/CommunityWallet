@@ -56,25 +56,39 @@ export function ReqDataScreen({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                     <View style={{width: '80%', alignItems: 'center'}}>
-                        <Text style={CommonStyle.bigHeader}>{request.name}</Text>
+                        <Text style={[CommonStyle.headerMd, {color: colors.gold}]}>{request.name}</Text>
                     </View>
                     <View style={{width: '10%'}}></View>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={{color: colors.lightGray, fontSize: sz.xl}}>Request for</Text>
-                    <Text style={[CommonStyle.mediumName, {color: colors.gold}]}>{request.name}</Text>
+                    <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Requested by</Text>
+                    <View style={[CommonStyle.sideBySide, CommonStyle.infoBox, {alignItems: 'center'}]}>
+                        <View style={styles.initialCircle}>
+                            <Text style={styles.initialText}>{request.requester.username.substring(0, 1).toUpperCase()}</Text>
+                        </View>
+                        <View style={{marginLeft: sz.sm}}>
+                            <Text style={CommonStyle.infoLg}>{request.requester.username}</Text>
+                            <Text style={CommonStyle.infoLg}>{request.requester.phoneNumber}</Text>
+                        </View>
+                    </View>
                 </View>
                 <View style={CommonStyle.infoBox}>
-                    <Text style={CommonStyle.infoHeader}>Response 1</Text>
-                    <Text>{request.response1}</Text>
-                </View>
-                <View style={CommonStyle.infoBox}>
-                    <Text style={CommonStyle.infoHeader}>Response 2</Text>
-                    <Text>{request.response2}</Text>
-                </View>
-                <View style={CommonStyle.infoBox}>
-                    <Text style={CommonStyle.infoHeader}>Response 3</Text>
-                    <Text>{request.response3}</Text>
+                    <View style={CommonStyle.infoBox}>
+                        <Text style={CommonStyle.headerSm}>Proposed Location</Text>
+                        <Text style={CommonStyle.infoLg}>{request.location}</Text>
+                    </View>
+                    <View style={CommonStyle.infoBox}>
+                        <Text style={CommonStyle.headerSm}>Response 1</Text>
+                        <Text style={CommonStyle.infoLg}>{request.response1}</Text>
+                    </View>
+                    <View style={CommonStyle.infoBox}>
+                        <Text style={CommonStyle.headerSm}>Response 2</Text>
+                        <Text style={CommonStyle.infoLg}>{request.response2}</Text>
+                    </View>
+                    <View style={CommonStyle.infoBox}>
+                        <Text style={CommonStyle.headerSm}>Response 3</Text>
+                        <Text style={CommonStyle.infoLg}>{request.response3}</Text>
+                    </View>
                 </View>
             </View>
             <View>
@@ -113,5 +127,19 @@ const styles = StyleSheet.create({
         height: sz.xxxl, 
         justifyContent: 'center',
         width: '100%',
-    }
+    },
+    initialText: {
+        color: colors.lightGray,
+        fontSize: sz.lg
+    },
+    initialCircle: {
+        alignItems: 'center',
+        backgroundColor: colors.lighterGray, 
+        borderColor: colors.lightGray, 
+        borderWidth: 1,
+        borderRadius: sz.xxl, 
+        justifyContent: 'center',
+        height: sz.xxl, 
+        width: sz.xxl, 
+    },
 })

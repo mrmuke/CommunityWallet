@@ -56,7 +56,7 @@ export function ReqListService() {
          * @param {*} verdict boolean of whether or not the community request is approved
          */
         updateReqList: (reqId, verdict) => {
-            const updatedReqList = reqListState.communityRequestList
+            const updatedReqList = [...reqListState.communityRequestList]
             const index = updatedReqList.findIndex(req => req._id === reqId)
             updatedReqList[index].completed = true
             updatedReqList[index].approved = verdict
