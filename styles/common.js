@@ -95,6 +95,11 @@ const CommonStyle = StyleSheet.create({
     sideBySide: {
         flexDirection: 'row'
     },
+    verticalSeperator: {
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
 }) 
 
 export {

@@ -8,7 +8,7 @@ import tokens from '../../i18n/tokens'
 import { useTranslation } from 'react-i18next'
 
 import { API_URL } from '../../utils/API_URL'
-import { AuthContext } from '../../utils/Contexts'
+import { AuthContext } from '../../states/Contexts'
 
 /** Translations */
 const {

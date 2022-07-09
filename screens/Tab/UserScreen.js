@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as SecureStore from 'expo-secure-store'
 import { 
     Image,
     SafeAreaView,
@@ -9,16 +10,19 @@ import {
 } from 'react-native'
 import QRCode from 'react-qr-code'
 
-import { AuthContext } from '../../utils/Contexts'
+import { AuthContext, CommunityContext } from '../../states/Contexts'
 import { colors, CommonStyle, sz } from '../../styles/common'
 
 export function UserScreen() {
     /** Contexts */
     const authContext = React.useContext(AuthContext).authContext
     const authState = React.useContext(AuthContext).authState
+
+    const communityContext = React.useContext(CommunityContext).communityContext
     
     /** State var */
     const [userData, setUserData] = React.useState(JSON.parse(authState.user))
+    const [screenActive, setScreenActive] = React.useState(true)
 
     const changePassword = () => {
         console.log('changing')
@@ -26,10 +30,14 @@ export function UserScreen() {
 
     const getUserInitials = () => { if (userData.username) return userData.username.substring(0, 1).toUpperCase() }
 
+    const handleSignout = () => {
+        authContext.signOut()
+        communityContext.signOut()
+    }
+
     return (
         <SafeAreaView style={CommonStyle.container}>
-        <View style={styles.seperator}>
-            
+        <View style={CommonStyle.verticalSeperator}>
             <View>
                 <View style={[styles.infoBox, {alignItems: 'center', justifyContent: 'flex-start'}]}>
                     <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials() }</Text></View>
@@ -62,7 +70,7 @@ export function UserScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={CommonStyle.longButton}
-                    onPress={() => authContext.signOut() }
+                    onPress={() => handleSignout() }
                 >
                     <Text style={styles.buttonText}>Sign out</Text>
                 </TouchableOpacity> 
@@ -100,9 +108,4 @@ const styles = StyleSheet.create({
         marginRight: sz.sm,
         width: sz.xxxl, 
     },
-    seperator: {
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-    }
 })

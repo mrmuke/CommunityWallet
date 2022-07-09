@@ -1,5 +1,5 @@
-import * as React from 'react'
 import axios from 'axios'
+import * as React from 'react'
 import {
     Image,
     SafeAreaView,
@@ -13,7 +13,8 @@ import { showMessage } from 'react-native-flash-message'
 
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
-import { ReqListContext } from '../../../utils/Contexts'
+import ConfettiCannon from 'react-native-confetti-cannon'
+import { ReqListContext } from '../../../states/Contexts'
 
 export function ReqDataScreen({ route, navigation }) {
     /** Contexts and States */
@@ -21,14 +22,17 @@ export function ReqDataScreen({ route, navigation }) {
     const reqListState = React.useContext(ReqListContext).reqListState
 
     /** State variables */
-    const [requestList, setRequestList] = React.useState(reqListState.communityRequestList) // put requestList as a state to enable rerender when data changes
+    const [requestList, setRequestList] = React.useState(reqListState.communityReqList) // put requestList as a state to enable rerender when data changes
     const [request, setRequest] = React.useState(requestList.find(req => route.params.request._id === req._id)) // request that was passed down through navigation
+    const [screenActive, setScreenActive] = React.useState(true)
+    const [activateConfetti, setActivateConfetti] = React.useState(false)
 
     /**
      * Handling response to community request event
      * @param {*} verdict boolean of  whether or not the request is approved
      */
     const handleReqRes = verdict => {
+        setScreenActive(false)
         const msg = {
             requestId: request._id, 
             verdict: verdict
@@ -36,18 +40,23 @@ export function ReqDataScreen({ route, navigation }) {
         axios.post(`${API_URL}/communityrequest/respond`, msg)
         .then(res => {
             reqListContext.updateReqList(request._id, verdict)
+            if (verdict) setActivateConfetti(true)
+            setScreenActive(true)
         })
         .catch(err => {
             showMessage({
-                message: 'Something went wrong',
+                message: 'Something went wrong! Check you network connection.',
                 type: 'danger'
             })
         })
     }
 
     return (
-        <SafeAreaView style={CommonStyle.container}>
-        <ScrollView style={{height: '100%'}}>
+        <SafeAreaView 
+            pointerEvents={screenActive ? 'auto' : 'none'}
+            style={CommonStyle.container}
+        >
+        <ScrollView style={{height: '100%'}} showsVerticalScrollIndicator={false}>
             <View style={CommonStyle.infoBox}>
                 <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween, {alignItems: 'center'}]}>
                     <View style={{width: '10%'}}>
@@ -116,6 +125,15 @@ export function ReqDataScreen({ route, navigation }) {
                 }
             </View>
         </ScrollView>
+        <View>
+                {
+                    activateConfetti ? (
+                        <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
+                    ) : (
+                        <></>
+                    )
+                }
+        </View>
         </SafeAreaView>
     )
 }

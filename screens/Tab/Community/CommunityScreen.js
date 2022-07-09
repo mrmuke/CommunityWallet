@@ -12,7 +12,7 @@ import {
 import Modal from 'react-native-modal'
 
 import { API_URL } from '../../../utils/API_URL'
-import { CommunityContext } from '../../../utils/Contexts'
+import { CommunityContext } from '../../../states/Contexts'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 
 export function CommunityScreen({ navigation }) {

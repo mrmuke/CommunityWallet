@@ -11,7 +11,7 @@ import {
 import { BulletList } from 'react-content-loader/native'
 
 import { CommonStyle, colors, sz } from '../../../styles/common'
-import { ReqListContext } from '../../../utils/Contexts'
+import { ReqListContext } from '../../../states/Contexts'
  
 export function ReqListScreen({ navigation }) {
     /** Contexts and States */
@@ -23,9 +23,9 @@ export function ReqListScreen({ navigation }) {
     const [incompleteReq, setIncompleteReq] = React.useState()
 
     React.useEffect(() => {
-        if (reqListState.communityRequestList) {
-            setCompletedReq(reqListState.communityRequestList.filter(req => req.completed).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))) // setting the completed community requests to its own array
-            setIncompleteReq(reqListState.communityRequestList.filter(req => !req.completed).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))) // likewise for the incomplete community requests
+        if (!reqListState.isLoading) {
+            setCompletedReq(reqListState.communityReqList.filter(req => req.completed).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))) // setting the completed community requests to its own array
+            setIncompleteReq(reqListState.communityReqList.filter(req => !req.completed).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))) // likewise for the incomplete community requests
         }
     }, [reqListState])
     
@@ -44,11 +44,11 @@ export function ReqListScreen({ navigation }) {
                     <View style={CommonStyle.sideBySide}>
                         <View style={[styles.responseCircle, {backgroundColor: req.completed ? (req.approved ? colors.green : colors.red) : colors.lighterGray}]}></View>
                         <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight, {color: 'black'}]}>{req.name}</Text>
-                        <Text style={[CommonStyle.infoLg]}> by </Text>
+                        <Text style={CommonStyle.infoLg}> by </Text>
                         <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight]}>{req.requester.username}</Text>
                     </View>
                     <View>
-                        <Text style={[CommonStyle.infoMd]}>{getDate(req.createdAt)}</Text>
+                        <Text style={CommonStyle.infoMd}>{getDate(req.createdAt)}</Text>
                     </View>
                 </View>
                 <View style={CommonStyle.divider}></View>
@@ -64,7 +64,7 @@ export function ReqListScreen({ navigation }) {
 
     return (
         <SafeAreaView style={CommonStyle.container}>
-        <ScrollView style={{height: '100%'}}>
+        <ScrollView style={{height: '100%'}} showsVerticalScrollIndicator={false}>
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Request List</Text>
             </View>

@@ -1,20 +1,21 @@
-import * as React from 'react'
 import axios from 'axios'
-import { showMessage } from 'react-native-flash-message'
-
+import * as React from 'react'
 import { 
-    Text, 
-    View, 
+    Image,
+    Keyboard, 
     KeyboardAvoidingView, 
     StyleSheet, 
-    Keyboard, 
+    Text, 
+    TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,  
-    TextInput,
+    View, 
 } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 
 import { API_URL } from '../../utils/API_URL'
-import { AuthContext, CommunityContext } from '../../utils/Contexts'
+import { CommonStyle, colors, sz } from '../../styles/common'
+import { CommunityContext } from '../../states/Contexts'
 
 export function CommunityCodeScreen() {
 
@@ -80,6 +81,14 @@ export function CommunityCodeScreen() {
     return (
         <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
         <KeyboardAvoidingView style={styles.container}>
+            {/* <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween, {alignItems: 'center'}]}>
+                <View style={{width: '10%'}}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image style={CommonStyle.backButton} source={require('../../assets/back.png')}/>
+                    </TouchableOpacity>
+                </View>
+                <View style={{width: '90%'}}></View>
+            </View> */}
             <View style={{marginBottom: 30}}>
                 <Text style={{fontSize: 30, color: "#eb6060", fontWeight: "bold"}}>Choose a Community</Text>
             </View>
@@ -91,7 +100,6 @@ export function CommunityCodeScreen() {
                     onChangeText={text => {setCommCode(text)}}
                 />
             </View>
-
             <TouchableOpacity
                 onPress={handleAddCommunity}
                 style={getSubmitStyle()}

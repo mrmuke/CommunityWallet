@@ -42,7 +42,6 @@ export function RequestScreen({ navigation }) {
         axios.post(`${API_URL}/communityrequest/create`, msg)
         .then(res => {
             setResLoading(false)
-            console.log(res)
         })
         .catch(err => {
             setScreenActive(true)

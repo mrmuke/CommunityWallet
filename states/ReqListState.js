@@ -1,7 +1,7 @@
-import * as React from 'react'
 import axios from 'axios'
+import * as React from 'react'
 
-import { API_URL } from './API_URL'
+import { API_URL } from '../utils/API_URL'
 
 /**
  * State management for the superuser's role to approve and deny community requests.
@@ -14,27 +14,27 @@ export function ReqListService() {
                 return {
                     ...prevState,
                     isLoading: false,
-                    communityRequestList: action.communityRequestList
+                    communityReqList: action.communityReqList
                 }
             case 'UPDATE_REQ_LIST': // updating request list with new list
                 return {
                     ...prevState,
-                    communityRequestList: action.communityRequestList
+                    communityReqList: action.communityReqList
                 }
         }
     }, {
         isLoading: true,
-        communityRequestList: null,
+        communityReqList: null,
     })
 
     React.useEffect(() => {
         const bootstrapAsync = async () => {
-            let communityRequestList
+            let communityReqList
             
             /** Fetch request list data from the backend */
             try {
                 const res = await axios.post(`${API_URL}/communityrequest/all`)
-                communityRequestList = res.data.data
+                communityReqList = res.data.data
             } catch (e) {
 
             }
@@ -42,7 +42,7 @@ export function ReqListService() {
             /** dispatching to reducer */ 
             dispatch({
                 type: 'ADD_REQ_LIST',
-                communityRequestList
+                communityReqList
             })
         }
         
@@ -51,20 +51,19 @@ export function ReqListService() {
     
     const reqListContext = React.useMemo(() => ({
         /**
-         * Finds the corresponding community request in `communityRequestList` and updates values
-         * @param {*} reqId objectId of the community request that is being updated
+         * Finds the corresponding community request in `communityReqList` and updates values
+         * @param {*} reqId objectId string of the community request that is being updated
          * @param {*} verdict boolean of whether or not the community request is approved
          */
         updateReqList: (reqId, verdict) => {
-            const updatedReqList = [...reqListState.communityRequestList]
+            const updatedReqList = [...reqListState.communityReqList]
             const index = updatedReqList.findIndex(req => req._id === reqId)
             updatedReqList[index].completed = true
             updatedReqList[index].approved = verdict
-
-            /** dispatch to reducer */
+            
             dispatch({
                 type: 'UPDATE_REQ_LIST',
-                communityRequestList: updatedReqList
+                communityReqList: updatedReqList
             })
         }
     }))

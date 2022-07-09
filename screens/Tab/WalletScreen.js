@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { API_URL } from '../../utils/API_URL'
-import { AuthContext, CommunityContext } from '../../utils/Contexts'
+import { AuthContext, CommunityContext } from '../../states/Contexts'
 import { CommonStyle, colors, sz } from '../../styles/common'
 
 export function WalletScreen() {

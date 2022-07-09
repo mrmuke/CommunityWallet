@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { ReqListScreen } from '../screens/Tab/Superuser/ReqListScreen'
 import { ReqDataScreen } from '../screens/Tab/Superuser/ReqDataScreen'
 
-import { ReqListContext } from '../utils/Contexts'
-import { ReqListService } from '../utils/ReqListUtils'
+import { ReqListContext } from '../states/Contexts'
+import { ReqListService } from '../states/ReqListState'
 
 const Stack = createStackNavigator()
 
