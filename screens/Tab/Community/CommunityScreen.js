@@ -1,7 +1,9 @@
-import * as React from 'react'
 import axios from 'axios'
+import * as React from 'react'
+import { BulletList } from 'react-content-loader/native'
 import {
     Image,
+    RefreshControl,
     SafeAreaView, 
     ScrollView,
     StyleSheet, 
@@ -12,8 +14,8 @@ import {
 import Modal from 'react-native-modal'
 
 import { API_URL } from '../../../utils/API_URL'
-import { CommunityContext } from '../../../states/Contexts'
 import { CommonStyle, colors, sz } from '../../../styles/common'
+import { CommunityContext } from '../../../states/Contexts'
 
 export function CommunityScreen({ navigation }) {
     /** Contexts */
@@ -21,33 +23,50 @@ export function CommunityScreen({ navigation }) {
     const communityState = React.useContext(CommunityContext).communityState
 
     /** State variables */
+    const [adminList, setAdminList] = React.useState()
     const [communityData, setCommunityData] = React.useState(JSON.parse(communityState.currentCommunity))
-    const [adminData, setAdminData] = React.useState()
     const [memberList, setMemberList] = React.useState([])
     const [modalVisible, setModalVisible] = React.useState(false)
-    const [modalButtonAct, setModalButtonAct] = React.useState(false)
+    const [permissionData, setPermissionData] = React.useState(JSON.parse(communityState.currentPermission))
+    const [refreshing, setRefreshing] = React.useState(false)
 
     React.useEffect(() => {
-        const msg = { communityId: communityData._id.toString() }
-        Promise.all([
-            axios.post(`${API_URL}/community/communitylistAdministrators`, msg),
-            axios.post(`${API_URL}/community/listMembers`, msg)
-        ])
-        .then(resps => {
-            setAdminData(resps[0][0])
-            setMemberList(resps[1])
-        })
+       getUserData()
     }, [])
 
-    const memberInfoView = member => {
+    /** Getting user data from the server */
+    const getUserData = () => {
+        const msg = { communityId: communityData._id.toString() }
+        Promise.all([
+            axios.post(`${API_URL}/community/listAdministrators`, msg),
+            axios.post(`${API_URL}/community/listMembers`, msg),
+        ])
+        .then(resps => {
+            setAdminList(resps[0].data.data)
+            setMemberList(resps[1].data.data)
+        })
+    }
+
+    /**
+     * Displayed out user data 
+     * @param {*} user User data to be displayed
+     * @returns View of layed out user data
+     */
+    const userView = user => {
         return (
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View>{ member.username }</View>
-                <View>{ member.address }</View>
-            </View>
+            <TouchableOpacity key={user._id} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={[CommonStyle.infoBox, CommonStyle.sideBySide, {alignItems: 'center'}]}>
+                    <Text style={[CommonStyle.infoLg, {marginRight: sz.sm, fontWeight: sz.bold}]}>{ user.username }</Text>
+                    <Text style={CommonStyle.infoLg}>{ user.wasmAddress }</Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 
+    /**
+     * Navigation for the community stack
+     * @param {*} screen Screen to navigate to
+     */
     const modalNavigate = screen => {
         navigation.navigate(screen)
         setModalVisible(false)
@@ -56,36 +75,71 @@ export function CommunityScreen({ navigation }) {
     return (
         <View>
         <SafeAreaView style={CommonStyle.container}>
-        <ScrollView style={{height: '100%'}}>
-            <View>
+            <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
+                <Text style={[CommonStyle.headerMd, {color: colors.red}]}>{communityData.name}</Text>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/menu.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            <View style={[CommonStyle.infoBox, CommonStyle.sideBySide]}>
+                <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Code: </Text>
+                <Text style={[CommonStyle.headerSm, {fontWeight: sz.plain, color: colors.lightGray}]}>{ communityData.code }</Text>
+            </View>
+            <View style={CommonStyle.infoBox}>
                 <View style={CommonStyle.infoBox}>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <Text style={CommonStyle.bigHeader}>You are in,</Text>
-                        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                            <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/menu.png')}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={CommonStyle.bigName}>{ communityData.name }</Text>
+                    <Text style={CommonStyle.headerSm}>Parent Token</Text>
                 </View>
-                <View style={{flexDirection: 'row'}}>
-                    <View style={[CommonStyle.infoBox, {marginRight: sz.xl}]}>
-                        <Text style={CommonStyle.infoHeader}>Code</Text>
-                        <Text style={[CommonStyle.infoText, {fontSize: sz.xl}]}>{ communityData.code }</Text>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={CommonStyle.headerSm}>Child Tokens</Text>
+                </View>
+                {
+                    permissionData.permissionLevel == 'admin-master' ? (
+                        <TouchableOpacity 
+                            onPress={() => modalNavigate('Manage Tokens')}
+                            style={[CommonStyle.longButton, CommonStyle.spaceBetween, {paddingLeft: sz.sm, paddingRight: sz.sm}]}
+                        >
+                            <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/tab/keyFocused.png')}></Image>
+                            <Text style={[CommonStyle.infoMd, {color: colors.white}]}>Manage Tokens</Text>
+                            <View style={{width: sz.lg}}></View>
+                        </TouchableOpacity>
+
+                    ) : (<></>)
+                }
+            </View>
+            <ScrollView 
+                style={{height: '100%'}}
+                showsVerticalScrollIndicator={false}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getUserData}/>}
+            >
+                <View style={CommonStyle.infoBox}>
+                    <View style={CommonStyle.infoBox}>
+                        <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Administrator</Text>
+                        {
+                            !adminList ? (
+                                <BulletList/>
+                            ) :
+                            (adminList.length == 0) ? (
+                                <Text style={CommonStyle.infoMd}>No administrator</Text>
+                            ) : (
+                                adminList.map(admin => userView(admin))
+                            )
+                        }
                     </View>
                     <View style={CommonStyle.infoBox}>
-                        <Text style={CommonStyle.infoHeader}>Administrator</Text>
-                        <Text style={[CommonStyle.infoText, {fontWeight: '600'}]}>Admin</Text>
+                        <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Members</Text>
+                        {
+                            !memberList ? (
+                                <BulletList/>
+                            ) :
+                            (memberList.length == 0) ? (
+                                <Text style={CommonStyle.infoMd}>No administrator</Text>
+                            ) : (
+                                memberList.map(admin => userView(admin))
+                            )
+                        }
                     </View>
                 </View>
-                <View>
-                    <Text style={CommonStyle.infoHeader}>User List</Text>
-                    <View>
-
-                    </View>
-                    <Text style={CommonStyle.infoText}>l</Text>
-                </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
         </SafeAreaView>
         <Modal
             isVisible={modalVisible}
@@ -93,11 +147,8 @@ export function CommunityScreen({ navigation }) {
             animationOut='slideOutDown'
             backdropOpacity={0.5}
             hideModalContentWhileAnimating={true}
-            onBackdropPress={() => setModalVisible(!modalVisible)}
-            onSwipeComplete={() => setModalVisible(!modalVisible)}
-            onSwipeStart={() => setModalButtonAct(false)}
-            onSwipeCancel={() => setModalButtonAct(false)}
-            onModalShow={() => setModalButtonAct(true)}
+            onBackdropPress={() => setModalVisible(false)}
+            onSwipeComplete={() => setModalVisible(false)}
             swipeDirection='down'
             style={styles.modalContainer}
         >   
@@ -105,14 +156,12 @@ export function CommunityScreen({ navigation }) {
                 <View style={[CommonStyle.infoBox, styles.pullDownBar]}></View>
                 <TouchableOpacity 
                     style={[CommonStyle.longButton, {marginBottom: sz.sm}]} 
-                    disabled={modalButtonAct}
                     onPress={() => modalNavigate('Request Community')} 
                 >
                     <Text style={{color: colors.white}}>Request to create a community</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={[CommonStyle.longButton]} 
-                    disabled={modalButtonAct}
                     onPress={() => modalNavigate('Request List')}
                 >
                     <Text style={{color: colors.white}}>See your community requests</Text>
