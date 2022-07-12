@@ -6,7 +6,6 @@ import { API_URL } from '../utils/API_URL'
 /**
  * State management for the superuser's role to approve and deny community requests.
  */
-
 export function ReqListService() {
     const [reqListState, dispatch] = React.useReducer((prevState, action) => {
         switch(action.type) {

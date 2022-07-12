@@ -15,6 +15,7 @@ const sz = {
 }
 
 const colors = {
+    black: '#7f6060',
     brown: '#BC735E',
     clicky1: '#0075F2',
     clicky2: '#6474E5',
@@ -48,14 +49,17 @@ const CommonStyle = StyleSheet.create({
         marginBottom: sz.lg
     },
     headerLg: {
+        color: colors.black,
         fontSize: sz.xxl,
         fontWeight: sz.bold,
     },
     headerMd: {
+        color: colors.black,
         fontSize: sz.xl,
         fontWeight: sz.bold,
     },
     headerSm: {
+        color: colors.black,
         fontSize: sz.lg,
         fontWeight: sz.bold,
     },
