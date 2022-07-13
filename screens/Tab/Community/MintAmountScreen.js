@@ -2,14 +2,16 @@ import axios from 'axios'
 import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import {
+    Animated,
     Image,
+    LayoutAnimation,
+    Modal,
     SafeAreaView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native'
-import { Animated } from 'react-native'
 
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
@@ -29,6 +31,7 @@ export function MintAmountScreen({ navigation, route }) {
     const [digitInput, setDigitInput] = React.useState('')
     const [digitInputFormatted, setDigitInputFormatted] = React.useState('')
     const [digitFontSize, setDigitFontSize] = React.useState(sz.xxl * 2)
+    const [screenActive, setScreenActive] = React.useState(true)
     const shaking = React.useRef(new Animated.Value(0)).current
 
     React.useEffect(() => {
@@ -55,11 +58,15 @@ export function MintAmountScreen({ navigation, route }) {
         }
 
         setDigitInputFormatted(digitInput.length == 0 ? '0' : parseInt(digitInput).toLocaleString())
-
     }, [digitInput])
+
+    React.useEffect(() => {
+        LayoutAnimation.configureNext(LayoutAnimation.create(100, LayoutAnimation.Types.linear, LayoutAnimation.Properties.scaleXY))
+    }, [buttonActive])
 
     /** */
     const handleSubmit = data => {
+        setScreenActive(false)
         const msg = {
             communityId: JSON.parse(communityState.currentCommunity)._id,
             initialTokenAmount: parseInt(digitInput),
@@ -67,9 +74,11 @@ export function MintAmountScreen({ navigation, route }) {
         }
         axios.post(`${API_URL}/community/mintParent`, msg)
         .then(res => {
+            setScreenActive(true)
             console.log(res.data)
         })
         .catch(err => {
+            setScreenActive(true)
             console.log(err)
         })
     }
@@ -82,7 +91,7 @@ export function MintAmountScreen({ navigation, route }) {
           Animated.timing(shaking, { toValue: 10, duration: 100, useNativeDriver: true }),
           Animated.timing(shaking, { toValue: 0, duration: 100, useNativeDriver: true })
         ]).start();
-     }
+    }
 
     /**
      * 
@@ -124,8 +133,23 @@ export function MintAmountScreen({ navigation, route }) {
         )
     }
 
+    const getMintButton = () => {
+        LayoutAnimation.spring()
+        return (
+            <TouchableOpacity 
+                style={[CommonStyle.longButton, CommonStyle.infoBox]}
+                onPress={() => handleSubmit()}
+            >
+                <Text style={{color: colors.white}}>Mint</Text>
+            </TouchableOpacity>
+        )
+    }
+
     return (
-        <SafeAreaView style={CommonStyle.container}>
+        <SafeAreaView 
+            pointerEvents={screenActive ? 'auto' : 'none'}
+            style={CommonStyle.container}
+        >
             <View style={CommonStyle.verticalSeperator}>
                 <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
                     <View style={{width: '10%'}}>
