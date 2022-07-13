@@ -16,7 +16,7 @@ import { CommonStyle, colors, sz } from '../../../styles/common'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ReqListContext } from '../../../states/Contexts'
 
-export function ReqDataScreen({ route, navigation }) {
+export function ReqDataScreen({ navigation, route }) {
     /** Contexts and States */
     const reqListContext = React.useContext(ReqListContext).reqListContext
     const reqListState = React.useContext(ReqListContext).reqListState

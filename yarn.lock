@@ -4052,6 +4052,11 @@
   dependencies:
     "fontfaceobserver" "^2.1.0"
 
+"expo-haptics@~11.2.0":
+  "integrity" "sha512-ijuWU2ljLBGjIf7OQCvnBQIu/chezndnWkfi518XxvK0hudA4+fAe98mqHO6hom9GexNRxhQZbXc0hcVnxkaiA=="
+  "resolved" "https://registry.npmjs.org/expo-haptics/-/expo-haptics-11.2.0.tgz"
+  "version" "11.2.0"
+
 "expo-keep-awake@~10.1.1":
   "integrity" "sha512-9zC0sdhQljUeMr2yQ7o4kzEZXVAy82fFOAZE1+TwPL7qR0b0sphe7OJ5T1GX1qLcwuVaJ8YewaPoLSHRk79+Rg=="
   "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-10.1.1.tgz"
@@ -4677,10 +4682,10 @@
   "resolved" "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
   "version" "1.0.4"
 
-"i18next@>= 19.0.0":
-  "integrity" "sha512-7xRb6y4QlSqZRZ3uA5BIEsLuZpmxpzHLizQyKjDDThOcvdfgICOX7aFoBnh4BSWcLtJamTqSweaOuK22A2xqkA=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.8.10.tgz"
-  "version" "21.8.10"
+"i18next@^21.8.13", "i18next@>= 19.0.0":
+  "integrity" "sha512-DpzwrJq7Y8tjUHxx6ByOkUIjrGYdQI5Mfv4XEI7q2RWdknQ7TaO9bKi8hS/LqYD6pBV5YGxJLReyLkOCxIpouA=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.8.13.tgz"
+  "version" "21.8.13"
   dependencies:
     "@babel/runtime" "^7.17.2"
 

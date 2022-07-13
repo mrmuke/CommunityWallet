@@ -16,6 +16,7 @@ import Modal from 'react-native-modal'
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 import { CommunityContext, TokenContext } from '../../../states/Contexts'
+import { TokenCardLoader } from '../../Components/TokenCardLoader'
 
 export function CommunityScreen({ navigation }) {
     /** Contexts */
@@ -27,12 +28,12 @@ export function CommunityScreen({ navigation }) {
     /** State variables */
     const [adminList, setAdminList] = React.useState()
     const [communityData, setCommunityData] = React.useState(JSON.parse(communityState.currentCommunity))
+    const [childTokens, setChildTokens] = React.useState()
     const [memberList, setMemberList] = React.useState()
     const [modalVisible, setModalVisible] = React.useState(false)
+    const [parentToken, setParentToken] = React.useState()
     const [permissionData, setPermissionData] = React.useState(JSON.parse(communityState.currentPermission))
     const [refreshing, setRefreshing] = React.useState(false)
-    const [parentToken, setParentToken] = React.useState()
-    const [childTokens, setChildTokens] = React.useState()
 
     React.useEffect(() => {
         getUserData()
@@ -65,21 +66,13 @@ export function CommunityScreen({ navigation }) {
     }
 
     /**
-     * Used to display user views
-     * @param {*} user User data whose data is to be displayed
-     * @returns User data wrapped in TouchableOpacity with redirect to user info page
+     * Navigation for the community stack
+     * @param {*} screen Screen to navigate to
      */
-    const userView = user => {
-        return (
-            <TouchableOpacity key={user._id} style={{flexDirection: 'row', justifyContent: 'space-between', width: '50%'}}>
-                <View style={[CommonStyle.infoBox, CommonStyle.sideBySide, {alignItems: 'center'}]}>
-                    <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials(user.username) }</Text></View>
-                    <Text style={[CommonStyle.infoLg, {marginRight: sz.sm, fontWeight: sz.bold}]}>{ user.username }</Text>
-                    <Text style={CommonStyle.infoLg} numberOfLines={1} >{ user.wasmAddress }</Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
+     const modalNavigate = screen => {
+        setModalVisible(false)
+        navigation.navigate(screen)
+    }    
 
     /**
      * Used to display the communities tokens
@@ -88,7 +81,11 @@ export function CommunityScreen({ navigation }) {
      */
     const tokenView = token => {
         return (
-            <TouchableOpacity style={[styles.tokenCard]} key={token._id}>
+            <TouchableOpacity
+                style={[styles.tokenCard]} 
+                key={token._id}
+                onPress={() => navigation.navigate('Token', {token})}
+            >
                 <View style={CommonStyle.verticalSeperator}>
                     <Text style={CommonStyle.infoMd}>{token.name}</Text>
                     <View>
@@ -104,12 +101,20 @@ export function CommunityScreen({ navigation }) {
     }
 
     /**
-     * Navigation for the community stack
-     * @param {*} screen Screen to navigate to
+     * Used to display user views
+     * @param {*} user User data whose data is to be displayed
+     * @returns User data wrapped in TouchableOpacity with redirect to user info page
      */
-    const modalNavigate = screen => {
-        setModalVisible(false)
-        navigation.navigate(screen)
+     const userView = user => {
+        return (
+            <TouchableOpacity key={user._id} style={{flexDirection: 'row', justifyContent: 'space-between', width: '50%'}}>
+                <View style={[CommonStyle.infoBox, CommonStyle.sideBySide, {alignItems: 'center'}]}>
+                    <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials(user.username) }</Text></View>
+                    <Text style={[CommonStyle.infoLg, {marginRight: sz.sm, fontWeight: sz.bold}]}>{ user.username }</Text>
+                    <Text style={CommonStyle.infoLg} numberOfLines={1} >{ user.wasmAddress }</Text>
+                </View>
+            </TouchableOpacity>
+        )
     }
 
     return (
@@ -137,45 +142,49 @@ export function CommunityScreen({ navigation }) {
                             showsHorizontalScrollIndicator={false}
                             style={styles.tokenScroll}
                         >
-                            {
-                                !parentToken ? (
-                                    <Text>Loading...</Text>
-                                ) : (
-                                    <View>
-                                        <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Parent Token</Text>
-                                        {tokenView(parentToken)}
-                                    </View>
-                                )
-                            }
-                            {
-                                !childTokens ? (
-                                    <Text>Loading...</Text>
-                                ) : (childTokens.length == 0) ? (
-                                    <Text style={CommonStyle.infoMd}>No child tokens</Text>
-                                ) : (
-                                    <View>
-                                        <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Child Tokens</Text>
+                            <View>
+                                <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Parent Token</Text>
+                                {
+                                    !parentToken ? (
+                                        <TokenCardLoader style={{marginRight: sz.md}}/>
+                                    ) : 
+                                    (parentToken == 'Not found') ? (
+                                        <TouchableOpacity 
+                                            style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
+                                            onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Parent' })}
+                                        >
+                                            <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
+                                        </TouchableOpacity>     
+                                    ) : (
+                                        tokenView(parentToken)
+                                    )
+                                }
+                            </View>
+                            <View>
+                                <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Child Tokens</Text>
+                                {
+
+                                    !childTokens ? (
+                                        <TokenCardLoader style={{marginRight: sz.md}}/>
+                                    ) : (childTokens.length == 0) ? (
+                                        <TouchableOpacity 
+                                            style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
+                                            onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Child' })}
+                                        >
+                                            <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
+                                        </TouchableOpacity>                                    
+                                    ) : (
                                         <View style={CommonStyle.sideBySide}>
                                             {childTokens.map(token => tokenView(token))}
                                         </View>
-                                    </View>
-                                )
-                            }
+                                    )
+                                }
+                            </View>
+                            
                         </ScrollView>   
-                        {
-                            (permissionData.permissionLevel == 'admin-master') ? (
-                                <TouchableOpacity 
-                                    onPress={() => modalNavigate('Manage Tokens')}
-                                    style={[CommonStyle.longButton, CommonStyle.spaceBetween, {paddingLeft: sz.sm, paddingRight: sz.sm}]}
-                                >
-                                    <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/tab/keyFocused.png')}></Image>
-                                    <Text style={[CommonStyle.infoMd, {color: colors.white}]}>Manage Tokens</Text>
-                                    <View style={{width: sz.lg}}></View>
-                                </TouchableOpacity>
-                            ) : (<></>)
-                        }
+                       
                     </View>
-                    <View style={CommonStyle.infoBox}>
+                    <View style={[CommonStyle.infoBox, {marginTop: sz.xs}]}>
                         <View style={CommonStyle.infoBox}>
                             <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Administrator</Text>
                             {
@@ -204,6 +213,7 @@ export function CommunityScreen({ navigation }) {
                 </View>
             </ScrollView>
         </SafeAreaView>
+
         <Modal
             isVisible={modalVisible}
             animationIn='slideInUp'
@@ -258,23 +268,6 @@ export function CommunityScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
         </Modal>
-        <Modal
-            isVisible={modalVisible}
-            animationIn='slideInUp'
-            animationOut='slideOutDown'
-            backdropOpacity={0.5}
-            hideModalContentWhileAnimating={true}
-            onBackdropPress={() => setModalVisible(false)}
-            onSwipeComplete={() => setModalVisible(false)}
-            swipeDirection='down'
-            style={styles.modalContainer}
-        >   
-            <View style={styles.modalContent2}>
-                <View style={[CommonStyle.infoBox, styles.pullDownBar]}></View>
-
-                <Text>hello</Text>
-            </View>
-        </Modal>
     </View>
     )
 }
@@ -303,14 +296,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: sz.xl,
         borderTopRightRadius: sz.xl,
         padding:sz.sm
-    },
-    modalContent2: {
-        backgroundColor: colors.white,
-        paddingTop: sz.lg,
-        borderTopLeftRadius: sz.xl,
-        borderTopRightRadius: sz.xl,
-        padding:sz.sm,
-        height: '95%',
     },
     pullDownBar: {
         alignSelf: 'center',

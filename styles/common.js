@@ -45,6 +45,12 @@ const CommonStyle = StyleSheet.create({
         marginTop: sz.sm,
         width: '100%', 
     },
+    escapeContainer: {
+        marginLeft: -sz.md,
+        marginRight: -sz.md,
+        paddingLeft: sz.md,
+        paddingRight: sz.md,
+    },
     headerBox: {
         marginBottom: sz.lg
     },
