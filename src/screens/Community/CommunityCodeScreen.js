@@ -65,10 +65,7 @@ export function CommunityCodeScreen() {
         .then(async res1 => {
             const communityId = res1.data.data._id
             const res2 = await axios.post(`${API_URL}/user/addCommunity`, { communityId })
-            commContext.enterCommunity({
-                community: res1.data.data,
-                permission: res2.data.data,
-            })
+            commContext.enterCommunity(res1.data.data, res2.data.data)
         })
         .catch(err => {
             showMessage({

@@ -10,7 +10,7 @@ import {
 import { CommonStyle, sz } from '../styles/common'
 import { DigitButton } from './DigitButton'
 
-export function Keyboard({ errorAnim, errorAnimValue, output, setOutput }) {
+export function DigitKeyboard({ errorAnim, errorAnimValue, output, setOutput }) {
 
     const handleBackspace = () => {
         if (output.length == 0) {

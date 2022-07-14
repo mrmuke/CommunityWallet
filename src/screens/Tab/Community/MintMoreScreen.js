@@ -1,26 +1,22 @@
 import axios from 'axios'
 import * as React from 'react'
-import { Dimensions } from 'react-native'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Dimensions, Text } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 import Reanimated, {useAnimatedStyle, useSharedValue, withTiming, Easing} from 'react-native-reanimated'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 
 import { API_URL } from '../../../utils/API_URL'
 import { FlyingCards, NumberInput } from '../../../components'
 import { CommunityContext, TokenContext } from '../../../states/Contexts'
+import { colors, CommonStyle, sz } from '../../../styles/common'
 
-import { showMessage } from 'react-native-flash-message'
-
-
-export function MintAmountScreen({ navigation, route }) {
-    const symbol = route.params.symbol
-    const tokenName = route.params.tokenName
-    const tokenType = route.params.tokenType
+export function MintMoreScreen({ route }) {
+    const contractAddress = route.params.contractAddress
 
     /** Contexts and States */
     const communityState = React.useContext(CommunityContext).communityState
     const tokenContext = React.useContext(TokenContext).tokenContext
 
-    /** State variables */
     const [digitInput, setDigitInput] = React.useState('')
     const [submit, setSubmit] = React.useState(false)
     const [completed, setCompleted] = React.useState(false)
@@ -40,15 +36,25 @@ export function MintAmountScreen({ navigation, route }) {
         }
     })
 
+    const [tokenData, setTokenData] = React.useState('')
+    React.useEffect(() => {
+        axios.post(`${API_URL}/community/tokenData`, { contractAddress })
+        .then(res => {
+            setTokenData(res.data.data)
+        })
+        .catch(err => {
+
+        })
+
+    }, [])
+
     /** */
     const handleSubmit = () => {
         setSubmit(true)
-        console.log(bottomTabBarHeight)
         offset.value = -Dimensions.get('window').height + bottomTabBarHeight
 
-        const baseMsg = { communityId: JSON.parse(communityState.currentCommunity)._id, symbol}
-        const url = (tokenType == 'Parent') ? `${API_URL}/community/mintParent` : `${API_URL}/community/mintChild`
-        const msg = (tokenType == 'Parent') ? {...baseMsg, initialTokenAmount: parseInt(digitInput)} : {...baseMsg, tokenAmount: parseInt(digitInput), tokenName }
+        const url = `${API_URL}/community/mintChild`
+        const msg = { communityId: JSON.parse(communityState.currentCommunity)._id, contractAddress, tokenAmount: parseInt(digitInput) }
 
         axios.post(url, msg)
         .then(res => {
@@ -74,16 +80,12 @@ export function MintAmountScreen({ navigation, route }) {
                 setDigitOutput={setDigitInput} 
                 suggestions={['100', '250', '500', '1,000']} 
                 submitHandler={handleSubmit}
+                message={<Text style={[CommonStyle.headerSm, {color: 'black'}]}>Current Supply: <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>{tokenData.total_supply}</Text></Text>}
             />
             {
-            submit ? (
-                <FlyingCards 
-                    loadingComplete={completed} 
-                    errorBool={errorOnSubmit} 
-                    errorMessage={'Request did not go through!'} 
-                    successMessage={'Minted!'}
-                />
-            ) : (<></>)
+                submit ? (
+                    <FlyingCards loadingComplete={completed} errorBool={errorOnSubmit} errorMessage={'Request did not go through!'} successMessage={'Minted!'}/>
+                ) : (<></>)
             }
         </Reanimated.View>
     )

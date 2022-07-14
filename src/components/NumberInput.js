@@ -14,10 +14,10 @@ import { useNavigation } from '@react-navigation/native'
 
 import { errorShake } from './Animations'
 import { CommonStyle, colors, sz } from '../styles/common'
-import { Keyboard } from './Keyboard'
+import { DigitKeyboard } from './Keyboard'
 import { SuggestionPills } from './SuggestionPills'
 
-export function NumberInput({ digitOutput, setDigitOutput, suggestions, submitHandler }) {
+export function NumberInput({ digitOutput, message, setDigitOutput, suggestions, submitHandler }) {
     const navigation = useNavigation()
 
     /** State variables */
@@ -60,38 +60,39 @@ export function NumberInput({ digitOutput, setDigitOutput, suggestions, submitHa
     }, [buttonActive])
 
     return (
-        <SafeAreaView style={[CommonStyle.container, {height: '100%'}]}>
-            <View style={CommonStyle.verticalSeperator}>
-                <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
-                    <View style={{width: '10%'}}>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image style={CommonStyle.backButton} source={require('../assets/back.png')}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{width: '80%', alignItems: 'center'}}>
-                        <Text style={[CommonStyle.headerSm, {color: colors.black}]}></Text>
-                    </View>
-                    <View style={{width: '10%'}}></View>
-                </View>
-                <>
-                    <View style={styles.digitOutputDisplay}>
-                        <Animated.Text style={[CommonStyle.escapeContainer, styles.digitOutputText, {fontSize: digitFontSize, transform: [{translateX: shaking}]}]}>{digitOutputFormatted}</Animated.Text>
-                    </View>
-                    {
-                        buttonActive ? (
-                            <TouchableOpacity style={[CommonStyle.longButton, CommonStyle.infoBox]} onPress={submitHandler}>
-                                <Text style={{color: colors.white}}>Mint</Text>
-                            </TouchableOpacity>
-                        ) : (
-                            <View style={[CommonStyle.sideBySide, {alignItems: 'center', justifyContent: 'center'}]}>
-                                {amountSuggestions.map(amount => SuggestionPills({ suggestion: amount, setOutput: setDigitOutput }))}
-                            </View>
-                        )
-                    }
-                </> 
-                <Keyboard errorAnim={errorShake} errorAnimValue={shaking} output={digitOutput} setOutput={setDigitOutput}/>
+    <SafeAreaView style={[CommonStyle.container, {height: '100%'}]}>
+    <View style={CommonStyle.verticalSeperator}>
+        <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
+            <View style={{width: '10%'}}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image style={CommonStyle.backButton} source={require('../assets/back.png')}/>
+                </TouchableOpacity>
             </View>
-        </SafeAreaView>
+            <View style={{width: '80%', alignItems: 'center'}}>
+                <Text style={[CommonStyle.headerSm, {color: colors.black}]}></Text>
+            </View>
+            <View style={{width: '10%'}}></View>
+        </View>
+        <>
+            <View style={styles.digitOutputDisplay}>
+                <Animated.Text style={[CommonStyle.escapeContainer, styles.digitOutputText, {fontSize: digitFontSize, transform: [{translateX: shaking}]}]}>{digitOutputFormatted}</Animated.Text>
+            </View>
+            {message}
+            {
+            buttonActive ? (
+                <TouchableOpacity style={[CommonStyle.longButton, CommonStyle.infoBox]} onPress={submitHandler}>
+                    <Text style={{color: colors.white}}>Mint</Text>
+                </TouchableOpacity>
+            ) : (
+                <View style={[CommonStyle.sideBySide, {alignItems: 'center', justifyContent: 'center'}]}>
+                    {amountSuggestions.map(amount => SuggestionPills({ suggestion: amount, setOutput: setDigitOutput }))}
+                </View>
+            )
+            }
+        </> 
+        <DigitKeyboard errorAnim={errorShake} errorAnimValue={shaking} output={digitOutput} setOutput={setDigitOutput}/>
+    </View>
+    </SafeAreaView>
     )
 }
 

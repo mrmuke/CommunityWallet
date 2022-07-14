@@ -6,11 +6,13 @@ import {
     View,
 } from 'react-native'
 import { StackActions, useNavigation } from '@react-navigation/native'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 
 import { CommonStyle, colors, sz } from '../styles/common'
 
 export function FlyingCards({ loadingComplete, errorBool, errorMessage,  successMessage}) {
     const navigation = useNavigation()
+    const bottomTabBarHeight = useBottomTabBarHeight()
 
     return (
         <View style={{height: '100%'}}>
@@ -18,7 +20,7 @@ export function FlyingCards({ loadingComplete, errorBool, errorMessage,  success
         <View style={[styles.cardLayers, {backgroundColor: colors.brown}]}>
         <View style={[styles.cardLayers, {backgroundColor: colors.pink}]}>
         <View style={[styles.cardLayers, {backgroundColor: colors.gold, justifyContent: 'center', alignItems: 'center'}]}>
-            <View style={styles.interiorCard}>
+            <View style={[styles.interiorCard, {marginBottom: bottomTabBarHeight}]}>
                 {
                     loadingComplete ? (
                         <View>

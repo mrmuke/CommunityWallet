@@ -97,6 +97,26 @@ const CommonStyle = StyleSheet.create({
     infoHighlight: {
         fontWeight: sz.bold,
     },
+    modalContainer: {
+        margin: 0,
+        width: '100%',
+        flex: 1,
+        justifyContent: 'flex-end'
+    },
+    modalContent: {
+        backgroundColor: colors.white,
+        paddingTop: sz.lg,
+        borderTopLeftRadius: sz.xl,
+        borderTopRightRadius: sz.xl,
+        padding:sz.sm
+    },
+    pullDownBar: {
+        alignSelf: 'center',
+        backgroundColor: 'black',
+        borderRadius: 3,
+        height: sz.xxs,
+        width: sz.xl,
+    },
     spaceBetween: {
         flexDirection: 'row',
         justifyContent: 'space-between',

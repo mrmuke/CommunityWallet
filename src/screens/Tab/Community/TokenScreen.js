@@ -2,7 +2,7 @@ import * as React from 'react'
 import {
     SafeAreaView,
     Text,
-    View
+    TouchableOpacity,
 } from 'react-native'
 
 import { CommonStyle, colors, sz } from '../../../styles/common'
@@ -10,7 +10,6 @@ import { TokenContext } from '../../../states/Contexts'
 
 export function TokenScreen({ route, navigation }) {
     /** States and contexts */
-    const tokenContext = React.useContext(TokenContext).tokenContext
     const tokenState = React.useContext(TokenContext).tokenState
 
     /** State variables */
@@ -20,8 +19,11 @@ export function TokenScreen({ route, navigation }) {
     )
 
     return (
-        <SafeAreaView style={CommonStyle.container}>
-            <Text>{token.name}</Text>
-        </SafeAreaView>
+    <SafeAreaView style={CommonStyle.container}>
+        <Text>{token.name}</Text>
+        <TouchableOpacity style={CommonStyle.longButton} onPress={() => navigation.navigate('Mint More', {contractAddress: token.address})}>
+            <Text style={{color: colors.white}}>Mint more</Text>
+        </TouchableOpacity>
+    </SafeAreaView>
     )
 }
