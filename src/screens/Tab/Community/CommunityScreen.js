@@ -16,7 +16,7 @@ import Modal from 'react-native-modal'
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 import { CommunityContext, TokenContext } from '../../../states/Contexts'
-import { TokenCardLoader } from '../../Components/TokenCardLoader'
+import { TokenCardLoader } from '../../../components/TokenCardLoader'
 
 export function CommunityScreen({ navigation }) {
     /** Contexts */
@@ -123,7 +123,11 @@ export function CommunityScreen({ navigation }) {
             <ScrollView 
                 style={{height: '100%'}}
                 showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getUserData}/>}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
+                        tokenContext.reloadTokens()
+                        getUserData
+                    }}
+                />}
             >
                 <View style={CommonStyle.container}>
                     <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
@@ -166,17 +170,17 @@ export function CommunityScreen({ navigation }) {
 
                                     !childTokens ? (
                                         <TokenCardLoader style={{marginRight: sz.md}}/>
-                                    ) : (childTokens.length == 0) ? (
-                                        <TouchableOpacity 
-                                            style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
-                                            onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Child' })}
-                                        >
-                                            <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
-                                        </TouchableOpacity>                                    
                                     ) : (
                                         <View style={CommonStyle.sideBySide}>
                                             {childTokens.map(token => tokenView(token))}
+                                            <TouchableOpacity 
+                                                style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
+                                                onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Child' })}
+                                            >
+                                                <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
+                                            </TouchableOpacity>  
                                         </View>
+                                        
                                     )
                                 }
                             </View>

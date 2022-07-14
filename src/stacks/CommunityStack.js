@@ -29,7 +29,7 @@ export function CommunityStack() {
                     <Stack.Screen name='Request' component={RequestDataScreen}/>
                     <Stack.Screen name='Token' component={TokenScreen}/>
                     <Stack.Screen name='Mint Symbol' component={MintSymbolScreen} options={{gestureEnabled: false}}/>
-                    <Stack.Screen name='Mint Amount' component={MintAmountScreen}/>
+                    <Stack.Screen name='Mint Amount' component={MintAmountScreen} options={{gestureEnabled: false}}/>
                 </Stack.Navigator>
             </RequestListContext.Provider>
         </TokenContext.Provider>

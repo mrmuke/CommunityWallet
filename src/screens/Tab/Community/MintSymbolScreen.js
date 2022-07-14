@@ -16,7 +16,7 @@ import {
     View,
 } from 'react-native'
 
-import { errorShake } from '../../Components/Animations'
+import { errorShake } from '../../../components/Animations'
 import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 import { CommunityContext } from '../../../states/Contexts'
@@ -68,7 +68,7 @@ export function MintSymbolScreen({ navigation, route }) {
         axios.post(`${API_URL}/community/tokenSymbolAvailability`, { tokenSymbol: symbolInput })
         .then(res => {
             if (res.data.message == 'Ok') {
-                navigation.navigate('Mint Amount', { symbol: symbolInput, tokenType })
+                navigation.navigate('Mint Amount', { symbol: symbolInput, tokenType, tokenName: nameInput })
             } else {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
                 errorShake(shaking2)
@@ -119,26 +119,26 @@ export function MintSymbolScreen({ navigation, route }) {
                     <View style={{width: '10%'}}></View>
                 </View>
                 <View>
-                    <View style={[CommonStyle.infoBox, {width: '100%'}]}>
-                        <Text style={[CommonStyle.infoMd, {marginBottom: sz.xxs}]}>Token Name</Text>
-                        <Animated.View style={[CommonStyle.sideBySide, {transform: [{translateX: shaking1}]}]}>
-                            {
-                                tokenType == 'Child' ? (
-                                    <TextInput
-                                        autoComplete={false}
-                                        autoCorrect={false}
-                                        onChangeText={text => setNameInput(text)}
-                                        placeholder='Token name'
-                                        style={[CommonStyle.headerMd, styles.nameInput, {fontSize: nameInputFontSize}]}
-                                        value={nameInput}
-                                    />
-                                ) : (<></>)
-                            }
-                            <Text style={[CommonStyle.infoLg, {fontSize: nameInputFontSize, color: 'black'}]}> Coin</Text>
-                        </Animated.View>
-                    </View>
+                    {
+                        tokenType == 'Child' ? (
+                        <View style={{width: '100%', marginBottom: sz.xl}}>
+                            <Text style={[CommonStyle.infoMd, {marginBottom: sz.xxs, textAlign: 'center'}]}>Token Name</Text>
+                            <Animated.View style={[CommonStyle.sideBySide, {alignSelf: 'center', transform: [{translateX: shaking1}]}]}>
+                                        <TextInput
+                                            autoComplete={false}
+                                            autoCorrect={false}
+                                            onChangeText={text => setNameInput(text)}
+                                            placeholder='Token name'
+                                            style={[CommonStyle.headerMd, styles.nameInput, {fontSize: nameInputFontSize}]}
+                                            value={nameInput}
+                                        />
+                                <Text style={[CommonStyle.infoLg, {fontSize: nameInputFontSize, color: 'black'}]}> Coin</Text>
+                            </Animated.View>
+                        </View>
+                        ) : (<></>)
+                    }
                     <>
-                        <Text style={[CommonStyle.infoMd, {marginBottom: sz.xxs}]}>Token Symbol</Text>
+                        <Text style={[CommonStyle.infoMd, {marginBottom: sz.xxs, textAlign: tokenType == 'Parent' ? 'left' : 'center'}]}>Token Symbol</Text>
                         <ScrollView 
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
