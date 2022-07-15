@@ -43,7 +43,6 @@ export function MintAmountScreen({ navigation, route }) {
     /** */
     const handleSubmit = () => {
         setSubmit(true)
-        console.log(bottomTabBarHeight)
         offset.value = -Dimensions.get('window').height + bottomTabBarHeight
 
         const baseMsg = { communityId: JSON.parse(communityState.currentCommunity)._id, symbol}
@@ -53,13 +52,11 @@ export function MintAmountScreen({ navigation, route }) {
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
-            console.log(res.data)
             tokenContext.reloadChildTokens()
         })
         .catch(err => {
             setCompleted(true)
             setErrorOnSubmit(true)
-            console.log(err)
             showMessage({
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'
@@ -71,6 +68,7 @@ export function MintAmountScreen({ navigation, route }) {
         <Reanimated.View style={[animatedStyles, {height: '100%'}]}>
             <NumberInput 
                 digitOutput={digitInput} 
+                enterText={'Mint'}
                 setDigitOutput={setDigitInput} 
                 suggestions={['100', '250', '500', '1,000']} 
                 submitHandler={handleSubmit}

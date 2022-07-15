@@ -6,8 +6,8 @@ import { RequestListScreen } from '../screens/Tab/Community/RequestListScreen'
 import { RequestDataScreen } from '../screens/Tab/Community/RequestDataScreen'
 import { TokenScreen } from '../screens/Tab/Community/TokenScreen'
 
+import { AdjustSupplyScreen } from '../screens/Tab/Community/AdjustSupplyScreen'
 import { MintAmountScreen } from '../screens/Tab/Community/MintAmountScreen'
-import { MintMoreScreen } from '../screens/Tab/Community/MintMoreScreen'
 import { MintSymbolScreen } from '../screens/Tab/Community/MintSymbolScreen'
 import { RequestListContext, TokenContext } from '../states/Contexts'
 import { RequestListService } from '../states/RequestListState'
@@ -26,7 +26,7 @@ export function CommunityStack() {
                 <Stack.Navigator screenOptions={{headerShown: false}}>
                     <Stack.Screen name='Community' component={CommunityScreen}/>
                     <Stack.Screen name='Mint Symbol' component={MintSymbolScreen} options={{gestureEnabled: false}}/>
-                    <Stack.Screen name='Mint More' component={MintMoreScreen} options={{gestureEnabled: false}}/>
+                    <Stack.Screen name='Adjust Supply' component={AdjustSupplyScreen} options={{gestureEnabled: false}}/>
                     <Stack.Screen name='Mint Amount' component={MintAmountScreen} options={{gestureEnabled: false}}/>
                     <Stack.Screen name='Request Community' component={RequestScreen}/>
                     <Stack.Screen name='Request List' component={RequestListScreen}/>

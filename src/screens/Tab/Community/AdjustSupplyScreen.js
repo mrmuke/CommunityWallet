@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import { Dimensions, Text } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
@@ -8,19 +9,21 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { API_URL } from '../../../utils/API_URL'
 import { FlyingCards, NumberInput } from '../../../components'
 import { CommunityContext, TokenContext } from '../../../states/Contexts'
-import { colors, CommonStyle, sz } from '../../../styles/common'
+import { CommonStyle } from '../../../styles/common'
 
-export function MintMoreScreen({ route }) {
-    const contractAddress = route.params.contractAddress
+export function AdjustSupplyScreen({ route }) {
+    const action = route.params.action
+    const tokenData = route.params.tokenData
 
     /** Contexts and States */
     const communityState = React.useContext(CommunityContext).communityState
     const tokenContext = React.useContext(TokenContext).tokenContext
 
-    const [digitInput, setDigitInput] = React.useState('')
-    const [submit, setSubmit] = React.useState(false)
+    /** State variables */
     const [completed, setCompleted] = React.useState(false)
+    const [digitInput, setDigitInput] = React.useState('')
     const [errorOnSubmit, setErrorOnSubmit] = React.useState(false)
+    const [submit, setSubmit] = React.useState(false)
     const bottomTabBarHeight = useBottomTabBarHeight()
 
     /** Animations */
@@ -36,36 +39,23 @@ export function MintMoreScreen({ route }) {
         }
     })
 
-    const [tokenData, setTokenData] = React.useState('')
-    React.useEffect(() => {
-        axios.post(`${API_URL}/community/tokenData`, { contractAddress })
-        .then(res => {
-            setTokenData(res.data.data)
-        })
-        .catch(err => {
-
-        })
-
-    }, [])
-
     /** */
     const handleSubmit = () => {
         setSubmit(true)
         offset.value = -Dimensions.get('window').height + bottomTabBarHeight
 
-        const url = `${API_URL}/community/mintChild`
-        const msg = { communityId: JSON.parse(communityState.currentCommunity)._id, contractAddress, tokenAmount: parseInt(digitInput) }
+        const url = `${API_URL}/community/${action == 'mint' ? 'mintMore' : 'burn'}`
+        const msg = { communityId: JSON.parse(communityState.currentCommunity)._id, contractAddress: tokenData.address, tokenAmount: parseInt(digitInput) }
 
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
-            console.log(res.data)
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
             tokenContext.reloadChildTokens()
         })
         .catch(err => {
             setCompleted(true)
             setErrorOnSubmit(true)
-            console.log(err)
             showMessage({
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'
@@ -77,15 +67,21 @@ export function MintMoreScreen({ route }) {
         <Reanimated.View style={[animatedStyles, {height: '100%'}]}>
             <NumberInput 
                 digitOutput={digitInput} 
+                enterText={action == 'mint' ? 'Mint' : 'Burn'}
                 setDigitOutput={setDigitInput} 
-                suggestions={['100', '250', '500', '1,000']} 
+                suggestions={action == 'mint' ? ['100', '250', '500', '1,000'] : ['50', '75', '100', '125']} 
                 submitHandler={handleSubmit}
-                message={<Text style={[CommonStyle.headerSm, {color: 'black'}]}>Current Supply: <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>{tokenData.total_supply}</Text></Text>}
+                message={<Text style={[CommonStyle.infoLg, {textAlign: 'center'}]}>Total supply {tokenData.supply}</Text>}
             />
             {
                 submit ? (
-                    <FlyingCards loadingComplete={completed} errorBool={errorOnSubmit} errorMessage={'Request did not go through!'} successMessage={'Minted!'}/>
-                ) : (<></>)
+                    <FlyingCards 
+                        loadingComplete={completed} 
+                        errorBool={errorOnSubmit} 
+                        errorMessage={'Request did not go through!'} 
+                        successMessage={action == 'mint' ? 'Minted!' : 'Burned!'}
+                    />
+                ) : <></>
             }
         </Reanimated.View>
     )

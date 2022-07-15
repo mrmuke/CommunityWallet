@@ -41,7 +41,6 @@ export function RequestDataScreen({ route, navigation }) {
             setScreenActive(true)
         })
         .catch(err => {
-            console.log(err)
             showMessage({
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'

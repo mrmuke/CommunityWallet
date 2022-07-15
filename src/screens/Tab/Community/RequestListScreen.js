@@ -72,37 +72,37 @@ export function RequestListScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={CommonStyle.container}>                
-            <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween, {alignItems: 'center'}]}>
-                <View style={{width: '10%'}}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image style={CommonStyle.backButton} source={require('../../../assets/back.png')}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={{width: '90%', alignItems: 'center'}}>
-                    <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Community Requests</Text>
-                </View>
+    <SafeAreaView style={CommonStyle.container}>                
+        <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween, {alignItems: 'center'}]}>
+            <View style={{width: '10%'}}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image style={CommonStyle.backButton} source={require('../../../assets/back.png')}/>
+                </TouchableOpacity>
             </View>
-            <ScrollView 
-                style={{height: '100%'}} 
-                showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={requestListContext.reloadRequestList}/>}
-            >
-                <View>
-                    {
-                        !requestList ? (
-                            <BulletList/>
-                        ) :
-                        (requestList.length == 0) ? (
-                            <Text>No community requests</Text>
-                        ) : 
-                        (
-                            requestList.map(request => requestView(request))
-                        )
-                    }
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+            <View style={{width: '90%', alignItems: 'center'}}>
+                <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Community Requests</Text>
+            </View>
+        </View>
+        <ScrollView 
+            style={{height: '100%'}} 
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={requestListContext.reloadRequestList}/>}
+        >
+            <View>
+                {
+                    !requestList ? (
+                        <BulletList/>
+                    ) :
+                    (requestList.length == 0) ? (
+                        <Text>No community requests</Text>
+                    ) : 
+                    (
+                        requestList.map(request => requestView(request))
+                    )
+                }
+            </View>
+        </ScrollView>
+    </SafeAreaView>
     )
 }
 

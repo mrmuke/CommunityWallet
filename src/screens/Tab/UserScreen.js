@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as SecureStore from 'expo-secure-store'
 import { 
     Image,
     SafeAreaView,
@@ -8,27 +7,23 @@ import {
     TouchableOpacity,
     View,  
 } from 'react-native'
-import QRCode from 'react-qr-code'
 
 import { AuthContext, CommunityContext } from '../../states/Contexts'
-import { colors, CommonStyle, sz } from '../../styles/common'
+import { CommonStyle, colors, sz } from '../../styles/common'
+import { getUserInitials } from '../../utils/HelperFunctions'
 
 export function UserScreen() {
     /** Contexts */
     const authContext = React.useContext(AuthContext).authContext
     const authState = React.useContext(AuthContext).authState
-
     const communityContext = React.useContext(CommunityContext).communityContext
     
     /** State var */
-    const [userData, setUserData] = React.useState(JSON.parse(authState.user))
-    const [screenActive, setScreenActive] = React.useState(true)
+    const userData = React.useRef(JSON.parse(authState.user)).current
 
     const changePassword = () => {
         console.log('changing')
     }
-
-    const getUserInitials = () => { if (userData.username) return userData.username.substring(0, 1).toUpperCase() }
 
     const handleSignout = () => {
         authContext.signOut()
@@ -36,66 +31,53 @@ export function UserScreen() {
     }
 
     return (
-        <SafeAreaView style={CommonStyle.container}>
-        <View style={CommonStyle.verticalSeperator}>
-            <View>
-                <View style={[styles.infoBox, {alignItems: 'center', justifyContent: 'flex-start'}]}>
-                    <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials() }</Text></View>
-                    <Text style={CommonStyle.bigName}>Hi, { userData.username }</Text>
+    <SafeAreaView style={CommonStyle.container}>
+    <View style={CommonStyle.verticalSeperator}>
+        <View>
+            <View style={CommonStyle.infoBox}>
+                <View style={[CommonStyle.infoBox, CommonStyle.sideBySide, {alignItems: 'center'}]}>
+                    <View style={styles.initialsBubble}><Text style={styles.initials}>{ getUserInitials(userData.username) }</Text></View>
+                    <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Hi, { userData.username }</Text>
                 </View>
-                <View style={styles.infoBox}>
+                <View style={[CommonStyle.spaceBetween, CommonStyle.infoBox]}>
                     <View>
-                        <Text style={CommonStyle.infoHeader}>Phone Number</Text>
-                        <Text style={CommonStyle.infoText}>{ userData.phoneNumber }</Text>
+                        <Text style={CommonStyle.headerSm}>Phone Number</Text>
+                        <Text style={CommonStyle.infoLg}>{ userData.phoneNumber }</Text>
                     </View>
                     <Image style={{height: sz.xl-5, width: sz.xl-5}} source={require('../../assets/telephone.png')}/>
                 </View>
-                <View style={[styles.infoBox, {marginBottom: 0}]}>
+                <View style={CommonStyle.spaceBetween}>
                     <View style={{width: '80%'}}>
-                        <Text style={CommonStyle.infoHeader}>Wallet Address</Text>
-                        <Text style={CommonStyle.infoText} numberOfLines={1}>{ userData.wasmAddress }</Text>
+                        <Text style={CommonStyle.headerSm}>Wallet Address</Text>
+                        <Text style={CommonStyle.infoLg} numberOfLines={1}>{ userData.wasmAddress }</Text>
                     </View>
                     <Image style={{height: sz.xl, width: sz.xl}} source={require('../../assets/address.png')}/>
                 </View>
             </View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                { !userData.wasmAddress ? (<></>) : (<QRCode size={128} value={userData.wasmAddress}/>) }
-            </View>
-            <View style={CommonStyle.infoBox}>
-                <TouchableOpacity 
-                    style={[CommonStyle.longButton, {marginBottom: sz.sm}]}
-                    onPress={() => { changePassword() }}
-                >
-                    <Text style={styles.buttonText}>Change password</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={CommonStyle.longButton}
-                    onPress={() => handleSignout() }
-                >
-                    <Text style={styles.buttonText}>Sign out</Text>
-                </TouchableOpacity> 
-            </View>
         </View>
-        </SafeAreaView>
+        <View>
+            <TouchableOpacity 
+                style={[CommonStyle.longButton, {marginBottom: sz.xs}]}
+                onPress={() => { changePassword() }}
+            >
+                <Text style={[CommonStyle.infoMd, {color: colors.white}]}>Change password</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[CommonStyle.longButton, {marginBottom: sz.xs}]}
+                onPress={() => handleSignout() }
+            >
+                <Text style={[CommonStyle.infoMd, {color: colors.white}]}>Sign out</Text>
+            </TouchableOpacity> 
+        </View>
+    </View>
+    </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    buttonText: {
-        color: colors.white
-    },
-    container: {
-        backgroundColor: colors.white,
-        marginBottom: sz.sm,
-    },
-    infoBox: {
-        flexDirection: 'row',
-        justifyContent: 'space-between', 
-        marginBottom: sz.md,
-    },
     initials: {
         color: colors.info, 
-        fontSize: sz.xxl
+        fontSize: sz.xl
     },
     initialsBubble: {
         alignItems: 'center', 
@@ -104,8 +86,8 @@ const styles = StyleSheet.create({
         borderRadius: sz.xxl, 
         borderWidth: 1,
         justifyContent: 'center', 
-        height: sz.xxxl,
+        height: sz.xxl,
         marginRight: sz.sm,
-        width: sz.xxxl, 
+        width: sz.xxl, 
     },
 })

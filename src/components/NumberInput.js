@@ -17,7 +17,7 @@ import { CommonStyle, colors, sz } from '../styles/common'
 import { DigitKeyboard } from './Keyboard'
 import { SuggestionPills } from './SuggestionPills'
 
-export function NumberInput({ digitOutput, message, setDigitOutput, suggestions, submitHandler }) {
+export function NumberInput({ digitOutput, enterText, message, setDigitOutput, suggestions, submitHandler }) {
     const navigation = useNavigation()
 
     /** State variables */
@@ -81,7 +81,7 @@ export function NumberInput({ digitOutput, message, setDigitOutput, suggestions,
             {
             buttonActive ? (
                 <TouchableOpacity style={[CommonStyle.longButton, CommonStyle.infoBox]} onPress={submitHandler}>
-                    <Text style={{color: colors.white}}>Mint</Text>
+                    <Text style={{color: colors.white}}>{enterText}</Text>
                 </TouchableOpacity>
             ) : (
                 <View style={[CommonStyle.sideBySide, {alignItems: 'center', justifyContent: 'center'}]}>

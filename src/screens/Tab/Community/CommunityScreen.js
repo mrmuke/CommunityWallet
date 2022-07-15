@@ -17,7 +17,7 @@ import { API_URL } from '../../../utils/API_URL'
 import { CommonStyle, colors, sz } from '../../../styles/common'
 import { MenuButton, TokenCardLoader, UserView1 } from '../../../components'
 import { CommunityContext, TokenContext } from '../../../states/Contexts'
-import { getUserInitials } from '../../../utils/HelperFunctions'
+import { showMessage } from 'react-native-flash-message'
 
 
 export function CommunityScreen({ navigation }) {
@@ -29,13 +29,13 @@ export function CommunityScreen({ navigation }) {
 
     /** State variables */
     const [adminList, setAdminList] = React.useState()
-    const [communityData, setCommunityData] = React.useState(JSON.parse(communityState.currentCommunity))
+    const communityData = React.useRef(JSON.parse(communityState.currentCommunity)).current
     const [childTokens, setChildTokens] = React.useState()
     const [memberList, setMemberList] = React.useState()
     const [modalVisible, setModalVisible] = React.useState(false)
     const [parentToken, setParentToken] = React.useState()
-    const [permissionData, setPermissionData] = React.useState(JSON.parse(communityState.currentPermission))
-    const [refreshing, setRefreshing] = React.useState(false)
+    const permissionData = React.useRef(JSON.parse(communityState.currentPermission)).current
+    const refreshing = React.useRef(false).current
 
     React.useEffect(() => {
         getMemberData()
@@ -55,6 +55,12 @@ export function CommunityScreen({ navigation }) {
         .then(resps => {
             setAdminList(resps[0].data.data)
             setMemberList(resps[1].data.data)
+        })
+        .catch(err => {
+            showMessage({
+                message: 'Something went wrong! Check your network connection.',
+                type: 'error'
+            })
         })
     }
 
@@ -93,98 +99,99 @@ export function CommunityScreen({ navigation }) {
     return (
     <>
     <SafeAreaView>
-    <ScrollView 
-        style={{height: '100%'}}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {tokenContext.reloadTokens(); getMemberData();}}/>}
-    >
-    <View style={CommonStyle.container}>
-        <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
-            <Text style={[CommonStyle.headerMd, {color: colors.red}]}>{communityData.name}</Text>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/menu.png')}></Image>
-            </TouchableOpacity>
+        <View style={CommonStyle.container}>
+            <View style={[CommonStyle.spaceBetween, {alignItems: 'center'}]}>
+                <Text style={[CommonStyle.headerMd, {color: colors.red}]}>{communityData.name}</Text>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/menu.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            <View style={[CommonStyle.infoBox, CommonStyle.sideBySide]}>
+                <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Code: </Text>
+                <Text style={[CommonStyle.headerSm, {fontWeight: sz.plain, color: colors.lightGray}]}>{ communityData.code }</Text>
+            </View>
         </View>
-        <View style={[CommonStyle.infoBox, CommonStyle.sideBySide]}>
-            <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Code: </Text>
-            <Text style={[CommonStyle.headerSm, {fontWeight: sz.plain, color: colors.lightGray}]}>{ communityData.code }</Text>
-        </View>
-        <ScrollView
-            horizontal={true} 
-            showsHorizontalScrollIndicator={false}
-            style={[CommonStyle.infoBox, styles.tokenScroll]}
+        <ScrollView 
+            style={{height: '100%'}}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {tokenContext.reloadTokens(); getMemberData();}}/>}
         >
-            <View>
-                <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Parent Token</Text>
-                {
-                !parentToken ? (
-                    <TokenCardLoader style={{marginRight: sz.md}}/>
-                ) : 
-                (parentToken == 'Not found' && permissionData.permissionLevel == 'admin-master') ? (
-                    <TouchableOpacity 
-                        style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
-                        onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Parent' })}
-                    >
-                        <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
-                    </TouchableOpacity>     
-                ) : (
-                    tokenCardView(parentToken)
-                )
-                }
-            </View>
-            <View>
-                <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Child Tokens</Text>
-                {
-                !childTokens ? (
-                    <TokenCardLoader style={{marginRight: sz.md}}/>
-                ) : (
-                    <View style={CommonStyle.sideBySide}>
-                        {childTokens.map(token => tokenCardView(token))}
-                        {
-                        (permissionData.permissionLevel == 'admin-master') ? (
-                            <TouchableOpacity 
-                                style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
-                                onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Child' })}
-                            >
-                                <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
-                            </TouchableOpacity>  
-                        ) : <></>
-                        }
-                    </View>
-                )
-                }
-            </View>
-        </ScrollView>   
-        <View style={[CommonStyle.infoBox, {marginTop: sz.xs}]}>
-            <View style={CommonStyle.infoBox}>
-                <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Administrator</Text>
-                {
-                !adminList ? (
-                    <BulletList/>
-                    ) : (adminList.length == 0) ? (
-                        <Text style={CommonStyle.infoMd}>No administrator</Text>
+        <View style={CommonStyle.container}>
+            <ScrollView
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                style={[CommonStyle.infoBox, styles.tokenScroll]}
+            >
+                <View>
+                    <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Parent Token</Text>
+                    {
+                    !parentToken ? (
+                        <TokenCardLoader style={{marginRight: sz.md}}/>
+                    ) : 
+                    (parentToken == 'Not found' && permissionData.permissionLevel == 'admin-master') ? (
+                        <TouchableOpacity 
+                            style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
+                            onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Parent' })}
+                        >
+                            <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
+                        </TouchableOpacity>     
                     ) : (
-                        adminList.map(admin => UserView1({user: admin}))
+                        tokenCardView(parentToken)
                     )
-                }
-            </View>
-            <View style={CommonStyle.infoBox}>
-                <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Members</Text>
-                {
-                !memberList ? (
-                    <BulletList/>
-                ) : (memberList.length == 0) ? (
-                    <Text style={CommonStyle.infoMd}>No members</Text>
-                ) : (
-                        memberList.map(member => UserView1({user: member}))
-                )
-                }
+                    }
+                </View>
+                <View>
+                    <Text style={[CommonStyle.headerSm, {marginBottom: sz.xxs}]}>Child Tokens</Text>
+                    {
+                    !childTokens ? (
+                        <TokenCardLoader style={{marginRight: sz.md}}/>
+                    ) : (
+                        <View style={CommonStyle.sideBySide}>
+                            {childTokens.map(token => tokenCardView(token))}
+                            {
+                            (permissionData.permissionLevel == 'admin-master') ? (
+                                <TouchableOpacity 
+                                    style={[styles.tokenCard, {justifyContent: 'center', alignItems: 'center'}]}
+                                    onPress={() => navigation.navigate('Mint Symbol', { tokenType: 'Child' })}
+                                >
+                                    <Image style={{width: sz.lg, height: sz.lg}} source={require('../../../assets/plus.png')}/>
+                                </TouchableOpacity>  
+                            ) : <></>
+                            }
+                        </View>
+                    )
+                    }
+                </View>
+            </ScrollView>   
+            <View style={[CommonStyle.infoBox, {marginTop: sz.xs}]}>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Administrator</Text>
+                    {
+                    !adminList ? (
+                        <BulletList/>
+                        ) : (adminList.length == 0) ? (
+                            <Text style={CommonStyle.infoMd}>No administrator</Text>
+                        ) : (
+                            adminList.map(admin => UserView1({user: admin}))
+                        )
+                    }
+                </View>
+                <View style={CommonStyle.infoBox}>
+                    <Text style={[CommonStyle.infoLg, {fontWeight: sz.bold, color: 'black'}]}>Members</Text>
+                    {
+                    !memberList ? (
+                        <BulletList/>
+                    ) : (memberList.length == 0) ? (
+                        <Text style={CommonStyle.infoMd}>No members</Text>
+                    ) : (
+                            memberList.map(member => UserView1({user: member}))
+                    )
+                    }
+                </View>
             </View>
         </View>
-    </View>
-    </ScrollView>
+        </ScrollView>
     </SafeAreaView>
-
     <Modal
         isVisible={modalVisible}
         animationIn='slideInUp'
@@ -204,7 +211,7 @@ export function CommunityScreen({ navigation }) {
                 onPress={communityContext.exitCommunity}
             />
             <MenuButton 
-                image={<Image style={{width: sz.xl, height: sz.xl, marginRight: sz.sm}} 
+                image={<Image style={{width: sz.xl-5, height: sz.xl, marginRight: sz.sm + 5}} 
                 source={require('../../../assets/docs.png')}/>} 
                 message={'Request community'} 
                 onPress={() => modalNavigate('Request Community')}
@@ -225,7 +232,7 @@ const styles = StyleSheet.create({
     tokenCard: {
         backgroundColor: colors.white, 
         borderRadius: sz.md,
-        height: 125, 
+        height: sz.xxl*3, 
         marginRight: sz.md,
         paddingBottom: sz.sm,
         paddingLeft: sz.xs,
@@ -235,7 +242,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: -2, height: 4}, 
         shadowOpacity: 0.15, 
         shadowRadius: sz.xxs, 
-        width: 100, 
+        width: sz.xxl*2, 
     },
     tokenScroll: {
         marginLeft: -sz.md,

@@ -35,24 +35,24 @@ export function ReqListScreen({ navigation }) {
      */
      const reqView = req => {
         return (
-            <TouchableOpacity 
-                key={req._id} 
-                style={CommonStyle.infoBox} 
-                onPress={() => navigation.navigate('Request', {request: req})}
-            >
-                <View style={CommonStyle.spaceBetween}>
-                    <View style={CommonStyle.sideBySide}>
-                        <View style={[styles.responseCircle, {backgroundColor: req.completed ? (req.approved ? colors.green : colors.red) : colors.lighterGray}]}></View>
-                        <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight, {color: 'black'}]}>{req.name}</Text>
-                        <Text style={CommonStyle.infoLg}> by </Text>
-                        <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight]}>{req.requester.username}</Text>
-                    </View>
-                    <View>
-                        <Text style={CommonStyle.infoMd}>{getDate(req.createdAt)}</Text>
-                    </View>
+        <TouchableOpacity 
+            key={req._id} 
+            style={CommonStyle.infoBox} 
+            onPress={() => navigation.navigate('Request', {request: req})}
+        >
+            <View style={CommonStyle.spaceBetween}>
+                <View style={CommonStyle.sideBySide}>
+                    <View style={[styles.responseCircle, {backgroundColor: req.completed ? (req.approved ? colors.green : colors.red) : colors.lighterGray}]}></View>
+                    <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight, {color: 'black'}]}>{req.name}</Text>
+                    <Text style={CommonStyle.infoLg}> by </Text>
+                    <Text style={[CommonStyle.infoLg, CommonStyle.infoHighlight]}>{req.requester.username}</Text>
                 </View>
-                <View style={CommonStyle.divider}></View>
-            </TouchableOpacity>
+                <View>
+                    <Text style={CommonStyle.infoMd}>{getDate(req.createdAt)}</Text>
+                </View>
+            </View>
+            <View style={CommonStyle.divider}></View>
+        </TouchableOpacity>
         )
     }
 
@@ -63,50 +63,50 @@ export function ReqListScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={CommonStyle.container}>
-        <ScrollView style={{height: '100%'}} showsVerticalScrollIndicator={false}>
-            <View style={CommonStyle.infoBox}>
-                <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Request List</Text>
+    <SafeAreaView style={CommonStyle.container}>
+    <ScrollView style={{height: '100%'}} showsVerticalScrollIndicator={false}>
+        <View style={CommonStyle.infoBox}>
+            <Text style={[CommonStyle.headerMd, {color: colors.red}]}>Request List</Text>
+        </View>
+        <View style={CommonStyle.infoBox}>
+            <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween]}>
+                <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Requests to review</Text>
+                <TouchableOpacity onPress={() => setIncompleteReq([...incompleteReq.reverse()])}>
+                    <Image style={styles.sortButton} source={require('../../../assets/sort.png')}/>
+                </TouchableOpacity>                
             </View>
-            <View style={CommonStyle.infoBox}>
-                <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween]}>
-                    <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Requests to review</Text>
-                    <TouchableOpacity onPress={() => setIncompleteReq([...incompleteReq.reverse()])}>
-                        <Image style={styles.sortButton} source={require('../../../assets/sort.png')}/>
-                    </TouchableOpacity>                
-                </View>
-                {
-                    !incompleteReq ? (
-                        <BulletList />
-                    ) :
-                    incompleteReq.length == 0 ? (
-                        <Text style={CommonStyle.infoLg}>All requests reviewed!</Text>
-                    ) : (
-                        incompleteReq.map(req => reqView(req))
-                    )
-                }
+            {
+            !incompleteReq ? (
+                <BulletList />
+            ) :
+            incompleteReq.length == 0 ? (
+                <Text style={CommonStyle.infoLg}>All requests reviewed!</Text>
+            ) : (
+                incompleteReq.map(req => reqView(req))
+            )
+            }
+        </View>
+        <View style={CommonStyle.infoBox}>
+            <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween]}>
+                <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Completed requests</Text>
+                <TouchableOpacity onPress={() => setCompletedReq([...completedReq.reverse()])}>
+                    <Image style={styles.sortButton} source={require('../../../assets/sort.png')}/>
+                </TouchableOpacity>
             </View>
-            <View style={CommonStyle.infoBox}>
-                <View style={[CommonStyle.infoBox, CommonStyle.spaceBetween]}>
-                    <Text style={[CommonStyle.headerSm, {color: colors.lightGray}]}>Completed requests</Text>
-                    <TouchableOpacity onPress={() => setCompletedReq([...completedReq.reverse()])}>
-                        <Image style={styles.sortButton} source={require('../../../assets/sort.png')}/>
-                    </TouchableOpacity>
-                </View>
-                {
-                    !completedReq ? (
-                        <BulletList />
-                    ) :
-                    completedReq.length == 0 ? (
-                        <Text style={CommonStyle.infoLg}>No completed requests</Text>
-                    ) : (
-                        completedReq.map(req => reqView(req))
-                    )
-                }
-            </View>
-            
-        </ScrollView>
-        </SafeAreaView>
+            {
+            !completedReq ? (
+                <BulletList />
+            ) :
+            completedReq.length == 0 ? (
+                <Text style={CommonStyle.infoLg}>No completed requests</Text>
+            ) : (
+                completedReq.map(req => reqView(req))
+            )
+            }
+        </View>
+        
+    </ScrollView>
+    </SafeAreaView>
     )
 }
 
