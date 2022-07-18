@@ -13,7 +13,6 @@ import { SplashScreen } from './components/Screens/SplashScreen'
 import { TabStack } from './stacks/TabStack'
 import { MyTheme } from './styles/theme'
 
-
 function App() {
   const { authContext, authState } = authenticate()
   const { communityContext, communityState } = CommunityService(authContext, authState)

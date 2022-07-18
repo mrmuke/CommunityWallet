@@ -33,7 +33,7 @@ export function SendScreen({navigation}) {
     const [hasCameraPermission, setHasCameraPermission] = React.useState(null)
     const [memo, setMemo] = React.useState()
     const [modalVisible, setModalVisible] = React.useState(false)
-    const [recipientAddress, setRecipientAddress] = React.useState('1yqrrf9uu698agpzzwk2s5mxd45yq0par3drak6')
+    const [recipientAddress, setRecipientAddress] = React.useState('')
     const [scanned, setScanned] = React.useState(false)
     const [selectedToken, setSelectedToken] = React.useState()
     const [boundsOrigin, setBoundsOrigin] = React.useState({x: 0, y: 0})
@@ -72,10 +72,12 @@ export function SendScreen({navigation}) {
     }
 
     const handleBarCodeScanned = ({bounds, data}) => {
-        setModalVisible(false)
         setBoundsOrigin(bounds.origin)
         setBoundsSize(bounds.size)
-        setRecipientAddress(data)
+        const splitData = data.split('wasm')
+        console.log(splitData)
+        splitData[1] ? setRecipientAddress(splitData[1]) : setRecipientAddress(splitData[0])
+        setModalVisible(false)
     }
 
     return (
@@ -105,7 +107,7 @@ export function SendScreen({navigation}) {
                         style={{marginRight: sz.xs}}
                         onPress={() => {setModalVisible(true)}}
                     >
-                        <Image source={require('../../../assets/qrcode.png')} style={{height: sz.lg, width: sz.lg}}/>
+                        <Image source={require('../../../assets/qrcode.png')} style={{height: sz.lg+sz.xs, width: sz.lg+sz.xs}}/>
                     </TouchableOpacity>
                     <Text style={[CommonStyle.headerSm, {color: 'black', fontStyle: 'italic', marginRight: sz.xxxs}]}>wasm</Text>
                         <TextInput
@@ -157,15 +159,15 @@ export function SendScreen({navigation}) {
                         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                         style={{height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center'}}
                     >
-                        <View style={
-                            [styles.scannerBoundingBox, {
+                        <View style={[
+                            styles.scannerBoundingBox, {
                                 top: boundsOrigin.y, 
                                 left: boundsOrigin.x, 
                                 height: boundsSize.height, 
-                                width: boundsSize.width}
-                            ]}
+                                width: boundsSize.width
+                            }]}
                         />
-                        <TouchableOpacity style={[styles.cancelScannerButton]}>
+                        <TouchableOpacity style={[styles.cancelScannerButton]} onPress={() => setModalVisible(false)}>
                             <Text style={[CommonStyle.headerSm, {color: colors.white}]}>Close</Text>
                         </TouchableOpacity>
                     </BarCodeScanner>

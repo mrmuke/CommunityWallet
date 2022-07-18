@@ -25,6 +25,7 @@ const colors = {
     info: '#696969',
     lightGray: '#B7B7B7',
     lighterGray: '#F8F8F8',
+    orange: '#F1A448',
     pink: '#D47EAF',
     white: '#FFFFFF'
 }

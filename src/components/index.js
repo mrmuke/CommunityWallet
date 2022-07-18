@@ -1,6 +1,7 @@
 import { DigitButton, DigitKeyboard } from './Keyboard'
 import { FlyingCards } from './FlyingCards'
 import { HorizontalPicker } from './Picker'
+import { InitialsBubble } from './InitialsBubble'
 import { MenuButton } from './MenuButton'
 import { NumberInput } from './NumberInput'
 import { SuggestionPills } from './SuggestionPills'
@@ -12,6 +13,7 @@ export {
     DigitButton,
     FlyingCards,
     HorizontalPicker,
+    InitialsBubble,
     DigitKeyboard,
     MenuButton,
     NumberInput,

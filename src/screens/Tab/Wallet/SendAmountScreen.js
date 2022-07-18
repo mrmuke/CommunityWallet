@@ -55,13 +55,12 @@ export function SendAmountScreen({route}) {
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
-            walletContext.reloadBalances()
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+            walletContext.reloadData()
         })
         .catch(err => {
             setCompleted(true)
             setErrorOnSubmit(true)
-            console.log(err)
             showMessage({
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'

@@ -1,6 +1,6 @@
-import axios from 'axios'
 import * as React from 'react'
 import { 
+    Image,
     RefreshControl,
     SafeAreaView,
     ScrollView, 
@@ -9,11 +9,13 @@ import {
     TouchableOpacity,
     View, 
 } from 'react-native'
+import Reanimated, {useAnimatedStyle, useSharedValue, withTiming, Easing} from 'react-native-reanimated'
 import { BulletList, Code } from 'react-content-loader/native'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 
 import { AuthContext, WalletContext } from '../../../states/Contexts'
 import { CommonStyle, colors, sz } from '../../../styles/common'
+import { getDate } from '../../../utils/HelperFunctions'
+import { InitialsBubble } from '../../../components'
 
 export function WalletScreen({ navigation }) {
     /** Contexts */
@@ -25,10 +27,23 @@ export function WalletScreen({ navigation }) {
     /** State variables */
     const [balanceChildren, setBalanceChildren] = React.useState()
     const [balanceParent, setBalanceParent] = React.useState()
-    const refreshing = React.useRef(false).current
     const [receivedTransactions, setReceivedTransactions] = React.useState()
     const [sentTransactions, setSentTransactions] = React.useState()
+    const refreshing = React.useRef(false).current
     const userData = React.useRef(JSON.parse(authState.user)).current
+
+    /** Animations */
+    const offset = useSharedValue(0)
+    const animatedStyles = useAnimatedStyle(() => {
+        return {
+            transform: [{ 
+                translateY: withTiming(offset.value, {
+                    duration: 500,
+                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+                })
+            }]
+        }
+    })
 
     React.useEffect(() => {
         setBalanceChildren(walletState.balanceChildren)
@@ -52,32 +67,45 @@ export function WalletScreen({ navigation }) {
     }
 
     const transactionView = transaction => {
-        if (transaction.sender._id == userData._id.toString()) {
-            return (
-            <View key={transaction._id}>
-                <View>
-                    <Text>{transaction.username} paid you <Text>{transaction.amount}</Text></Text>
-                    <Text>{transaction.createdDate}</Text>
+        const createdAt = transaction.createdAt
+        const isReceiver = transaction.receiver._id === userData._id.toString()
+        const memo = transaction.memo
+        const receiverName = transaction.receiver.username
+        const senderName = transaction.sender.username
+        return (
+            <View key={transaction._id} style={CommonStyle.spaceBetween}>
+                <View style={[CommonStyle.sideBySide, {width: '70%'}]}>
+                    <InitialsBubble username={isReceiver ? senderName : receiverName}/>
+                    <View style={{marginLeft: sz.xs, paddingTop: sz.xxs}}>
+                        {
+                            isReceiver ? (
+                                <View style={CommonStyle.sideBySide}>
+                                    <Text style={[CommonStyle.infoLg, {color: 'black', fontWeight: sz.bold}]}>{senderName} </Text>
+                                    <Text style={[CommonStyle.infoLg, {color: 'black'}]}>sent to you</Text>
+                                </View>
+                            ) : (
+                                <View style={CommonStyle.sideBySide}>
+                                    <Text style={[CommonStyle.infoLg, {color: 'black'}]}>You sent to </Text>
+                                    <Text style={[CommonStyle.infoLg, {color: 'black', fontWeight: sz.bold}]}>{receiverName}</Text>
+                                </View>
+                            )
+                        }
+                        {
+                            createdAt ? (
+                                <Text style={CommonStyle.infoMd}>{getDate(createdAt)}</Text>
+                                ) : <Text></Text>
+                            }
+                        {
+                            memo ? (
+                                <Text numberOfLines={1} style={[CommonStyle.headerSm, {color: colors.info, fontWeight: sz.plain}]}>{memo}</Text>
+                            ) : <></>
+                        }
+                        <View style={CommonStyle.divider}/>
+                    </View>
                 </View>
-                <View>
-                    <Text>{ transaction.memo }</Text>
-                </View>
+                <Text style={[CommonStyle.headerSm, {width: '50%', color: isReceiver ? colors.green : colors.red}]}>{isReceiver ? '+' : '-'}{transaction.amount} {transaction.token.symbol}</Text>
             </View>
-            )
-        } else {
-            return (
-            <View key={transaction._id}>
-                <View style={{flexDirection: 'row'}}>
-                    <Text>You paid you <Text>{transaction.receiver.username}</Text></Text>
-                    <Text>{transaction.amount}</Text>
-                </View>
-                <View>
-                    <Text>{transaction.createdDate}</Text>
-                    <Text>{ transaction.memo }</Text>
-                </View>
-            </View>
-            )
-        }
+        )
     }
 
     return (
@@ -87,7 +115,9 @@ export function WalletScreen({ navigation }) {
         </>
         <ScrollView 
             showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadData}/>}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadData}/>}
+            onScroll={e => {e.nativeEvent.contentOffset.y > 20 ? offset.value=100 : offset.value=0}}
+            scrollEventThrottle={1}
         >
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Balances</Text>
@@ -117,17 +147,23 @@ export function WalletScreen({ navigation }) {
                     [...sentTransactions, ...receivedTransactions].length == 0 ? (
                         <Text style={CommonStyle.infoMd}>No transactions</Text>
                     ) : (
-                        [...sentTransactions, ...receivedTransactions].map(transaction => transactionView(transaction))
+                        [...sentTransactions, ...receivedTransactions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(transaction => transactionView(transaction))
                     )
                 }
             </View>
         </ScrollView>
-        <TouchableOpacity 
-            onPress={() => navigation.navigate('Send Tokens')}
-            style={[CommonStyle.longButton, {position: 'absolute', bottom: sz.xs, width: '100%'}]}
-        >
-            <Text style={{color: colors.white}}>Send</Text>
-        </TouchableOpacity>
+        <Reanimated.View style={animatedStyles}>
+            <TouchableOpacity 
+                onPress={() => navigation.navigate('Send Tokens')}
+                style={[ CommonStyle.longButton, {position: 'absolute', bottom: sz.xs, width: '100%'}]}
+            >
+                <View style={[CommonStyle.spaceBetween, {paddingLeft: sz.sm, paddingRight: sz.sm}]}>
+                    <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/sendFocused.png')}/>
+                    <Text style={[CommonStyle.infoLg, {color: colors.white}]}>Send</Text>
+                    <View style={{width: sz.lg}}/>
+                </View>
+            </TouchableOpacity>
+        </Reanimated.View>
     </SafeAreaView>
     )
 }

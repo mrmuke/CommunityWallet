@@ -115,6 +115,7 @@ export function WalletService() {
             })
         },
         reloadBalances: () => {
+            console.log('happening')
             const msg = { communityId: JSON.parse(communityState.currentCommunity)._id }
             axios.post(`${API_URL}/user/balancesOneCommunity`, msg)
             .then(res => {
