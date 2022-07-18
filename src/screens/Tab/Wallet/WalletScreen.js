@@ -27,17 +27,31 @@ export function WalletScreen({ navigation }) {
     /** State variables */
     const [balanceChildren, setBalanceChildren] = React.useState()
     const [balanceParent, setBalanceParent] = React.useState()
+    const [buttonYPos, setButtonYPos] = React.useState(1000)
     const [receivedTransactions, setReceivedTransactions] = React.useState()
     const [sentTransactions, setSentTransactions] = React.useState()
     const refreshing = React.useRef(false).current
     const userData = React.useRef(JSON.parse(authState.user)).current
 
+    console.log(buttonYPos)
+
     /** Animations */
-    const offset = useSharedValue(0)
-    const animatedStyles = useAnimatedStyle(() => {
+    const buttonOffset = useSharedValue(100)
+    const buttonAnimatedStyles = useAnimatedStyle(() => {
         return {
             transform: [{ 
-                translateY: withTiming(offset.value, {
+                translateY: withTiming(buttonOffset.value, {
+                    duration: 500,
+                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+                })
+            }]
+        }
+    })
+    const headerOffset = useSharedValue(-100)
+    const headerAnimatedStyles = useAnimatedStyle(() => {
+        return {
+            transform: [{ 
+                translateY: withTiming(headerOffset.value, {
                     duration: 500,
                     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
                 })
@@ -110,16 +124,24 @@ export function WalletScreen({ navigation }) {
 
     return (
     <SafeAreaView style={[CommonStyle.container, {height: '100%'}]}>
-        <>
-            <Text style={[CommonStyle.headerLg, {color: colors.red}]}>Wallet</Text>
-        </>
+        <Reanimated.View style={[headerAnimatedStyles, {alignItems: 'center', height: sz.xl, justifyContent: 'center'}]}>
+            <Text style={[CommonStyle.infoLg]}>Wallet</Text>
+        </Reanimated.View>
         <ScrollView 
-            showsVerticalScrollIndicator={false}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadData}/>}
-            onScroll={e => {e.nativeEvent.contentOffset.y > 20 ? offset.value=100 : offset.value=0}}
             scrollEventThrottle={1}
+            showsVerticalScrollIndicator={false}
+            style={{paddingTop: sz.sm}}
+            onScroll={e => {
+                const y = e.nativeEvent.contentOffset.y
+                y > buttonYPos ? buttonOffset.value=0 : buttonOffset.value=100
+                y > 50 ? headerOffset.value=0 : headerOffset.value=-100
+            }}
         >
-            <View style={CommonStyle.infoBox}>
+        <View style={CommonStyle.infoBox}>
+            <Text style={[CommonStyle.headerLg, {color: colors.clicky2}]}>Wallet</Text>
+        </View>
+            <View style={{marginBottom: sz.sm}}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Balances</Text>
                 {
                     balanceParent ? (
@@ -138,6 +160,17 @@ export function WalletScreen({ navigation }) {
                     )
                 }
             </View>
+            <TouchableOpacity 
+                onLayout={event => setButtonYPos(event.nativeEvent.layout.y + event.nativeEvent.layout.height*2)}
+                onPress={() => navigation.navigate('Send Tokens')}
+                style={[ CommonStyle.longButton, CommonStyle.infoBox]}
+            >
+                <View style={[CommonStyle.spaceBetween, {paddingLeft: sz.sm, paddingRight: sz.sm}]}>
+                    <Image style={{height: sz.lg, width: sz.lg}} source={require('../../../assets/sendFocused.png')}/>
+                    <Text style={[CommonStyle.infoLg, {color: colors.white}]}>Send</Text>
+                    <View style={{width: sz.lg}}/>
+                </View>
+            </TouchableOpacity>
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Transactions</Text>
                 {
@@ -152,7 +185,7 @@ export function WalletScreen({ navigation }) {
                 }
             </View>
         </ScrollView>
-        <Reanimated.View style={animatedStyles}>
+        <Reanimated.View style={buttonAnimatedStyles}>
             <TouchableOpacity 
                 onPress={() => navigation.navigate('Send Tokens')}
                 style={[ CommonStyle.longButton, {position: 'absolute', bottom: sz.xs, width: '100%'}]}

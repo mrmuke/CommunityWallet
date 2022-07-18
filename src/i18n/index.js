@@ -1,28 +1,23 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as SecureStore from 'expo-secure-store'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import * as Localization from 'expo-localization'
 
 import { english } from './english'
 import { chinese } from './chinese'
 
-// creating a language detection plugin using expo
-// http://i18next.com/docs/ownplugin/#languagedetector
-const languageDetector = {
-  type: 'languageDetector',
-  async: true, // flags below detection to be async
-  detect: callback => {
-    return AsyncStorage.getItem('setLanguage').then(res=>{
-        callback(res)
-    })
-  },
-  init: () => {},
-  cacheUserLanguage: () => {},
+function callFallbackIfFunc(fallback, callback){
+  if(typeof fallback === 'function'){
+    return fallback(callback)
+  }
+
+  return callback(fallback)
 }
 
 i18n
-.use(languageDetector)
 .use(initReactI18next)
 .init({
+  compatibilityJSON: 'v3',
   fallbackLng: 'en',
   resources: {
     en: { translation:english },

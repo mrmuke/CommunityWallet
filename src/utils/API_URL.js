@@ -4,4 +4,4 @@ const { manifest } = Constants
 
 export const API_URL = (typeof manifest.packagerOpts === `object`) && manifest.packagerOpts.dev
     ? "http://"+manifest.debuggerHost.split(`:`).shift().concat(`:3000`)
-    : `http://3.101.141.11:3000`
+    : `http://localhost:3000`
