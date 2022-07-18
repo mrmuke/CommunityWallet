@@ -77,42 +77,42 @@ export function LoginScreen({ navigation }) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
-        <KeyboardAvoidingView style={styles.container}>
-            <Text style={styles.logo}>{ t(bao_W) }</Text>
-            <View style={getInputStyle('phoneNumber')}>
-                <TextInput
-                    keyboardType="numeric"
-                    style={styles.inputText}
-                    placeholder={ t(phoneNumber_P) + "..." }
-                    placeholderTextColor="#003f5c"
-                    onChangeText={text => setPhoneNumber(text)}
-                />
-            </View>
-            <View style={getInputStyle('password')}>
-                <TextInput
-                    secureTextEntry
-                    style={styles.inputText}
-                    placeholder={ t(password_W) + "..." }
-                    placeholderTextColor="#003f5c"
-                    onChangeText={text => setPassword(text)}
-                />
-            </View>
-            <TouchableOpacity>
-                <Text style={styles.forgot}>{ t(forgotPassword_P) }</Text>
+    <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
+    <KeyboardAvoidingView style={styles.container}>
+        <Text style={styles.logo}>{ t(bao_W) }</Text>
+        <View style={getInputStyle('phoneNumber')}>
+            <TextInput
+                keyboardType="numeric"
+                style={styles.inputText}
+                placeholder={ t(phoneNumber_P) + "..." }
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPhoneNumber(text)}
+            />
+        </View>
+        <View style={getInputStyle('password')}>
+            <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder={ t(password_W) + "..." }
+                placeholderTextColor="#003f5c"
+                onChangeText={text => setPassword(text)}
+            />
+        </View>
+        <TouchableOpacity>
+            <Text style={styles.forgot}>{ t(forgotPassword_P) }</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+            onPress={handleLogin} 
+            style={getSubmitStyle()}
+            disabled={inputsFilled()}
+        >
+            <Text style={styles.loginText}>{ t(login_W) }</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => { navigation.navigate("SignupScreen") }}>
+            <Text style={styles.signup}>{ t(signUp_P) }</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-                onPress={handleLogin} 
-                style={getSubmitStyle()}
-                disabled={inputsFilled()}
-            >
-                <Text style={styles.loginText}>{ t(login_W) }</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => { navigation.navigate("SignupScreen") }}>
-                <Text style={styles.signup}>{ t(signUp_P) }</Text>
-             </TouchableOpacity>
-        </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
     )
 }
 

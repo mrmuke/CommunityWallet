@@ -5,6 +5,7 @@ const CommunityContext = React.createContext()
 const ReqListContext = React.createContext()
 const RequestListContext = React.createContext()
 const TokenContext = React.createContext()
+const WalletContext = React.createContext()
 
 export {
     AuthContext,
@@ -12,4 +13,5 @@ export {
     ReqListContext,
     RequestListContext,
     TokenContext,
+    WalletContext
 }

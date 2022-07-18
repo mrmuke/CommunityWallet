@@ -1,30 +1,34 @@
 import axios from 'axios'
 import * as React from 'react'
-import { Dimensions } from 'react-native'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { 
+    Dimensions, 
+    Image,
+    Keyboard,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+} from 'react-native'
+import { showMessage } from 'react-native-flash-message'
+import Modal from 'react-native-modal'
+import { Picker } from '@react-native-picker/picker'
 import Reanimated, {useAnimatedStyle, useSharedValue, withTiming, Easing} from 'react-native-reanimated'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { API_URL } from '../../../utils/API_URL'
 import { FlyingCards, NumberInput } from '../../../components'
-import { CommunityContext, TokenContext } from '../../../states/Contexts'
+import { WalletContext } from '../../../states/Contexts'
 
-import { showMessage } from 'react-native-flash-message'
-
-
-export function MintAmountScreen({ route }) {
-    const symbol = route.params.symbol
-    const tokenName = route.params.tokenName
-    const tokenType = route.params.tokenType
+export function SendAmountScreen({route}) {
+    const selectedToken = route.params.selectedToken
+    const recipientAddress = route.params.recipientAddress
 
     /** Contexts and States */
-    const communityState = React.useContext(CommunityContext).communityState
-    const tokenContext = React.useContext(TokenContext).tokenContext
+    const walletState = React.useContext(WalletContext).walletState
 
     /** State variables */
-    const [digitInput, setDigitInput] = React.useState('')
-    const [submit, setSubmit] = React.useState(false)
     const [completed, setCompleted] = React.useState(false)
+    const [digitInput, setDigitInput] = React.useState('')
     const [errorOnSubmit, setErrorOnSubmit] = React.useState(false)
+    const [submit, setSubmit] = React.useState(false)
     const bottomTabBarHeight = useBottomTabBarHeight()
 
     /** Animations */
@@ -45,14 +49,12 @@ export function MintAmountScreen({ route }) {
         setSubmit(true)
         offset.value = -Dimensions.get('window').height + bottomTabBarHeight
 
-        const baseMsg = { communityId: JSON.parse(communityState.currentCommunity)._id, symbol}
-        const url = (tokenType == 'Parent') ? `${API_URL}/community/mintParent` : `${API_URL}/community/mintChild`
-        const msg = (tokenType == 'Parent') ? {...baseMsg, initialTokenAmount: parseInt(digitInput)} : {...baseMsg, tokenAmount: parseInt(digitInput), tokenName }
+        const url = `${API_URL}/user/sendTokens`
+        const msg = {amount: parseInt(digitInput), contractAddress: selectedToken.address, recipientAddress }
 
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
-            tokenContext.reloadChildTokens()
         })
         .catch(err => {
             setCompleted(true)
@@ -65,12 +67,14 @@ export function MintAmountScreen({ route }) {
     }
 
     return (
+    <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
+    <KeyboardAvoidingView>
         <Reanimated.View style={[animatedStyles, {height: '100%'}]}>
             <NumberInput 
                 digitOutput={digitInput} 
                 enterText={'Mint'}
                 setDigitOutput={setDigitInput} 
-                suggestions={['100', '250', '500', '1,000']} 
+                suggestions={['10', '15', '25', '50']} 
                 submitHandler={handleSubmit}
             />
             {
@@ -79,10 +83,12 @@ export function MintAmountScreen({ route }) {
                     loadingComplete={completed} 
                     errorBool={errorOnSubmit} 
                     errorMessage={'Request did not go through!'} 
-                    successMessage={'Minted!'}
+                    successMessage={'Sent!'}
                 />
             ) : (<></>)
             }
         </Reanimated.View>
-    )
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+    )  
 }

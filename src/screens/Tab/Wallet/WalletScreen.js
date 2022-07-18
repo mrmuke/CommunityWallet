@@ -12,45 +12,31 @@ import {
 import { BulletList, Code } from 'react-content-loader/native'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 
-import { API_URL } from '../../utils/API_URL'
-import { AuthContext, CommunityContext } from '../../states/Contexts'
-import { CommonStyle, colors, sz } from '../../styles/common'
-import { showMessage } from 'react-native-flash-message'
+import { AuthContext, WalletContext } from '../../../states/Contexts'
+import { CommonStyle, colors, sz } from '../../../styles/common'
 
-export function WalletScreen() {
+export function WalletScreen({ navigation }) {
     /** Contexts */
     const authState = React.useContext(AuthContext).authState
-    const communityState = React.useContext(CommunityContext).communityState
+
+    const walletContext = React.useContext(WalletContext).walletContext
+    const walletState = React.useContext(WalletContext).walletState
 
     /** State variables */
     const [balanceChildren, setBalanceChildren] = React.useState()
-    const communityData = React.useRef(JSON.parse(communityState.currentCommunity)).current
     const [balanceParent, setBalanceParent] = React.useState()
     const refreshing = React.useRef(false).current
-    const [transactionsReceived, setTransactionsReceived] = React.useState()
-    const [transactionsSent, setTransactionsSent] = React.useState()
+    const [receivedTransactions, setReceivedTransactions] = React.useState()
+    const [sentTransactions, setSentTransactions] = React.useState()
     const userData = React.useRef(JSON.parse(authState.user)).current
     const bottomTabBarHeight = useBottomTabBarHeight()
 
-
     React.useEffect(() => {
-        Promise.all([
-            axios.post(`${API_URL}/user/balancesOneCommunity`, { communityId: communityData._id }),
-            axios.post(`${API_URL}/user/transactions`)
-        ])
-        .then(resps => {
-            const children = resps[0].data.data
-            const transactions = resps[1].data.data
-            const index = children.findIndex(bal => bal.parentToken)
-            const parent =  children.splice(index, 1).pop()
-            setBalanceChildren(children)
-            setBalanceParent(parent)
-            setTransactionsSent(transactions.sentTransactions ? transactions.sentTransactions : [])
-            setTransactionsReceived(transactions.receivedTransactions ? transactions.receivedTransactions : [])
-        })
-        .catch(err => 
-            console.log(err))
-    }, [])
+        setBalanceChildren(walletState.balanceChildren)
+        setBalanceParent(walletState.balanceParent)
+        setReceivedTransactions(walletState.receivedTransactions)
+        setSentTransactions(walletState.sentTransactions)
+    }, [walletState])
 
     const balanceView = token => {
         return (
@@ -95,29 +81,6 @@ export function WalletScreen() {
         }
     }
 
-    const getWalletData = () => {
-        Promise.all([
-            axios.post(`${API_URL}/user/balancesOneCommunity`, { communityId: communityData._id }),
-            axios.post(`${API_URL}/user/transactions`)
-        ])
-        .then(resps => {
-            const children = resps[0].data.data
-            const transactions = resps[1].data.data
-            const index = children.findIndex(bal => bal.parentToken)
-            const parent =  children.splice(index, 1).pop()
-            setBalanceChildren(children)
-            setBalanceParent(parent)
-            setTransactionsSent(transactions.sentTransactions ? transactions.sentTransactions : [])
-            setTransactionsReceived(transactions.receivedTransactions ? transactions.receivedTransactions : [])
-        })
-        .catch(err => 
-            showMessage({
-                message: 'Something went wrong! Check your network connection.',
-                type: 'danger'
-            })
-        )
-    }
-
     return (
     <SafeAreaView style={[CommonStyle.container, {height: '100%'}]}>
         <>
@@ -125,7 +88,7 @@ export function WalletScreen() {
         </>
         <ScrollView 
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getWalletData}/>}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadBalances}/>}
         >
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Balances</Text>
@@ -149,18 +112,21 @@ export function WalletScreen() {
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Transactions</Text>
                 {
-                    !transactionsSent || !transactionsReceived ? (
+                    !sentTransactions || !receivedTransactions ? (
                         <Code/>
                     ) : 
-                    [...transactionsSent, ...transactionsReceived].length == 0 ? (
+                    [...sentTransactions, ...receivedTransactions].length == 0 ? (
                         <Text style={CommonStyle.infoMd}>No transactions</Text>
                     ) : (
-                        [...transactionsSent, ...transactionsReceived].map(transaction => transactionView(transaction))
+                        [...sentTransactions, ...receivedTransactions].map(transaction => transactionView(transaction))
                     )
                 }
             </View>
         </ScrollView>
-        <TouchableOpacity style={[CommonStyle.longButton, {position: 'absolute', bottom: bottomTabBarHeight + sz.xs, width: '100%'}]}>
+        <TouchableOpacity 
+            onPress={() => navigation.navigate('Send Tokens')}
+            style={[CommonStyle.longButton, {position: 'absolute', bottom: sz.xs, width: '100%'}]}
+        >
             <Text style={{color: colors.white}}>Send</Text>
         </TouchableOpacity>
     </SafeAreaView>

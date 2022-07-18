@@ -21,19 +21,19 @@ export function FlyingCards({ loadingComplete, errorBool, errorMessage,  success
         <View style={[styles.cardLayers, {backgroundColor: colors.pink}]}>
         <View style={[styles.cardLayers, {backgroundColor: colors.gold, justifyContent: 'center', alignItems: 'center'}]}>
             <View style={[styles.interiorCard, {marginBottom: bottomTabBarHeight}]}>
-                {
-                    loadingComplete ? (
-                        <View>
-                            <Text style={[CommonStyle.infoLg, {textAlign: 'center'}]}>{errorBool ? errorMessage : successMessage}</Text> 
-                            <TouchableOpacity style={styles.doneButton} onPress={() => navigation.dispatch(StackActions.popToTop())}>
-                                <Text style={[CommonStyle.infoMd, { color: colors.white, textAlign: 'center', width: sz.xxl*2}]}>Done</Text>
-                            </TouchableOpacity>
-                        </View>
+            {
+                loadingComplete ? (
+                    <View>
+                        <Text style={[CommonStyle.infoLg, {textAlign: 'center'}]}>{errorBool ? errorMessage : successMessage}</Text> 
+                        <TouchableOpacity style={styles.doneButton} onPress={() => navigation.dispatch(StackActions.popToTop())}>
+                            <Text style={[CommonStyle.infoMd, { color: colors.white, textAlign: 'center', width: sz.xxl*2}]}>Done</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                    ) : (
-                        <ActivityIndicator/>
-                    )
-                }
+                ) : (
+                    <ActivityIndicator/>
+                )
+            }
             </View>
         </View>
         </View>
