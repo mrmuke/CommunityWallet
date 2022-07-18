@@ -29,7 +29,6 @@ export function WalletScreen({ navigation }) {
     const [receivedTransactions, setReceivedTransactions] = React.useState()
     const [sentTransactions, setSentTransactions] = React.useState()
     const userData = React.useRef(JSON.parse(authState.user)).current
-    const bottomTabBarHeight = useBottomTabBarHeight()
 
     React.useEffect(() => {
         setBalanceChildren(walletState.balanceChildren)
@@ -88,7 +87,7 @@ export function WalletScreen({ navigation }) {
         </>
         <ScrollView 
             showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadBalances}/>}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={walletContext.reloadData}/>}
         >
             <View style={CommonStyle.infoBox}>
                 <Text style={[CommonStyle.headerSm, {marginBottom: sz.xs}]}>Balances</Text>

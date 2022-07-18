@@ -50,8 +50,8 @@ export function AdjustSupplyScreen({ route }) {
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
             tokenContext.reloadChildTokens()
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
         })
         .catch(err => {
             setCompleted(true)
@@ -60,6 +60,7 @@ export function AdjustSupplyScreen({ route }) {
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'
             })
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
         })
     }
 

@@ -87,6 +87,7 @@ export function WalletService() {
 
     const walletContext = React.useMemo(() => ({
         reloadData: () => {
+            const msg = { communityId: JSON.parse(communityState.currentCommunity)._id }
             Promise.all([
                 axios.post(`${API_URL}/user/balancesOneCommunity`, msg),
                 axios.post(`${API_URL}/user/transactions`)

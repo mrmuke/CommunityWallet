@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import { Dimensions } from 'react-native'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -53,6 +54,7 @@ export function MintAmountScreen({ route }) {
         .then(res => {
             setCompleted(true)
             tokenContext.reloadChildTokens()
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
         })
         .catch(err => {
             setCompleted(true)
@@ -61,6 +63,7 @@ export function MintAmountScreen({ route }) {
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'
             })
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
         })
     }
 

@@ -1,15 +1,13 @@
 import axios from 'axios'
+import * as Haptics from 'expo-haptics'
 import * as React from 'react'
 import { 
     Dimensions, 
-    Image,
     Keyboard,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
 } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
-import Modal from 'react-native-modal'
-import { Picker } from '@react-native-picker/picker'
 import Reanimated, {useAnimatedStyle, useSharedValue, withTiming, Easing} from 'react-native-reanimated'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
@@ -18,11 +16,12 @@ import { FlyingCards, NumberInput } from '../../../components'
 import { WalletContext } from '../../../states/Contexts'
 
 export function SendAmountScreen({route}) {
+    const memo = route.params.memo
+    const recipientId = route.params.recipientId
     const selectedToken = route.params.selectedToken
-    const recipientAddress = route.params.recipientAddress
 
     /** Contexts and States */
-    const walletState = React.useContext(WalletContext).walletState
+    const walletContext = React.useContext(WalletContext).walletContext
 
     /** State variables */
     const [completed, setCompleted] = React.useState(false)
@@ -50,19 +49,24 @@ export function SendAmountScreen({route}) {
         offset.value = -Dimensions.get('window').height + bottomTabBarHeight
 
         const url = `${API_URL}/user/sendTokens`
-        const msg = {amount: parseInt(digitInput), contractAddress: selectedToken.address, recipientAddress }
-
+        const baseMsg = {amount: parseInt(digitInput), contractAddress: selectedToken.address, recipientId}
+        const msg = memo ? {...baseMsg, memo} : baseMsg
+        
         axios.post(url, msg)
         .then(res => {
             setCompleted(true)
+            walletContext.reloadBalances()
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
         })
         .catch(err => {
             setCompleted(true)
             setErrorOnSubmit(true)
+            console.log(err)
             showMessage({
                 message: 'Something went wrong! Check your network connection.',
                 type: 'danger'
             })
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
         })
     }
 
@@ -72,7 +76,7 @@ export function SendAmountScreen({route}) {
         <Reanimated.View style={[animatedStyles, {height: '100%'}]}>
             <NumberInput 
                 digitOutput={digitInput} 
-                enterText={'Mint'}
+                enterText={'Send'}
                 setDigitOutput={setDigitInput} 
                 suggestions={['10', '15', '25', '50']} 
                 submitHandler={handleSubmit}
