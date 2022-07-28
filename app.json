@@ -4,9 +4,10 @@
     "slug": "bao-wallet",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/whitewallet.png",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -26,12 +27,13 @@
       "package": "com.bao.baowallet",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./src/assets/favicon.png"
+    },
+    "entryPoint": "./src/App.js"
   }
 }
