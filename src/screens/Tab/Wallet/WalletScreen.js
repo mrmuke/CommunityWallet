@@ -33,8 +33,6 @@ export function WalletScreen({ navigation }) {
     const refreshing = React.useRef(false).current
     const userData = React.useRef(JSON.parse(authState.user)).current
 
-    console.log(buttonYPos)
-
     /** Animations */
     const buttonOffset = useSharedValue(100)
     const buttonAnimatedStyles = useAnimatedStyle(() => {
@@ -47,15 +45,13 @@ export function WalletScreen({ navigation }) {
             }]
         }
     })
-    const headerOffset = useSharedValue(-100)
+    const headerOpacity = useSharedValue(0)
     const headerAnimatedStyles = useAnimatedStyle(() => {
         return {
-            transform: [{ 
-                translateY: withTiming(headerOffset.value, {
-                    duration: 500,
-                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-                })
-            }]
+            opacity: withTiming(headerOpacity.value, {
+                duration: 250,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            })
         }
     })
 
@@ -135,7 +131,7 @@ export function WalletScreen({ navigation }) {
             onScroll={e => {
                 const y = e.nativeEvent.contentOffset.y
                 y > buttonYPos ? buttonOffset.value=0 : buttonOffset.value=100
-                y > 50 ? headerOffset.value=0 : headerOffset.value=-100
+                y > 50 ? headerOpacity.value=1 : headerOpacity.value=0
             }}
         >
         <View style={CommonStyle.infoBox}>
@@ -184,6 +180,7 @@ export function WalletScreen({ navigation }) {
                     )
                 }
             </View>
+            <View style={{height: sz.xxxl * 3}}/>
         </ScrollView>
         <Reanimated.View style={buttonAnimatedStyles}>
             <TouchableOpacity 
